@@ -18,10 +18,19 @@ cd E:\users\amy.mason\Pipeline_27_07_2016\
 
 set more off
 * data input
-run inputs.do
+*run inputs.do
 
 
 * clean data
-run clean.do
+cd E:\users\amy.mason\Pipeline_27_07_2016\
+run clean_pheno.do
+cd E:\users\amy.mason\Pipeline_27_07_2016\
+run clean_predict.do
+cd E:\users\amy.mason\Pipeline_27_07_2016\
+run create_predict_anti.do
+cd E:\users\amy.mason\Pipeline_27_07_2016\
+run create_predict_viru.do
+* create prediction panals
+
 
 * analyse data
