@@ -6,13 +6,38 @@ cap log close
 log using clean.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
 cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+
+noi di _n(5) _dup(80) "=" _n " 1 Combine all predictive sets" _n _dup(80) "="
+
+
+****** combine the 3 sets
+noi di "combine"
+use pipeline_data_gf, clear
+append using pipeline_data_tw.dta, force
+append using pipeline_data_z2.dta, force
+replace site = lower(site)
+noi di _N " results"
+bysort site: gen tab=1 if _n==1
+summ tab 
+noi di "on " r(sum) " sites"
+tab site
+drop tab
+bysort sample: gen tab=1 if _n==1
+summ tab
+noi di "from " r(sum) " samples"
+tab set if tab==1
+drop tab
+
+save pipeline_predict_raw, replace
+
 ***********************************************************
 * 1) Remove samples that are contaminated for all methods
 *********************************************************
+use pipeline_predict_raw, clear
 
 noi di _n(5) _dup(80) "=" _n " 1 Remove samples that were contaminated for all methods" _n _dup(80) "="
 
-use pipeline_all, clear
+use pipeline_predict_raw, clear
 preserve
 reshape wide value  comment, i(set sample site) j(method) string
 noi display _N " sample sites"
@@ -53,8 +78,7 @@ noi di _n(5) _dup(80) "=" _n "consolidate names/ spelling errors for various sit
 replace site = "ant9ib" if site=="ant9_ibspc"
 replace site = "ant9ia" if site=="ant9_iaspc"
 replace site= "aac6aph2" if strpos(site, "aac")
-replace site= "clinddtest" if strpos(site, "dtest")
-replace site="clindamycin" if site=="clindamycindisc"
+
 replace site = subinstr(site, "acr", "arc",.) if strpos(site, "acr")
 replace site = "mlst" if site=="st"
 replace site = "ccrca"  if site == "ccrc_a"
@@ -67,22 +91,7 @@ replace site =  subinstr(site, "_", "",.) if strpos(site, "lnu")
 replace site =  subinstr(site, "_", "",.) if strpos(site, "qac")
 replace site =  subinstr(site, "_", "",.) if strpos(site, "van")
 
-***** match up phenotype names
 
-replace site="methicillin" if site=="oxa"
-replace site= "ciprofloxacin" if inlist(site, "cip")
-replace site= "fusidicacid" if inlist(site, "fus")
-replace site= "clindamycin" if inlist(site, "cli")
-replace site= "erythromycin" if inlist(site, "ery")
-replace site= "gentamicin" if inlist(site, "gen")
-replace site= "mupirocin" if inlist(site, "mup")
-replace site= "penicillin" if inlist(site, "pen")
-replace site= "rifampicin" if inlist(site, "rif")
-replace site= "tetracycline " if inlist(site, "tet")
-replace site= "trimethoprim" if inlist(site, "tmp")
-replace site= "vancomycin" if inlist(site, "van")
-
-replace site = subinstr(site, " ", "",.)
 compress
 save temp, replace
 
@@ -143,18 +152,17 @@ reshape long
 rename value cleanvalue
 
 merge 1:1 set sample method site using temp, update
+assert _merge!=4
+assert _merge!=5
 noi assert value == cleanvalue if _merge==3
 noi tab site if _merge ==1
 replace value = cleanvalue if value==""
 noi tab site if strpos(site, "_")
 drop if strpos(site, "_")
 noi tab site if _merge==2 
-drop _merge cleanvalue
+drop _merge cleanvalue comment
  
 
-* counting
-
-keep value sample site method set
 reshape wide value , i(sample site) j(method) string
 noi display _N " sample sites"
 bysort sample: gen count1=1 if _n==1
@@ -173,21 +181,19 @@ save temp2, replace
 ***************************************************
 use temp2, clear
 
-gen type = "Phenotype" if method=="gold"
-
-replace type = "mlst"  if inlist(site, "mlst")
+gen type = "mlst"  if inlist(site, "mlst")
 
 replace type = "virulence" if inlist(site, "arca","arcb", "arcc", "arcd", "sasx")
 replace type = "virulence" if inlist(site, "sea", "sea1", "sea2", "seb", "sec", "sed" )
 replace type = "virulence" if inlist(site, "seh2", "sei", "sej", "selr", "sep","seu", "seu1", "seu2")
 replace type = "virulence" if inlist(site, "eta", "etb", "etd", "chp", "sak", "scn", "lukpvf" )
-replace type = "virulence" if inlist(site, "lukm", "lukmf", "lukpvs", "tsst1")
+replace type = "virulence" if inlist(site, "luk", "lukm", "lukmf", "lukpvs", "tsst1")
 replace type = "virulence" if inlist(site, "see", "seg", "seh", "seh1" )
 
 
 replace type = "ccr" if strpos(site, "ccr")==1
 
-replace type = "Chromosomal Resistance" if inlist(site, "gyra", "grla", "dfrb", "fusa", "rpob")
+replace type = "Chromosomal Resistance" if inlist(site, "iles", "gyra", "grla", "dfrb", "fusa", "rpob")
 
 
 replace type = "Aquired Resistance"  if inlist(site, "blaz", "meca", "mecc", "aac6aph2" )
@@ -199,9 +205,6 @@ replace type = "Aquired Resistance"  if inlist(site, "sat4", "tetk", "tetl", "te
 replace type = "Aquired Resistance"  if inlist(site, "dfrg", "dfrk", "cfr", "cat", "qaca", "qacb", "qaccsmr")
 
 
-replace type ="Phenotype" if inlist(site, "ciprofloxacin", "fusidicacid", "clindamycin", "erythromycin")
-replace type ="Phenotype" if inlist(site, "gentamicin", "mupirocin", "penicillin","rifampicin")
-replace type ="Phenotype" if inlist(site,"tetracycline", "trimethoprim", "vancomycin", "methicillin")
 
 * Summary 
 noi display _N " sample sites"
@@ -212,9 +215,11 @@ noi di r(sum) " samples"
 bysort site: gen count2=1 if _n==1
 summ count2
 noi di r(sum) " sites"
-noi tab type if count2==1
+noi tab type if count2==1, m
+noi tab site if type==""
 drop count*
 
+save temp3, replace
 
 
 **********************
@@ -223,9 +228,7 @@ drop count*
 noi di _n(5) _dup(80) "=" _n " 2 Missing data between methods" _n _dup(80) "="
 
 * how many values are missing
-use temp2, clear
-drop comments
-reshape wide value, i(sample site) j(method) string
+use temp3, clear
 
 * create absence markers
 gen  zbyte=( valuezam!="")
@@ -261,9 +264,13 @@ noi di _N " sample sites remaining"
 * samples not in other sets
 vallist sample if new=="010", local(list)
 noi tab sample new if strpos("`list'", sample)
-summ zbyte if strpos("`list'", sample)
+bysort sample: gen count =1 if _n==1
+summ zbyte if strpos("`list'", sample) & count==1
 noi di r(N) " samples are only processed by mykrobe - drop from comparision set"
+summ zbyte if strpos("`list'", sample) 
+noi di r(N) " sample sites affected"
 drop if strpos("`list'", sample)
+drop count 
 
 *001
 summ zbyte if new =="001"
@@ -282,7 +289,7 @@ assert new!="001"
 
 * 101
 summ zbyte if new =="101"
-noi di r(N) " no value in mykrobe"
+noi di r(N) " no value in mykrobe, eg fusa"
 noi tab site if new=="101"
 noi tab valuezam if site=="fusa"
 noi tab valuegenefinder valuetypewriter if site=="fusa" & valuezam==""
@@ -302,8 +309,28 @@ gen new= string( tbyte ) + string(zbyte) + string(gbyte)
 noi tab new
 * mslt
 noi assert site=="mlst" if new=="101" 
-assert new =="111" if type!="Phenotype" & site!="mlst"
-noi di "all remaining sample sites are either complete accross all three methods, phenotype results, or mlst (mykrobe absent)"
+assert new =="111" if (type!="Phenotype" & site!="mlst")
+noi di "all remaining sample sites are either complete accross all three methods or mlst (mykrobe absent)"
+
+* save mlst results and drop
+preserve
+keep if site =="mlst"
+gen ident =  strpos(valuetypewriter, valuegene) >0
+replace ident = 1 if valueg=="Novel" & valuet=="NF"
+summ ident 
+noi di "mlst agreement between typewriter and genefinder in " r(sum) " cases out of " r(N)
+noi di "value missing for all mykrobe"
+noi di "rest"
+noi tab valueg valuet if ident==0
+keep sample valueg valuet ident
+save mlst, replace
+restore
+gen marker =1 if site=="mlst"
+summ marker
+noi di "dropping " r(sum) " mlst sites"
+noi drop if marker==1
+drop marker
+
 
 * count how many sample sites left
 
@@ -321,127 +348,184 @@ drop count* new *byte
 
 
  
-save pipeline_noncontam2, replace
+save temp4, replace
 *************************************
 
-
-
-********************************
-* use D-test to fix clindamycin 
-replace cleanvalue=upper(value) if cleanvalue==""
-reshape wide value clean comments type, i(set sample method) j(site) string
-replace  cleanvalueclindamycin= "R" if  cleanvalueclindamycin=="S" &  cleanvalueclinddtest == "POS" 
-drop *clinddtest
-reshape long
-*drop if cleanvalue==""
-
-
-save pipeline_noncontam3, replace
-
-
-
-
 * then add which go with which antibiotic (based on new sheet by clare)
+**********************************************************
 
-gen antibiotic =""
-replace antibiotic = "ciprofloxacin" if inlist(site, "gyra","gryb", "grla", "grlb")
-replace antibiotic = "erythromycinclindamycin" if inlist(site, "erma", "ermb", "ermc", "ermt", "ermy")
-replace antibiotic = "erythromycin" if inlist(site, "msra", "mphc")
-replace antibiotic = "fusidic acid" if inlist(site, "fusb", "fusc", "fusa", "far")
-replace antibiotic = "gentamicin" if inlist(site,"aac6aph2", "aph2ic")
-replace antibiotic = "methicillinpenicillin" if inlist(site,"meca", "mecc")
-replace antibiotic = "mupirocin" if inlist(site, "mupa", "mupb")
-replace antibiotic = "penicillin" if site=="blaz"
-replace antibiotic = "rifampicin" if site=="rpob"
-replace antibiotic = "tetracycline" if inlist(site, "tetk", "tetl", "tetm", "teto")
-replace antibiotic = "trimethoprim" if inlist(site, "dfra", "dfrc", "dfrb", "dfrb","dfrg", "dfrk")
-replace antibiotic = "vancomycin" if inlist(site, "vana", "vanb", "vanc")
-
-
-
-sort set sample method site
-save pipeline_noncontam4, replace
-
+noi di _n(5) _dup(80) "=" _n " 4 Match to antibiotic prediction" _n _dup(80) "="
 
 
 *clean up non binary values
-use pipeline_noncontam4, clear
-gen orgvalue = value
-replace cleanvalue = upper(value) if cleanvalue==""
-replace cleanvalue="" if inlist(value, "nd", "ND", "NT", "Low cov", "mixed")
-replace cleanvalue="" if inlist(cleanvalue, "NOT DONE", "N/A", "NF")
+use temp4, clear
+reshape long
 
-replace cleanvalue="" if type=="profile"
-replace cleanvalue="" if type=="mlst"
+replace value = upper(value)
+gen ambi = 1 if inlist(value, "ND", "NT", "LOW COV", "MIXED")
+replace ambi=1 if inlist(value, "NOT DONE", "N/A", "NF", "NA", "-")
+summ ambi if ambi ==1
+noi di r(N) " values have N/A or equivalent values, set these all to NA"
+noi replace value = "NA" if ambi==1
+tab site if ambi ==1
+drop ambi
 
-*I/B are equivalent = somewhere between sensitive and resistant
-replace cleanvalue="I" if value=="B"
+***************
+gen count = 1 if strpos(value, "=>")
+summ count
+noi di r(N) " replace => with - to create uniform recording of mutations"
+noi replace value = subinstr(value, "=>", "-",.)
+drop count 
 
 
-replace cleanvalue="P" if inlist(value, "Pi", "Pu")
-replace cleanvalue="A" if value=="Pc"
-
-replace value = subinstr(value, "=>", "-",.)
-replace cleanvalue = subinstr(cleanvalue, "=>", "-",.)
-replace cleanvalue = subinstr(cleanvalue, " ", "",.)
+gen count = 1 if strpos(value," ")
+summ count
+noi di r(N) " remove all spaces in value reports"
+noi replace value = subinstr(value, " ", "",.)
+drop count 
 
 *swap to binary the point mutations
-replace cleanvalue = "A" if cleanvalue=="WT"
-replace cleanvalue = "A" if cleanvalue=="" & method=="zam" & strpos(type, "Chromo")
+* clarify absenses
+gen count = 1  if value=="WT" & strpos(type, "Chromo")
+summ count if count==1 
+noi di r(N) "replace WT with A in typewriter/ genewriter/ zam  reports on chromosonal mutations"
+noi replace value = "A" if count==1
+drop count
 
-* point mutations based on clare's paper
+* clarify point mutations based on clare's paper
+noi di "mutations: if count!=1 then no considered positive as not in panal on clare's paper"
 *gyra
-replace cleanvalue = "P" if cleanvalue =="84:S-L" & strpos(site, "gyra")
-*grla 
-replace cleanvalue = "P" if strpos(cleanvalue, "80:S-F") & strpos(site, "grla")
-replace cleanvalue = "P" if strpos(cleanvalue, "80:S-Y") & strpos(site, "grla")
-replace cleanvalue = "P" if strpos(cleanvalue, "84:E-G") & strpos(site, "grla")
+noi di "gyra mutations"
+gen count =1 if value =="84:S-L" & strpos(site, "gyra")
+noi tab value count if site=="gyra" & strpos(value, "-") , m
+replace value = "P" if count ==1
+noi tab value count if site=="gyra" , m
+drop count 
+*grla
+noi di "grla mutations"
+gen count =1 if strpos(value, "80:S-F") & strpos(site, "grla")
+replace count=1 if strpos(value, "80:S-Y") & strpos(site, "grla")
+replace count=1  if strpos(value, "84:E-G") & strpos(site, "grla")
+noi tab value count if site=="grla" & strpos(value, "-") , m
+replace value = "P" if count ==1
+noi tab value count if site=="grla" , m
+drop count 
+
 
 * fusa
-replace cleanvalue = "P" if strpos(cleanvalue, "114:P-H") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "461:L-K") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "461:L-S") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "404:P-L") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "90:V-I") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "457:H-Y") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "67:A-T") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "406:P-L") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "464:R-S") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "464:R-H") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "457:H-Q") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "453:M-I") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "452:G-C") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "452:G-S") & strpos(site, "fusa")
-replace cleanvalue = "P" if strpos(cleanvalue, "404:P-Q") & strpos(site, "fusa")
+noi di "fusa mutations"
+
+gen count =1 if strpos(value, "114:P-H") & strpos(site, "fusa")
+replace count =1  if strpos(value, "461:L-K") & strpos(site, "fusa")
+replace count =1  if strpos(value, "461:L-S") & strpos(site, "fusa")
+replace count =1  if strpos(value, "404:P-L") & strpos(site, "fusa")
+replace count =1  if strpos(value, "90:V-I") & strpos(site, "fusa")
+replace count =1  if strpos(value, "457:H-Y") & strpos(site, "fusa")
+replace count =1 if strpos(value, "67:A-T") & strpos(site, "fusa")
+replace count =1 if strpos(value, "406:P-L") & strpos(site, "fusa")
+replace count =1 if strpos(value, "464:R-S") & strpos(site, "fusa")
+replace count =1  if strpos(value, "464:R-H") & strpos(site, "fusa")
+replace count =1  if strpos(value, "457:H-Q") & strpos(site, "fusa")
+replace count =1  if strpos(value, "453:M-I") & strpos(site, "fusa")
+replace count =1  if strpos(value, "452:G-C") & strpos(site, "fusa")
+replace count =1  if strpos(value, "452:G-S") & strpos(site, "fusa")
+replace count =1  if strpos(value, "404:P-Q") & strpos(site, "fusa")
+noi tab value count if site=="fusa" & strpos(value, "-") , m
+replace value = "P" if count ==1
+noi tab value count if site=="fusa" , m
+drop count 
+
 
 *rpob
-replace cleanvalue = "P" if strpos(cleanvalue, "464:S-P") & strpos(site, "rpob")
-replace cleanvalue = "P" if strpos(cleanvalue, "468:Q-R") & strpos(site, "rpob")
-replace cleanvalue = "P" if strpos(cleanvalue, "471:D-Y") & strpos(site, "rpob")
-replace cleanvalue = "P" if strpos(cleanvalue, "477:A-D") & strpos(site, "rpob")
-replace cleanvalue = "P" if strpos(cleanvalue, "481:H-N") & strpos(site, "rpob")
-replace cleanvalue = "P" if strpos(cleanvalue, "481:H-Y") & strpos(site, "rpob")
+noi di "rpob mutations"
+gen count =1 if strpos(value, "464:S-P") & strpos(site, "rpob")
+replace count =1   if strpos(value, "468:Q-R") & strpos(site, "rpob")
+replace count =1  if strpos(value, "471:D-Y") & strpos(site, "rpob")
+replace count =1  if strpos(value, "477:A-D") & strpos(site, "rpob")
+replace count =1   if strpos(value, "481:H-N") & strpos(site, "rpob")
+replace count =1  if strpos(value, "481:H-Y") & strpos(site, "rpob")
+noi tab value count if site=="rpob" & strpos(value, "-") , m
+noi replace value = "P" if count ==1
+noi tab value count if site=="rpob" , m
+drop count 
+
 
 *dfrb
-
-replace cleanvalue = "P" if strpos(cleanvalue, "150:H-R") & strpos(site, "dfrb")
-replace cleanvalue = "P" if strpos(cleanvalue, "21:L-V") & strpos(site, "dfrb")
-replace cleanvalue = "P" if strpos(cleanvalue, "31:H-N") & strpos(site, "dfrb")
-replace cleanvalue = "P" if strpos(cleanvalue, "41:L-F") & strpos(site, "dfrb")
-replace cleanvalue = "P" if strpos(cleanvalue, "99:F-S") & strpos(site, "dfrb")
-replace cleanvalue = "P" if strpos(cleanvalue, "99:F-Y") & strpos(site, "dfrb")
-
-
+noi di "dfrb mutations"
+gen count =1 if  strpos(value, "150:H-R") & strpos(site, "dfrb")
+replace count =1   if  strpos(value, "21:L-V") & strpos(site, "dfrb")
+replace count =1   if strpos(value, "31:H-N") & strpos(site, "dfrb")
+replace count =1   if strpos(value, "41:L-F") & strpos(site, "dfrb")
+replace count =1   if strpos(value, "99:F-S") & strpos(site, "dfrb")
+replace count =1   if  strpos(value, "99:F-Y") & strpos(site, "dfrb")
+noi tab value count if site=="dfrb" & strpos(value, "-") , m
+noi replace value = "P" if count ==1
+noi tab value count if site=="dfrb" , m
+drop count 
 
 * replace all other point mutations as A
+noi di "replace mutations not in table with A"
+gen count=1 if !inlist(value, "P", "A")& strpos(type, "Chromo")& inlist(method, "genefinder", "typewriter", "zam") & value!=""
+tab value site if count==1, m
+replace value="A" if count==1
+drop count
 
-replace cleanvalue = "A" if cleanvalue!="P"& strpos(type, "Chromo")
 
 
 * swap blanks to dashes to make easier to see
-replace cleanvalue="-" if cleanvalue==""
+assert value!=""
+replace site=lower(site)
+noi bysort type: tab site value, m 
+
+save temp5, replace
+
+noi di _n(5) _dup(80) "=" _n " 5 Cleaned summary" _n _dup(80) "="
+
+***************************************
+* Summary 
+****************************************
+noi display _N " sample sites"
+noi tab type
+bysort sample: gen count1=1 if _n==1
+summ count1
+noi di r(sum) " samples"
+bysort site: gen count2=1 if _n==1
+summ count2
+noi di r(sum) " sites"
+noi tab type if count2==1, m
+noi tab site if type==""
+drop count*
 
 
-save pipeline_clean, replace
+noi di "values by type"
+noi bysort type: tab value 
+
+noi di "breakdown by site"
+noi bysort type site:  tab value 
+
+noi di "breakdown by method"
+noi bysort method: tab value
+
+save pipeline_clean_all_values_long, replace
+
+**********
+* and wide
+noi di "Compare site values between methods"
+
+reshape wide
+gen ValueAll = valuet  + valuez + valueg
+noi tab ValueAll , sort
+
+noi di "values by type"
+noi bysort type: tab ValueA, sort 
+
+noi di "breakdown by site"
+noi bysort type site:  tab ValueA, sort
+
+noi tab site ValueA
+
+save pipeline_clean_all_values_wide, replace
+
+cd E:\users\amy.mason\Pipeline_27_07_2016\
 
 
