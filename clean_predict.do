@@ -366,6 +366,7 @@ gen ambi = 1 if inlist(value, "ND", "NT", "LOW COV", "MIXED")
 replace ambi=1 if inlist(value, "NOT DONE", "N/A", "NF", "NA", "-")
 summ ambi if ambi ==1
 noi di r(N) " values have N/A or equivalent values, set these all to NA"
+noi list site value if ambi==1
 noi replace value = "NA" if ambi==1
 tab site if ambi ==1
 drop ambi
@@ -389,7 +390,7 @@ drop count
 gen count = 1  if value=="WT" & strpos(type, "Chromo")
 summ count if count==1 
 noi di r(N) "replace WT with A in typewriter/ genewriter/ zam  reports on chromosonal mutations"
-noi replace value = "A" if count==1
+noi replace value = "A" if count==1 
 drop count
 
 * clarify point mutations based on clare's paper
@@ -467,7 +468,7 @@ drop count
 noi di "replace mutations not in table with A"
 gen count=1 if !inlist(value, "P", "A")& strpos(type, "Chromo")& inlist(method, "genefinder", "typewriter", "zam") & value!=""
 tab value site if count==1, m
-replace value="A" if count==1
+replace value="A" if count==1 & value!="NA"
 drop count
 
 
@@ -514,15 +515,15 @@ noi di "Compare site values between methods"
 
 reshape wide
 gen ValueAll = valuet  + valuez + valueg
-noi tab ValueAll , sort
+noi tab ValueAll , sort m
 
 noi di "values by type"
-noi bysort type: tab ValueA, sort 
+noi bysort type: tab ValueA, sort  m 
 
 noi di "breakdown by site"
-noi bysort type site:  tab ValueA, sort
+noi bysort type site:  tab ValueA, sort m
 
-noi tab site ValueA
+noi tab site ValueA, m
 
 save pipeline_clean_all_values_wide, replace
 
