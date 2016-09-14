@@ -30,6 +30,8 @@ cd E:\users\amy.mason\Pipeline_27_07_2016\
 run create_predict_anti.do
 cd E:\users\amy.mason\Pipeline_27_07_2016\
 run create_predict_viru.do
+
+
 * create prediction panals
 
 
