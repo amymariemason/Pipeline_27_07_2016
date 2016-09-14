@@ -60,7 +60,7 @@ noi dis "based on entero pcr/array"
 foreach x in A B C D E G H I J LR P U{
 	gen SE`x' = ""
 	replace SE`x' = "R" if strpos( entero_pcr, "`x'") | strpos(entero_array, "`x'")
-	replace SE`x' = "S" if strpos( entero_pcr, "-") & strpos(entero_array, "-")
+	replace SE`x' = "S" if !strpos( entero_pcr, "`x'") & !strpos(entero_array, "`x'") & (entero_pcr!=""|entero_array!="")
 	replace SE`x' = "NT" if strpos( lower(entero_pcr), "nt") & strpos(lower(entero_array), "nt")
 	noi tab SE`x', m		
 			}
@@ -69,7 +69,7 @@ noi di "based on exfol_pcr/ array"
 		foreach x in A B D {
 	gen ET`x' = ""
 	replace ET`x' = "R" if strpos( exfol_pcr, "`x'") | strpos(exfol_array, "`x'")
-	replace ET`x' = "S" if strpos( exfol_pcr, "-") & strpos(exfol_array, "-")
+	replace ET`x' = "S" if !strpos( exfol_pcr, "`x'") & !strpos(exfol_array, "`x'")  & (exfol_pcr!=""|exfol_array!="")
 	replace ET`x' = "NT" if strpos( lower(exfol_pcr), "nt") & strpos(lower(exfol_array), "nt")
 	noi tab ET`x', m		
 			}
@@ -148,7 +148,7 @@ gen count =1 if  Clindamycin=="S" &  ClindDtest == "POS"
 summ  count if count==1
 noi di r(N) " clinddtest results are positive when clindamycin results = S -> replace clindamycin test with R"
 replace  Clindamycin= "R" if count == 1
-tab Clindamycin, m
+noi tab Clindamycin, m
 drop *ClindDtest count
 
 	noi di "SAVE: one record per sample with gold standard profile"
