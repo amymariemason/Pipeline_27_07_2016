@@ -1,0 +1,669 @@
+----------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  E:\users\amy.mason\Pipeline_27_07_2016\Datasets\clean2.log
+  log type:  text
+ opened on:  14 Sep 2016, 18:43:18
+
+. 
+. noi di "Run by AMM on $S_DATE $S_TIME"
+Run by AMM on 14 Sep 2016 18:43:18
+
+. 
+. cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+
+. 
+. 
+. 
+. 
+. 
+. *************************************************
+
+. 
+. 
+. 
+. use pipeline_data_gs, clear
+
+. 
+. * to distinguish blank responses in pcrs checked from blacnk boxes formed by long -> wide
+
+. 
+. 
+. 
+. ******************************************************
+
+. 
+. noi di _n(5) _dup(80) "=" _n " 1 drop contaminated samples" _n _dup(80) "="
+
+
+
+
+
+================================================================================
+ 1 drop contaminated samples
+================================================================================
+
+. 
+. **************************
+
+. 
+. 
+. 
+. gen contam=.
+(1,389 missing values generated)
+
+. 
+. replace contam=1 if inlist(sample,"C00012813", "C00001215", "C00001249", "C00012746", "C00012791")
+(5 real changes made)
+
+. 
+. replace contam=1 if inlist(sample,"H113120068-138-1","H121000461-388-2","H131100031-408-2","H111840168-459-2","H111200061-196-2"
+> )
+(5 real changes made)
+
+. 
+. bysort sample: gen count=1 if _n==1
+
+. 
+. summ contam if count==1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      contam |         10           1           0          1          1
+
+. 
+. noi di r(sum) " samples contaminated"
+10 samples contaminated
+
+. 
+. noi drop if contam==1
+(10 observations deleted)
+
+. 
+. drop contam count
+
+. 
+. 
+. 
+. 
+. 
+. ******************************************************
+
+. 
+. noi di _n(5) _dup(80) "=" _n " 2 Match up names from method to method" _n _dup(80) "="
+
+
+
+
+
+================================================================================
+ 2 Match up names from method to method
+================================================================================
+
+. 
+. *********************************************************
+
+. 
+. 
+. 
+. local list1 "ClindDtest Clindamycin Penicillin Methicillin Ciprofloxacin  Clindamycin  Erythromycin  Tetracycline Fusidicacid Ge
+> ntamicin Rifampicin Trimethoprim Vancomycin Mupirocin"
+
+. 
+. local list2 "Dtest Clindamycindisc PEN OXA CIP CLI ERY TET FUS GEN RIF TMP VAN MUP"
+
+. 
+. local n1 : word count `list1'
+
+. 
+. local n2 : word count `list2'
+
+. 
+. if `n1' != `n2' {
+. 
+.         di as err "different counts"
+. 
+. }
+
+. 
+. 
+. 
+. forval i = 1/`n1' {
+  2. 
+.         local first : word `i' of `list1'
+  3. 
+.         local second : word `i' of `list2'
+  4. 
+.         noi display " match `first' and `second'"
+  5. 
+. assert !(`first' !="" & `second' !="")
+  6. 
+. replace `first' = `second' if `first' ==""
+  7. 
+. replace `first' = upper(`first')
+  8. 
+. drop `second'
+  9. 
+. noi tab `first', m
+ 10. 
+. }
+ match ClindDtest and Dtest
+variable ClindDtest was str3 now str8
+(112 real changes made)
+(598 real changes made)
+
+   Clind (D |
+      test) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        781       56.64       56.64
+        N/A |        450       32.63       89.27
+        NEG |          8        0.58       89.85
+   NOT DONE |         23        1.67       91.52
+        POS |        117        8.48      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Clindamycin and Clindamycindisc
+variable Clindamycin was str1 now str2
+(486 real changes made)
+(407 real changes made)
+
+Clindamycin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        893       64.76       64.76
+         ND |        406       29.44       94.20
+          R |         44        3.19       97.39
+          S |         36        2.61      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Penicillin and PEN
+variable Penicillin was str1 now str2
+(392 real changes made)
+(0 real changes made)
+
+ Penicillin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          B |          5        0.36        0.36
+         NT |          5        0.36        0.73
+          R |      1,137       82.45       83.18
+          S |        232       16.82      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Methicillin and OXA
+variable Methicillin was str1 now str2
+(392 real changes made)
+(0 real changes made)
+
+Methicillin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          B |         20        1.45        1.45
+         NT |          6        0.44        1.89
+          R |        391       28.35       30.24
+          S |        962       69.76      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Ciprofloxacin and CIP
+variable Ciprofloxacin was str1 now str2
+(392 real changes made)
+(0 real changes made)
+
+Ciprofloxac |
+         in |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          B |         21        1.52        1.52
+         NT |          6        0.44        1.96
+          R |        316       22.92       24.87
+          S |      1,036       75.13      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Clindamycin and CLI
+(392 real changes made)
+(0 real changes made)
+
+Clindamycin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        501       36.33       36.33
+          B |          2        0.15       36.48
+         ND |        406       29.44       65.92
+         NT |          6        0.44       66.35
+          R |         68        4.93       71.28
+          S |        396       28.72      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Erythromycin and ERY
+variable Erythromycin was str1 now str2
+(392 real changes made)
+(0 real changes made)
+
+Erythromyci |
+          n |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          B |          1        0.07        0.07
+         NT |          6        0.44        0.51
+          R |        348       25.24       25.74
+          S |      1,024       74.26      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Tetracycline and TET
+variable Tetracycline was str1 now str2
+(392 real changes made)
+(1 real change made)
+
+Tetracyclin |
+          e |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          B |          1        0.07        0.07
+         NT |          6        0.44        0.51
+          R |        118        8.56        9.06
+          S |      1,254       90.94      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Fusidicacid and FUS
+variable Fusidicacid was str1 now str2
+(392 real changes made)
+(0 real changes made)
+
+    Fusidic |
+       acid |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         NT |          6        0.44        0.44
+          R |        162       11.75       12.18
+          S |      1,211       87.82      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Gentamicin and GEN
+variable Gentamicin was str1 now str2
+(392 real changes made)
+(0 real changes made)
+
+ Gentamicin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         NT |          6        0.44        0.44
+          R |         94        6.82        7.25
+          S |      1,279       92.75      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Rifampicin and RIF
+variable Rifampicin was str1 now str2
+(392 real changes made)
+(0 real changes made)
+
+ Rifampicin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          B |          1        0.07        0.07
+         NT |          6        0.44        0.51
+          R |         25        1.81        2.32
+          S |      1,347       97.68      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Trimethoprim and TMP
+(392 real changes made)
+(286 real changes made)
+
+Trimethopri |
+          m |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        178       12.91       12.91
+          B |          5        0.36       13.27
+         ND |        286       20.74       34.01
+         NT |        240       17.40       51.41
+          R |         43        3.12       54.53
+          S |        627       45.47      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Vancomycin and VAN
+variable Vancomycin was str1 now str2
+(392 real changes made)
+(0 real changes made)
+
+ Vancomycin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         NT |          6        0.44        0.44
+          S |      1,373       99.56      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ match Mupirocin and MUP
+variable Mupirocin was str1 now str2
+(392 real changes made)
+(0 real changes made)
+
+  Mupirocin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        323       23.42       23.42
+          I |         24        1.74       25.16
+         NT |         11        0.80       25.96
+          R |          6        0.44       26.40
+          S |      1,015       73.60      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+
+. gen SEA = ""
+(1,379 missing values generated)
+
+. tab entero_pcr
+
+  entero_pcr |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+   A C G H I |          1        0.26        0.26
+           - |         43       10.97       11.22
+          A  |          5        1.28       12.50
+        A B  |          1        0.26       12.76
+A B D G I J  |          1        0.26       13.01
+    A B D J  |          1        0.26       13.27
+      A B H  |          2        0.51       13.78
+    A C G I  |          4        1.02       14.80
+       A C H |          1        0.26       15.05
+      A C H  |          1        0.26       15.31
+  A D G I J  |          2        0.51       15.82
+      A D J  |          2        0.51       16.33
+        A G  |          1        0.26       16.58
+      A G I  |          5        1.28       17.86
+        A H  |          2        0.51       18.37
+          B  |          3        0.77       19.13
+  B D G I J  |          1        0.26       19.39
+    B G H I  |          1        0.26       19.64
+      B G I  |          2        0.51       20.15
+        B H  |          2        0.51       20.66
+           C |          1        0.26       20.92
+          C  |          2        0.51       21.43
+  C D G I J  |          1        0.26       21.68
+        C G  |          1        0.26       21.94
+       C G I |          1        0.26       22.19
+      C G I  |          6        1.53       23.72
+    C G I J  |          1        0.26       23.98
+        C I  |          1        0.26       24.23
+     D G I J |          4        1.02       25.26
+    D G I J  |          3        0.77       26.02
+        D J  |          1        0.26       26.28
+           E |          1        0.26       26.53
+          E  |          2        0.51       27.04
+          G  |          1        0.26       27.30
+      G H I  |          3        0.77       28.06
+         G I |          4        1.02       29.08
+        G I  |         25        6.38       35.46
+      G I J  |          1        0.26       35.71
+          H  |          8        2.04       37.76
+          I  |          1        0.26       38.01
+          J  |          1        0.26       38.27
+          NT |        242       61.73      100.00
+-------------+-----------------------------------
+       Total |        392      100.00
+
+. gen count= 1 if strpos( entero_pcr, "A")
+(1,350 missing values generated)
+
+. tab count
+
+      count |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |         29      100.00      100.00
+------------+-----------------------------------
+      Total |         29      100.00
+
+. tab entero_pcr, m
+
+  entero_pcr |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+             |        987       71.57       71.57
+   A C G H I |          1        0.07       71.65
+           - |         43        3.12       74.76
+          A  |          5        0.36       75.13
+        A B  |          1        0.07       75.20
+A B D G I J  |          1        0.07       75.27
+    A B D J  |          1        0.07       75.34
+      A B H  |          2        0.15       75.49
+    A C G I  |          4        0.29       75.78
+       A C H |          1        0.07       75.85
+      A C H  |          1        0.07       75.92
+  A D G I J  |          2        0.15       76.07
+      A D J  |          2        0.15       76.21
+        A G  |          1        0.07       76.29
+      A G I  |          5        0.36       76.65
+        A H  |          2        0.15       76.79
+          B  |          3        0.22       77.01
+  B D G I J  |          1        0.07       77.08
+    B G H I  |          1        0.07       77.16
+      B G I  |          2        0.15       77.30
+        B H  |          2        0.15       77.45
+           C |          1        0.07       77.52
+          C  |          2        0.15       77.66
+  C D G I J  |          1        0.07       77.74
+        C G  |          1        0.07       77.81
+       C G I |          1        0.07       77.88
+      C G I  |          6        0.44       78.32
+    C G I J  |          1        0.07       78.39
+        C I  |          1        0.07       78.46
+     D G I J |          4        0.29       78.75
+    D G I J  |          3        0.22       78.97
+        D J  |          1        0.07       79.04
+           E |          1        0.07       79.12
+          E  |          2        0.15       79.26
+          G  |          1        0.07       79.33
+      G H I  |          3        0.22       79.55
+         G I |          4        0.29       79.84
+        G I  |         25        1.81       81.65
+      G I J  |          1        0.07       81.73
+          H  |          8        0.58       82.31
+          I  |          1        0.07       82.38
+          J  |          1        0.07       82.45
+          NT |        242       17.55      100.00
+-------------+-----------------------------------
+       Total |      1,379      100.00
+
+. drop SEA
+
+. noi dis "based on entero pcr/array"
+based on entero pcr/array
+
+. 
+. foreach x in A B C D E G H I J LR P U{
+  2. 
+. gen SE`x' = ""
+  3. 
+. replace SE`x' = "R" if strpos( entero_pcr, "`x'") | strpos(entero_array, "`x'")
+  4. 
+. replace SE`x' = "S" if !strpos( entero_pcr, "`x'") & !strpos(entero_array, "`x'") & (entero_pcr!=""|entero_array!="")
+  5. 
+. replace SE`x' = "NT" if strpos( lower(entero_pcr), "nt") & strpos(lower(entero_array), "nt")
+  6. 
+. noi tab SE`x', m
+  7. 
+. }
+(1,379 missing values generated)
+(40 real changes made)
+(352 real changes made)
+variable SEA was str1 now str2
+(187 real changes made)
+
+        SEA |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |         40        2.90       88.03
+          S |        165       11.97      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(21 real changes made)
+(371 real changes made)
+variable SEB was str1 now str2
+(187 real changes made)
+
+        SEB |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |         21        1.52       86.66
+          S |        184       13.34      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(28 real changes made)
+(364 real changes made)
+variable SEC was str1 now str2
+(187 real changes made)
+
+        SEC |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |         28        2.03       87.16
+          S |        177       12.84      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(16 real changes made)
+(376 real changes made)
+variable SED was str1 now str2
+(187 real changes made)
+
+        SED |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |         16        1.16       86.29
+          S |        189       13.71      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(3 real changes made)
+(389 real changes made)
+variable SEE was str1 now str2
+(187 real changes made)
+
+        SEE |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |          3        0.22       85.35
+          S |        202       14.65      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(77 real changes made)
+(315 real changes made)
+variable SEG was str1 now str2
+(187 real changes made)
+
+        SEG |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |         77        5.58       90.72
+          S |        128        9.28      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(26 real changes made)
+(366 real changes made)
+variable SEH was str1 now str2
+(187 real changes made)
+
+        SEH |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |         26        1.89       87.02
+          S |        179       12.98      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(76 real changes made)
+(316 real changes made)
+variable SEI was str1 now str2
+(187 real changes made)
+
+        SEI |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |         76        5.51       90.65
+          S |        129        9.35      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(20 real changes made)
+(372 real changes made)
+variable SEJ was str1 now str2
+(187 real changes made)
+
+        SEJ |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |         20        1.45       86.58
+          S |        185       13.42      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(0 real changes made)
+(392 real changes made)
+variable SELR was str1 now str2
+(187 real changes made)
+
+       SELR |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          S |        205       14.87      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(0 real changes made)
+(392 real changes made)
+variable SEP was str1 now str2
+(187 real changes made)
+
+        SEP |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          S |        205       14.87      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(21 real changes made)
+(371 real changes made)
+variable SEU was str1 now str2
+(187 real changes made)
+
+        SEU |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        187       13.56       85.13
+          R |         21        1.52       86.66
+          S |        184       13.34      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+
+. gen TSST1 = "S" if strpos( tst_pcr, "-") | strpos(tst_array, "-")
+(1,194 missing values generated)
+
+. 
+. replace TSST1 = "R" if strpos( tst_pcr, "+") | strpos(tst_array, "+")
+(22 real changes made)
+
+. 
+. replace TSST1 = "NT" if strpos( lower(tst_pcr), "nt") & strpos(lower(tst_array), "nt")
+variable TSST1 was str1 now str2
+(185 real changes made)
+
+. 
+. noi tab TSST1, m
+
+      TSST1 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        185       13.42       84.99
+          R |         22        1.60       86.58
+          S |        185       13.42      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+
+. * clean data
+
+. 
+. cd E:\users\amy.mason\Pipeline_27_07_2016\
+E:\users\amy.mason\Pipeline_27_07_2016
+
+. 
+. run clean_pheno.do
