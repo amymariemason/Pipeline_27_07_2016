@@ -26,13 +26,13 @@ cd E:\users\amy.mason\Pipeline_27_07_2016\
 run clean_pheno.do
 cd E:\users\amy.mason\Pipeline_27_07_2016\
 run clean_predict.do
+
+* prediction of phenotypes
 cd E:\users\amy.mason\Pipeline_27_07_2016\
 run create_predict_anti.do
 cd E:\users\amy.mason\Pipeline_27_07_2016\
 run create_predict_viru.do
 
-
-* create prediction panals
-
-
 * analyse data
+cd E:\users\amy.mason\Pipeline_27_07_2016\
+run Analysis_Pipeline.do
