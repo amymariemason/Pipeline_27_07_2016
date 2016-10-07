@@ -54,13 +54,110 @@ graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_di
 
 restore
 
-
-
 * sensitivity/ specificity
+noi di "find sensitivity and specifity of each method/antibiotic"
+
+use anti_panel_all, clear
+
+assert site!=""
+assert _N==16548
+
+noi di "restrict to sites with clear gold standard values only"
+
+gen clear=inlist(gold, "R", "S")
+summ clear
+noi di r(sum) " results are R/S"
+drop if clear!=1
 
 
+noi di "Typewriter"
 
+contract  site  gold valuetype
+rename value predict
 
+assert predict!=""
+* reshape
 
+reshape wide _freq, i(site gold) j(predict) string
+rename _freq* *
 
+rename r combor
+rename s combos
+reshape wide combo*, i(site) j(gold) string
+rename combo* *
+
+* remember : resistance = postive result
+rename sS TN
+rename rR TP
+rename sR FN 
+*so predicted sensitive but actually resistant
+rename rS FP 
+* predicted resistant but actually sensitive
+
+for any TN TP FN FP: replace X=0 if X==.
+
+gen sensitivity = TP/(TP+FN)
+gen specificity = TN/(TN+FP)
+
+gen predictPOS = TP+FP
+gen predictNEG = TN +FN
+
+gen trueNeg= TN +FP
+gen truePos= TP +FN
+
+gen MajorErrorRate = FN/truePos
+gen VeryMajorErrorRate = FP/trueNeg
+gen Agreement = (TP+TN)/(trueNeg+truePos)
+
+* get confidence intervals
+for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
+local max=_N
+forvalues i=1(1)`max'{
+if truePos[`i']>0{
+cii prop  truePos[`i'] TP[`i']
+replace lsens = r(lb) if _n==`i'
+replace usens = r(ub) if _n==`i'
+cii prop truePos[`i'] FN[`i']
+replace lvme = r(lb) if _n==`i'
+replace uvme = r(ub) if _n==`i'
+}
+else{
+noi di site[`i'] " has no positive samples"
+}
+if trueNeg[`i']>0{
+cii prop trueNeg[`i'] TN[`i']
+replace lspec = r(lb) if _n==`i'
+replace uspec = r(ub) if _n==`i'
+cii prop trueNeg[`i'] FP[`i']
+replace lme = r(lb) if _n==`i'
+replace ume = r(ub) if _n==`i'
+}
+else{
+noi di site[`i'] " has no negative samples"
+}
+}
+
+* save values for combining into graphs
+
+preserve
+keep site  sens spec lsens usens lspec uspec
+rename * tw_*
+rename tw_site site
+save typewriter, replace
+restore
+
+* graph
+use typewriter, clear
+sort site
+gen num =_n 
+labmask num, values(site)
+local max= _N
+
+#delimit ;
+twoway rcap tw_usens tw_lsens num || scatter tw_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+legend(off) title("Typewriter vs. Lab") 
+subtitle("Sensitivity in Phenotype prediction");
+#delimit cr
+graph save Graph "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_sens.gph", replace
+graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_sens.tif", as(tif) replace
 
