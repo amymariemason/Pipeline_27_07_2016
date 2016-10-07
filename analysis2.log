@@ -1,0 +1,250 @@
+Run by AMM on  5 Oct 2016 15:26:41
+sites relevant to antibiotic prediction
+132384 sample sites
+
+                  type |      Freq.     Percent        Cum.
+-----------------------+-----------------------------------
+    Aquired Resistance |    111,699       84.38       84.38
+Chromosomal Resistance |     20,685       15.63      100.00
+-----------------------+-----------------------------------
+                 Total |    132,384      100.00
+1379 samples
+32 sites
+12 antibiotics
+
+             antibiotic |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+          ciprofloxacin |      8,274        6.25        6.25
+           erythromycin |      8,274        6.25       12.50
+erythromycinclindamycin |     20,685       15.63       28.13
+           fusidic acid |     12,411        9.38       37.50
+             gentamicin |      8,274        6.25       43.75
+  methicillinpenicillin |      8,274        6.25       50.00
+              mupirocin |      8,274        6.25       56.25
+             penicillin |      4,137        3.13       59.38
+             rifampicin |      4,137        3.13       62.50
+           tetracycline |     16,548       12.50       75.00
+           trimethoprim |     20,685       15.63       90.63
+             vancomycin |     12,411        9.38      100.00
+------------------------+-----------------------------------
+                  Total |    132,384      100.00
+
+               |                                             antibiotic
+          site | ciprofl..  erythro..  erythro..  fusidic..  gentami..  methici..  mupirocin  penicil..  rifampi.. |     Total
+---------------+---------------------------------------------------------------------------------------------------+----------
+      aac6aph2 |         0          0          0          0      4,137          0          0          0          0 |     4,137 
+        aph2ic |         0          0          0          0      4,137          0          0          0          0 |     4,137 
+          blaz |         0          0          0          0          0          0          0      4,137          0 |     4,137 
+          dfra |         0          0          0          0          0          0          0          0          0 |     4,137 
+          dfrb |         0          0          0          0          0          0          0          0          0 |     4,137 
+          dfrc |         0          0          0          0          0          0          0          0          0 |     4,137 
+          dfrg |         0          0          0          0          0          0          0          0          0 |     4,137 
+          dfrk |         0          0          0          0          0          0          0          0          0 |     4,137 
+          erma |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          ermb |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          ermc |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          ermt |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          ermy |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          fusa |         0          0          0      4,137          0          0          0          0          0 |     4,137 
+          fusb |         0          0          0      4,137          0          0          0          0          0 |     4,137 
+          fusc |         0          0          0      4,137          0          0          0          0          0 |     4,137 
+          grla |     4,137          0          0          0          0          0          0          0          0 |     4,137 
+          gyra |     4,137          0          0          0          0          0          0          0          0 |     4,137 
+          meca |         0          0          0          0          0      4,137          0          0          0 |     4,137 
+          mecc |         0          0          0          0          0      4,137          0          0          0 |     4,137 
+          mphc |         0      4,137          0          0          0          0          0          0          0 |     4,137 
+          msra |         0      4,137          0          0          0          0          0          0          0 |     4,137 
+          mupa |         0          0          0          0          0          0      4,137          0          0 |     4,137 
+          mupb |         0          0          0          0          0          0      4,137          0          0 |     4,137 
+          rpob |         0          0          0          0          0          0          0          0      4,137 |     4,137 
+          tetk |         0          0          0          0          0          0          0          0          0 |     4,137 
+          tetl |         0          0          0          0          0          0          0          0          0 |     4,137 
+          tetm |         0          0          0          0          0          0          0          0          0 |     4,137 
+          teto |         0          0          0          0          0          0          0          0          0 |     4,137 
+          vana |         0          0          0          0          0          0          0          0          0 |     4,137 
+          vanb |         0          0          0          0          0          0          0          0          0 |     4,137 
+          vanc |         0          0          0          0          0          0          0          0          0 |     4,137 
+---------------+---------------------------------------------------------------------------------------------------+----------
+         Total |     8,274      8,274     20,685     12,411      8,274      8,274      8,274      4,137      4,137 |   132,384 
+
+
+               |            antibiotic
+          site | tetracy..  trimeth..  vancomy.. |     Total
+---------------+---------------------------------+----------
+      aac6aph2 |         0          0          0 |     4,137 
+        aph2ic |         0          0          0 |     4,137 
+          blaz |         0          0          0 |     4,137 
+          dfra |         0      4,137          0 |     4,137 
+          dfrb |         0      4,137          0 |     4,137 
+          dfrc |         0      4,137          0 |     4,137 
+          dfrg |         0      4,137          0 |     4,137 
+          dfrk |         0      4,137          0 |     4,137 
+          erma |         0          0          0 |     4,137 
+          ermb |         0          0          0 |     4,137 
+          ermc |         0          0          0 |     4,137 
+          ermt |         0          0          0 |     4,137 
+          ermy |         0          0          0 |     4,137 
+          fusa |         0          0          0 |     4,137 
+          fusb |         0          0          0 |     4,137 
+          fusc |         0          0          0 |     4,137 
+          grla |         0          0          0 |     4,137 
+          gyra |         0          0          0 |     4,137 
+          meca |         0          0          0 |     4,137 
+          mecc |         0          0          0 |     4,137 
+          mphc |         0          0          0 |     4,137 
+          msra |         0          0          0 |     4,137 
+          mupa |         0          0          0 |     4,137 
+          mupb |         0          0          0 |     4,137 
+          rpob |         0          0          0 |     4,137 
+          tetk |     4,137          0          0 |     4,137 
+          tetl |     4,137          0          0 |     4,137 
+          tetm |     4,137          0          0 |     4,137 
+          teto |     4,137          0          0 |     4,137 
+          vana |         0          0      4,137 |     4,137 
+          vanb |         0          0      4,137 |     4,137 
+          vanc |         0          0      4,137 |     4,137 
+---------------+---------------------------------+----------
+         Total |    16,548     20,685     12,411 |   132,384 
+
+predictions: type, zam, gene
+
+        all |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        RRR |      2,745       18.10       18.10
+        RSR |        219        1.44       19.54
+        SRR |         26        0.17       19.71
+        SRS |         87        0.57       20.28
+        SSR |          3        0.02       20.30
+        SSS |     12,089       79.70      100.00
+------------+-----------------------------------
+      Total |     15,169      100.00
+by antibotic
+
+              |                                all
+         site |       RRR        RSR        SRR        SRS        SSR        SSS |     Total
+--------------+------------------------------------------------------------------+----------
+ciprofloxacin |       299          7          0          0          1      1,072 |     1,379 
+  clindamycin |       338          0          7         25          0      1,009 |     1,379 
+ erythromycin |       354          0          6         23          0        996 |     1,379 
+   gentamicin |        76          0          1          3          0      1,299 |     1,379 
+  methicillin |       393          0          2          9          0        975 |     1,379 
+    mupirocin |        15          0          2          0          0      1,362 |     1,379 
+   penicillin |     1,005        156          1          8          2        207 |     1,379 
+   rifampicin |         7         17          0          0          0      1,355 |     1,379 
+ tetracycline |       121          0          4         16          0      1,238 |     1,379 
+ trimethoprim |       137         39          3          3          0      1,197 |     1,379 
+   vancomycin |         0          0          0          0          0      1,379 |     1,379 
+--------------+------------------------------------------------------------------+----------
+        Total |     2,745        219         26         87          3     12,089 |    15,169 
+
+. 
+. gen all = predictt+predictz+ predictg
+
+. noi di "by antibotic"
+by antibotic
+
+. 
+. sort site
+
+. 
+. noi tab site all, m
+
+              |                                all
+         site |       RRR        RSR        SRR        SRS        SSR        SSS |     Total
+--------------+------------------------------------------------------------------+----------
+ciprofloxacin |       299          7          0          0          1      1,072 |     1,379 
+  clindamycin |       338          0          7         25          0      1,009 |     1,379 
+ erythromycin |       354          0          6         23          0        996 |     1,379 
+   gentamicin |        76          0          1          3          0      1,299 |     1,379 
+  methicillin |       393          0          2          9          0        975 |     1,379 
+    mupirocin |        15          0          2          0          0      1,362 |     1,379 
+   penicillin |     1,005        156          1          8          2        207 |     1,379 
+   rifampicin |         7         17          0          0          0      1,355 |     1,379 
+ tetracycline |       121          0          4         16          0      1,238 |     1,379 
+ trimethoprim |       137         39          3          3          0      1,197 |     1,379 
+   vancomycin |         0          0          0          0          0      1,379 |     1,379 
+--------------+------------------------------------------------------------------+----------
+        Total |     2,745        219         26         87          3     12,089 |    15,169 
+
+
+. 
+. * make graph
+
+. 
+. preserve
+already preserved
+r(621);
+
+. 
+. contract  site  predict*
+
+. 
+. gen all = predictg+predictz+ predictt
+
+. 
+. drop predict*
+
+. 
+. 
+. 
+. reshape wide _freq, i(site) j(all) string
+(note: j = RRR RRS RSR RSS SRS SSS)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       42   ->      11
+Number of variables                   3   ->       7
+j variable (6 values)               all   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqRRR _freqRRS ... _freqSSS
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. graph bar (asis)  RRR RRS RSR RSS SRS SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RS
+> S") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6,
+>  color(gs12))
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif", as(tif) width(2550) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif written in TIFF format)
+
+. graph bar (asis)  RRR RRS RSR RSS SRS SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder  Typewriter ") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RSS") la
+> bel( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, color
+> (gs12))
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif", as(tif) width(2550) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif written in TIFF format)
+
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis)  RRR RRS RSR RSS SRS SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder  Typewriter ") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "RSR") label (4 "RSS" ) label (5 "SRS") la
+> bel( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, color
+> (gs12))
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif", as(tif) width(2550) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif written in TIFF format)
+
+. use anti_panel_all, clear
+
+. use anti_panel_all, clear
+
+. contract  site  value*
+
+. 
+. * prediction of phenotypes
+
+. 
+. cd E:\users\amy.mason\Pipeline_27_07_2016\
+E:\users\amy.mason\Pipeline_27_07_2016
+
+. 
+. run create_predict_anti.do

@@ -81,7 +81,7 @@ noi bysort site: tab method value
 noi display "counts differing between method: gene, type, mykrobe"
 
 reshape wide value, i(sample site) j(method) string
-gen valueall = valueg + valuet + valuez
+gen valueall = valueg + valuez + valuet
 noi tab valuea, m sort
 
 noi tab site valuea, m 
@@ -109,4 +109,7 @@ noi bysort gold: tab site valuea
 
 save anti_panel_all, replace
 cd E:\users\amy.mason\Pipeline_27_07_2016\
+
+
+
 
