@@ -28,7 +28,7 @@ drop tab
 bysort sample: gen tab=1 if _n==1
 summ tab
 noi di "from " r(sum) " samples"
-tab set if tab==1, m
+tab set if tab==1
 drop tab
 
 save pipeline_predict_raw, replace
@@ -264,10 +264,10 @@ noi di r(N) " luk only supplied by mykrobe, drop from database"
 noi drop if inlist(site, "luk")
 noi di _N " sample sites remaining" 
 * ar
-noi tab site new if strpos(site, "v44"), m
-summ zbyte if inlist(site, "v44")
-noi di r(N) "v44 only supplied by mykrobe, drop from database"
-noi drop if inlist(site, "v44")
+noi tab site new if strpos(site, "ar"), m
+summ zbyte if inlist(site, "ar")
+noi di r(N) " ar only supplied by mykrobe, drop from database"
+noi drop if inlist(site, "ar")
 noi di _N " sample sites remaining" 
 
 
@@ -547,14 +547,6 @@ noi di "breakdown by site"
 noi bysort type site:  tab ValueA, sort m
 
 noi tab site ValueA, m
-gen agree  = (ValueA=="AAA"| ValueA=="PPP" )
-summ agree
-noi di r(sum) " out of " r(N) " site predictions" agree
-noi di r(sum)/_N*100
-
-summ agree if strpos(type, "Aqu") |strpos(type, "Chro")
-noi di r(sum) " out of " r(N) " aquired or chromosonal resistance site predictions" agree
-noi di r(sum)/r(N)*100
 
 save pipeline_clean_all_values_wide, replace
 

@@ -1,0 +1,751 @@
+----------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  E:\users\amy.mason\Pipeline_27_07_2016\Datasets\analysis2.log
+  log type:  text
+ opened on:   4 Oct 2016, 18:40:49
+
+. 
+. noi di "Run by AMM on $S_DATE $S_TIME"
+Run by AMM on  4 Oct 2016 18:40:50
+
+. 
+. cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+
+. 
+. 
+. 
+. *********** create phenotype predictions by site
+
+. 
+. 
+. 
+. use pipeline_clean_all_values_long, clear
+
+. 
+. 
+. 
+. * (based on new sheet by clare)
+
+. 
+. 
+. 
+. gen antibiotic =""
+(351,645 missing values generated)
+
+. 
+. replace antibiotic = "ciprofloxacin" if inlist(site, "gyra","gryb", "grla", "grlb")
+variable antibiotic was str1 now str13
+(8,274 real changes made)
+
+. 
+. replace antibiotic = "erythromycinclindamycin" if inlist(site, "erma", "ermb", "ermc", "ermt", "ermy")
+variable antibiotic was str13 now str23
+(20,685 real changes made)
+
+. 
+. replace antibiotic = "erythromycin" if inlist(site, "msra", "mphc")
+(8,274 real changes made)
+
+. 
+. replace antibiotic = "fusidic acid" if inlist(site, "fusb", "fusc", "fusa", "far")
+(12,411 real changes made)
+
+. 
+. replace antibiotic = "gentamicin" if inlist(site,"aac6aph2", "aph2ic")
+(8,274 real changes made)
+
+. 
+. replace antibiotic = "methicillinpenicillin" if inlist(site,"meca", "mecc")
+(8,274 real changes made)
+
+. 
+. replace antibiotic = "mupirocin" if inlist(site, "mupa", "mupb")
+(8,274 real changes made)
+
+. 
+. replace antibiotic = "penicillin" if site=="blaz"
+(4,137 real changes made)
+
+. 
+. replace antibiotic = "rifampicin" if site=="rpob"
+(4,137 real changes made)
+
+. 
+. replace antibiotic = "tetracycline" if inlist(site, "tetk", "tetl", "tetm", "teto")
+(16,548 real changes made)
+
+. 
+. replace antibiotic = "trimethoprim" if inlist(site, "dfra", "dfrc", "dfrb", "dfrb","dfrg", "dfrk")
+(20,685 real changes made)
+
+. 
+. replace antibiotic = "vancomycin" if inlist(site, "vana", "vanb", "vanc")
+(12,411 real changes made)
+
+. 
+. 
+. 
+. drop if antibiotic==""
+(219,261 observations deleted)
+
+. 
+. 
+. 
+. * some summary stats
+
+. 
+. noi di "sites relevant to antibiotic prediction"
+sites relevant to antibiotic prediction
+
+. 
+. noi display _N " sample sites"
+132384 sample sites
+
+. 
+. noi tab type
+
+                  type |      Freq.     Percent        Cum.
+-----------------------+-----------------------------------
+    Aquired Resistance |    111,699       84.38       84.38
+Chromosomal Resistance |     20,685       15.63      100.00
+-----------------------+-----------------------------------
+                 Total |    132,384      100.00
+
+. 
+. bysort sample: gen count1=1 if _n==1
+(131,005 missing values generated)
+
+. 
+. summ count1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      count1 |      1,379           1           0          1          1
+
+. 
+. noi di r(sum) " samples"
+1379 samples
+
+. 
+. bysort site: gen count2=1 if _n==1
+(132,352 missing values generated)
+
+. 
+. summ count2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      count2 |         32           1           0          1          1
+
+. 
+. noi di r(sum) " sites"
+32 sites
+
+. 
+. bysort antibiotic: gen count3=1 if _n==1
+(132,372 missing values generated)
+
+. 
+. summ count3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      count3 |         12           1           0          1          1
+
+. 
+. noi di r(sum) " antibiotics"
+12 antibiotics
+
+. 
+. noi tab antibiotic, m
+
+             antibiotic |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+          ciprofloxacin |      8,274        6.25        6.25
+           erythromycin |      8,274        6.25       12.50
+erythromycinclindamycin |     20,685       15.63       28.13
+           fusidic acid |     12,411        9.38       37.50
+             gentamicin |      8,274        6.25       43.75
+  methicillinpenicillin |      8,274        6.25       50.00
+              mupirocin |      8,274        6.25       56.25
+             penicillin |      4,137        3.13       59.38
+             rifampicin |      4,137        3.13       62.50
+           tetracycline |     16,548       12.50       75.00
+           trimethoprim |     20,685       15.63       90.63
+             vancomycin |     12,411        9.38      100.00
+------------------------+-----------------------------------
+                  Total |    132,384      100.00
+
+. 
+. noi tab site anti
+
+               |                                             antibiotic
+          site | ciprofl..  erythro..  erythro..  fusidic..  gentami..  methici..  mupirocin  penicil..  rifampi.. |     Total
+---------------+---------------------------------------------------------------------------------------------------+----------
+      aac6aph2 |         0          0          0          0      4,137          0          0          0          0 |     4,137 
+        aph2ic |         0          0          0          0      4,137          0          0          0          0 |     4,137 
+          blaz |         0          0          0          0          0          0          0      4,137          0 |     4,137 
+          dfra |         0          0          0          0          0          0          0          0          0 |     4,137 
+          dfrb |         0          0          0          0          0          0          0          0          0 |     4,137 
+          dfrc |         0          0          0          0          0          0          0          0          0 |     4,137 
+          dfrg |         0          0          0          0          0          0          0          0          0 |     4,137 
+          dfrk |         0          0          0          0          0          0          0          0          0 |     4,137 
+          erma |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          ermb |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          ermc |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          ermt |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          ermy |         0          0      4,137          0          0          0          0          0          0 |     4,137 
+          fusa |         0          0          0      4,137          0          0          0          0          0 |     4,137 
+          fusb |         0          0          0      4,137          0          0          0          0          0 |     4,137 
+          fusc |         0          0          0      4,137          0          0          0          0          0 |     4,137 
+          grla |     4,137          0          0          0          0          0          0          0          0 |     4,137 
+          gyra |     4,137          0          0          0          0          0          0          0          0 |     4,137 
+          meca |         0          0          0          0          0      4,137          0          0          0 |     4,137 
+          mecc |         0          0          0          0          0      4,137          0          0          0 |     4,137 
+          mphc |         0      4,137          0          0          0          0          0          0          0 |     4,137 
+          msra |         0      4,137          0          0          0          0          0          0          0 |     4,137 
+          mupa |         0          0          0          0          0          0      4,137          0          0 |     4,137 
+          mupb |         0          0          0          0          0          0      4,137          0          0 |     4,137 
+          rpob |         0          0          0          0          0          0          0          0      4,137 |     4,137 
+          tetk |         0          0          0          0          0          0          0          0          0 |     4,137 
+          tetl |         0          0          0          0          0          0          0          0          0 |     4,137 
+          tetm |         0          0          0          0          0          0          0          0          0 |     4,137 
+          teto |         0          0          0          0          0          0          0          0          0 |     4,137 
+          vana |         0          0          0          0          0          0          0          0          0 |     4,137 
+          vanb |         0          0          0          0          0          0          0          0          0 |     4,137 
+          vanc |         0          0          0          0          0          0          0          0          0 |     4,137 
+---------------+---------------------------------------------------------------------------------------------------+----------
+         Total |     8,274      8,274     20,685     12,411      8,274      8,274      8,274      4,137      4,137 |   132,384 
+
+
+               |            antibiotic
+          site | tetracy..  trimeth..  vancomy.. |     Total
+---------------+---------------------------------+----------
+      aac6aph2 |         0          0          0 |     4,137 
+        aph2ic |         0          0          0 |     4,137 
+          blaz |         0          0          0 |     4,137 
+          dfra |         0      4,137          0 |     4,137 
+          dfrb |         0      4,137          0 |     4,137 
+          dfrc |         0      4,137          0 |     4,137 
+          dfrg |         0      4,137          0 |     4,137 
+          dfrk |         0      4,137          0 |     4,137 
+          erma |         0          0          0 |     4,137 
+          ermb |         0          0          0 |     4,137 
+          ermc |         0          0          0 |     4,137 
+          ermt |         0          0          0 |     4,137 
+          ermy |         0          0          0 |     4,137 
+          fusa |         0          0          0 |     4,137 
+          fusb |         0          0          0 |     4,137 
+          fusc |         0          0          0 |     4,137 
+          grla |         0          0          0 |     4,137 
+          gyra |         0          0          0 |     4,137 
+          meca |         0          0          0 |     4,137 
+          mecc |         0          0          0 |     4,137 
+          mphc |         0          0          0 |     4,137 
+          msra |         0          0          0 |     4,137 
+          mupa |         0          0          0 |     4,137 
+          mupb |         0          0          0 |     4,137 
+          rpob |         0          0          0 |     4,137 
+          tetk |     4,137          0          0 |     4,137 
+          tetl |     4,137          0          0 |     4,137 
+          tetm |     4,137          0          0 |     4,137 
+          teto |     4,137          0          0 |     4,137 
+          vana |         0          0      4,137 |     4,137 
+          vanb |         0          0      4,137 |     4,137 
+          vanc |         0          0      4,137 |     4,137 
+---------------+---------------------------------+----------
+         Total |    16,548     20,685     12,411 |   132,384 
+
+
+. 
+. drop count*
+
+. 
+. 
+. 
+. * create record per sample-antibiotic
+
+. 
+. 
+. 
+. gen countvalues = 1 if value=="P"
+(123,598 missing values generated)
+
+. 
+. replace countvalue = 0 if value=="A"
+(123,598 real changes made)
+
+. 
+. drop site set type
+
+. 
+. 
+. 
+. * collapse by antibiotic, so that one record per antibiotic/sample/method
+
+. 
+. bysort sample method antibiotic: egen value2= total(countvalue), missing
+
+. 
+. replace value2 = 1 if value2>1 
+(2,157 real changes made)
+
+. 
+. duplicates drop sample method antibiotic value2, force
+
+Duplicates in terms of sample method antibiotic value2
+
+(82,740 observations deleted)
+
+. 
+. drop value
+
+. 
+. drop countvalue
+
+. 
+. rename value2 value
+
+. 
+. 
+. 
+. 
+. 
+. * now create wide record, one column per antibiotic and clean up the mult indicators
+
+. 
+. reshape wide value, i( sample method) j(antibiotic) string
+(note: j = ciprofloxacin erythromycin erythromycinclindamycin fusidic acid gentamicin methicillinpenicillin mupirocin penicillin r
+> ifampicin tetracycline trimethoprim vancomycin)
+(note: no data for antibiotic == fusidic)
+(note: no data for antibiotic == acid)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    49644   ->    4137
+Number of variables                   4   ->      13
+j variable (11 values)       antibiotic   ->   (dropped)
+xij variables:
+                                  value   ->   valueciprofloxacin valueerythromycin ... valuevancomycin
+-----------------------------------------------------------------------------
+
+. 
+. 
+. 
+. rename value* *
+
+. 
+. replace erythromycin = 1 if (erythromycinclindamycin==1)
+(1,039 real changes made)
+
+. 
+. rename erythromycinclindamycin clindamycin
+
+. 
+. gen methicillin =  methicillinpenicillin
+
+. 
+. replace penicillin = 1 if  methicillinpenicillin==1
+(276 real changes made)
+
+. 
+. drop methicillinpenicillin
+
+. 
+. 
+. 
+. * reshape to long for purposes of merge later
+
+. 
+. rename * predict*
+
+. 
+. rename (predictsample predictmethod) (sample method)
+
+. 
+. 
+. 
+. reshape long predict, i(sample method) j(Antibiotic) string
+(note: j = ciprofloxacin clindamycin erythromycin gentamicin methicillin mupirocin penicillin rifampicin tetracycline trimethoprim
+>  vancomycin)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                     4137   ->   45507
+Number of variables                  13   ->       4
+j variable (11 values)                    ->   Antibiotic
+xij variables:
+predictciprofloxacin predictclindamycin ... predictvancomycin->predict
+-----------------------------------------------------------------------------
+
+. 
+. gen predict2 = "R" if predict==1
+(36,692 missing values generated)
+
+. 
+. replace predict2 ="S" if inlist(predict,0)
+(36,692 real changes made)
+
+. 
+. replace predict2 ="S" if inlist(predict,.) & method=="zam"
+(0 real changes made)
+
+. 
+. drop predict
+
+. 
+. rename predict2 predict
+
+. 
+. rename Antibiotic site
+
+. 
+. replace site = subinstr(site, " ", "",.)
+(0 real changes made)
+
+. 
+. reshape wide predict, i (sample site) j(method) string
+(note: j = genefinder typewriter zam)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    45507   ->   15169
+Number of variables                   4   ->       5
+j variable (3 values)            method   ->   (dropped)
+xij variables:
+                                predict   ->   predictgenefinder predicttypewriter predictzam
+-----------------------------------------------------------------------------
+
+. 
+. drop if sample==""
+(0 observations deleted)
+
+. 
+. 
+. 
+. save antibiotic_prediction, replace
+file antibiotic_prediction.dta saved
+
+. 
+. 
+. 
+. * produce stats
+
+. 
+. 
+. 
+. gen all = predictt+predictz+ predictg
+
+. 
+. 
+. 
+. noi di "predictions: type, zam, gene"
+predictions: type, zam, gene
+
+. 
+. noi tab all
+
+        all |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        RRR |      2,745       18.10       18.10
+        RSR |        219        1.44       19.54
+        SRR |         26        0.17       19.71
+        SRS |         87        0.57       20.28
+        SSR |          3        0.02       20.30
+        SSS |     12,089       79.70      100.00
+------------+-----------------------------------
+      Total |     15,169      100.00
+
+. 
+. 
+. 
+. noi di "by antibotic"
+by antibotic
+
+. 
+. sort site
+
+. 
+. noi tab site all, m
+
+              |                                all
+         site |       RRR        RSR        SRR        SRS        SSR        SSS |     Total
+--------------+------------------------------------------------------------------+----------
+ciprofloxacin |       299          7          0          0          1      1,072 |     1,379 
+  clindamycin |       338          0          7         25          0      1,009 |     1,379 
+ erythromycin |       354          0          6         23          0        996 |     1,379 
+   gentamicin |        76          0          1          3          0      1,299 |     1,379 
+  methicillin |       393          0          2          9          0        975 |     1,379 
+    mupirocin |        15          0          2          0          0      1,362 |     1,379 
+   penicillin |     1,005        156          1          8          2        207 |     1,379 
+   rifampicin |         7         17          0          0          0      1,355 |     1,379 
+ tetracycline |       121          0          4         16          0      1,238 |     1,379 
+ trimethoprim |       137         39          3          3          0      1,197 |     1,379 
+   vancomycin |         0          0          0          0          0      1,379 |     1,379 
+--------------+------------------------------------------------------------------+----------
+        Total |     2,745        219         26         87          3     12,089 |    15,169 
+
+
+. 
+. 
+. 
+. drop all
+
+. 
+. 
+. 
+. * make graph
+
+. 
+. preserve
+
+. 
+. contract  site  predict*
+
+. 
+. gen all = predictt+predictz+ predictg
+
+. 
+. 
+. 
+. reshape wide _freq, i(site) j(all) string
+(note: j = RRR RSR SRR SRS SSR SSS)
+variable predictgenefinder not constant within site
+variable predicttypewriter not constant within site
+variable predictzam not constant within site
+    Your data are currently long.  You are performing a reshape wide.  You typed something like
+
+        . reshape wide a b, i(site) j(all)
+
+    There are variables other than a, b, site, all in your data.  They must be constant within site because that is the only way
+    they can fit into wide data without loss of information.
+
+    The variable or variables listed above are not constant within site.  Perhaps the values are in error.  Type reshape error
+    for a list of the problem observations.
+
+    Either that, or the values vary because they should vary, in which case you must either add the variables to the list of xij
+    variables to be reshaped, or drop them.
+r(9);
+
+. 
+. rename _freq* *
+1 new variable name invalid
+    You attempted to rename _freq to .  That is an invalid Stata variable name.
+r(198);
+
+. drop predict*
+
+. 
+. 
+. 
+. reshape wide _freq, i(site) j(all) string
+(note: j = RRR RSR SRR SRS SSR SSS)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       42   ->      11
+Number of variables                   3   ->       7
+j variable (6 values)               all   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqRRR _freqRSR ... _freqSSS
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis) RRR RRS SSR RSR RSS SSS if strpos(type, "Pheno"), over(site, label(angle(90))) stack  title("Combinations of Re
+> sults") subtitle("Results given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label
+>  (4 "RSR" ) label (5 "RSS") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(
+> 5, color(yellow)) bar(6, color(gs12))
+type not found
+r(111);
+
+. graph bar (asis) RRR RRS SSR RSR RSS SSS, over(site, label(angle(90))) stack  title("Combinations of Results") subtitle("Results
+>  given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RSS
+> ") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, 
+> color(gs12))
+
+. graph bar (asis) RRR RRS SSR RSR RSS SSS, over(site, label(angle(90))) stack
+
+. graph bar (asis) RRR RRS SSR RSR RSS SSS, stack
+varlist, if exp, or in range required
+r(100);
+
+. graph bar RRR RRS SSR RSR RSS SSS, stack
+variable RRS not found
+r(111);
+
+. graph bar (asis) RRR SSR RSR RSS SSS, over(site) stack
+
+. graph bar RRR
+
+. graph bar RRR, over(site)
+
+. graph bar RRR,  over(site, label(angle(90)))
+
+. graph bar RRR SSS,  over(site, label(angle(90)))
+
+. graph bar RRR SSS,  over(site, label(angle(90))) stack
+
+. graph bar (asis)RRR SSS,  over(site, label(angle(90))) stack
+
+. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack
+
+. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RS
+> S") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6,
+>  color(gs12))
+
+. restore
+
+. * make graph
+
+. 
+. preserve
+
+. 
+. contract  site  predict*
+
+. 
+. gen all = predictg+predictt+ predictz
+
+. 
+. drop predict*
+
+. 
+. 
+. 
+. reshape wide _freq, i(site) j(all) string
+(note: j = RRR RRS RSR RSS SSR SSS)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       42   ->      11
+Number of variables                   3   ->       7
+j variable (6 values)               all   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqRRR _freqRRS ... _freqSSS
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. 
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RS
+> S") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6,
+>  color(gs12))
+
+. 
+. 
+. 
+. restore
+
+. * make graph
+
+. 
+. preserve
+
+. 
+. contract  site  predict*
+
+. 
+. gen all = predictg+predictt+ predictz
+
+. 
+. drop predict*
+
+. 
+. 
+. 
+. reshape wide _freq, i(site) j(all) string
+(note: j = RRR RRS RSR RSS SSR SSS)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       42   ->      11
+Number of variables                   3   ->       7
+j variable (6 values)               all   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqRRR _freqRRS ... _freqSSS
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. 
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RS
+> S") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6,
+>  color(gs12))
+
+. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack
+
+. graph bar (asis)  RRR RRS RSR RSS SSR SSS,  over(site, label(angle(90))) stack
+
+. graph bar (asis)  RRR RRS RSR RSS SSR SSS,  over(site, label(angle(90))) stack
+
+. graph bar (asis)  RRR RRS RSR RSS SSR SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RS
+> S") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6,
+>  color(gs12))
+
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif", as(tif) width(2550) replace
+(note: file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif not found)
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif written in TIFF format)
+
+. *******************
+
+. 
+. cd E:\users\amy.mason\Pipeline_27_07_2016\
+E:\users\amy.mason\Pipeline_27_07_2016
+
+. do master_sept2016.do
+
+. ********************************
+. * PIPELINE ANALYSIS MASTER DOC
+. ********************************
+. * MASTER.DO
+. 
+. * project: staph pipeline
+. * author: Amy Mason
+. * start date: July 2016
+. * raw data files in E:\users\amy.mason\Pipeline_27_07_2016\Inputs
+. 
+. sysdir set PERSONAL "E:\users\amy.mason\ADO"
+
+. sysdir set STBPLUS  "E:\users\amy.mason\ADO\stbplus"
+
+. sysdir set OLDPLACE "E:\users\amy.mason\ADO\oldplace"
+
+. set logtype text
+
+. 
+. *******************
+. cd E:\users\amy.mason\Pipeline_27_07_2016\
+E:\users\amy.mason\Pipeline_27_07_2016
+
+. 
+. set more off
+
+. * data input
+. run inputs016.do

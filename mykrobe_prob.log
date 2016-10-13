@@ -2105,3 +2105,2153 @@ file my_prob.dta saved
 . 
 end of do-file
 
+. 
+. *********** create phenotype predictions by site
+
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. noi di" make bar chart of which methods differ on which antibiotic"
+ make bar chart of which methods differ on which antibiotic
+
+. 
+. preserve
+already preserved
+r(621);
+
+. 
+. contract  site  value*
+
+. 
+. rename valueall all
+
+. 
+. drop value*
+
+. 
+. 
+. 
+. reshape wide _freq, i(site) j(all) string
+(note: j = rrr rrs rsr rss srs sss)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       48   ->      12
+Number of variables                   3   ->       7
+j variable (6 values)               all   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqrrr _freqrrs ... _freqsss
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. 
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis)  rrr rrs rsr rss srs sss,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder Mykrobe Typewriter ") legend( label(1 "rrr") label( 2 "rrs" ) label (3 "rsr") label (4 "rss" ) label (5 "s
+> rs") label( 6 "sss" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6
+> , color(gs12))
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif", as(tif) width(2550) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif written in TIFF format)
+
+. 
+. 
+. 
+. restore
+
+. 
+. *************************************************************
+
+. 
+. 
+. 
+. noi di "compare to gold standard"
+compare to gold standard
+
+. 
+. 
+. 
+. * in table
+
+. 
+. noi tab gold valueall
+
+goldstanda |                             valueall
+        rd |       rrr        rrs        rsr        rss        srs        sss |     Total
+-----------+------------------------------------------------------------------+----------
+         - |       172          3         17          0         18        792 |     1,002 
+         I |         6          0          0          0          1         73 |        80 
+        NA |        87          5         12          0          5        893 |     1,002 
+         R |     2,487          6        236          3          7         86 |     2,825 
+         S |        89         14          9          2         63     11,462 |    11,639 
+-----------+------------------------------------------------------------------+----------
+     Total |     2,841         28        274          5         94     13,306 |    16,548 
+
+
+. 
+. 
+. 
+. * in graph
+
+. 
+. preserve
+
+. 
+. contract  site  gold valueall
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(valueall) string
+(note: j = rrr rrs rsr rss srs sss)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                      120   ->      47
+Number of variables                   4   ->       8
+j variable (6 values)          valueall   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqrrr _freqrrs ... _freqsss
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. 
+. 
+. gen graphx = site + " " + gold
+
+. 
+. drop if !inlist(gold, "R", "S")
+(24 observations deleted)
+
+. 
+. sort gold site
+
+. 
+.  gen num =_n
+
+. 
+.  replace num=num+1 if gold=="S"
+(12 real changes made)
+
+. 
+. labmask num, values(site)
+
+. 
+. gen goldlabel = "Gold standard " + gold
+
+. 
+. 
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis) rrr rrs rsr rss srs sss if inlist(golds,"R", "S"),graphregion(color(white))    over(site, label(angle(90) labsi
+> ze(tiny)) )  over(goldlabel, label(labsize(small)) ) stack  title("Prediction combinations") subtitle("Results given as Genefind
+> er Mykrobe Typewriter") legend(rows(2) label(1 "rrr") label( 2 "rrs" ) label (3 "rsr") label (4 "rss" ) label (5 "srs") label( 6
+>  "sss" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, color(gs12)
+> ) ylabel(0(500)1000 1400)
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements_withgold.tif", as(tif) width(2550) r
+> eplace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements_withgold.tif written in TIFF format)
+
+. 
+. 
+. 
+. restore
+
+. display _N
+16548
+
+. assert _N==16548
+
+. reshape long
+(already long)
+
+. 
+. 
+. 
+. * add type to discriminate graphs at later stage
+
+. 
+. gen type =""
+(16,548 missing values generated)
+
+. 
+. replace type ="Phenotype" if inlist(site, "ciprofloxacin", "fusidicacid", "clindamycin", "erythromycin")
+variable type was str1 now str9
+(5,516 real changes made)
+
+. 
+. replace type ="Phenotype" if inlist(site, "gentamicin", "mupirocin", "penicillin","rifampicin")
+(5,516 real changes made)
+
+. 
+. replace type ="Phenotype" if inlist(site,"tetracycline", "trimethoprim", "vancomycin", "methicillin")
+(5,516 real changes made)
+
+. 
+. 
+. 
+. keep if type!=""
+(0 observations deleted)
+
+. 
+. *keep if type==""
+
+. 
+. 
+. 
+. gen anti=(strlen(site)>5)
+
+. 
+. 
+. 
+. contract  anti site value*
+
+. drop  valuegenefinder valuetypewriter valuezam
+
+. * sensitivity/ specificity
+
+. 
+. noi di "find sensitivity and specifity of each method/antibiotic"
+find sensitivity and specifity of each method/antibiotic
+
+. 
+. 
+. 
+. use anti_panel_all, clear
+
+. 
+. contract  site  value*
+
+. 
+. rename valueall all
+
+. 
+. drop value*
+
+. 
+. use anti_panel_all, clear
+
+. contract  site  gold value*
+
+. 
+. rename valueall all
+
+. 
+. drop value*
+
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |        120        .625    .4861528          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+75 results are R/S
+
+. 
+. drop if clear!=1
+(45 observations deleted)
+
+. 
+. * sensitivity/ specificity
+
+. 
+. noi di "find sensitivity and specifity of each method/antibiotic"
+find sensitivity and specifity of each method/antibiotic
+
+. 
+. 
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. 
+. 
+. noi di "restrict to sites with clear gold standard values only"
+restrict to sites with clear gold standard values only
+
+. 
+. 
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2,084 observations deleted)
+
+. 
+. 
+. 
+. contract  site  gold value*
+
+. 
+. rename valueall all
+
+. 
+. drop value*
+
+. 
+. 
+. 
+. * restr
+
+. assert all!=""
+
+. reshape wide _freq, i(site gold) j(result) string
+variable result not found
+    Data are already wide.
+r(111);
+
+. reshape wide _freq, i(site gold) j(all) string
+(note: j = rrr rrs rsr rss srs sss)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       75   ->      23
+Number of variables                   4   ->       8
+j variable (6 values)               all   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqrrr _freqrrs ... _freqsss
+-----------------------------------------------------------------------------
+
+. rename _freq* *
+
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. 
+. 
+. noi di "restrict to sites with clear gold standard values only"
+restrict to sites with clear gold standard values only
+
+. 
+. 
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2,084 observations deleted)
+
+. 
+. 
+. 
+. 
+. 
+. noi di "Typewriter"
+Typewriter
+
+. 
+. 
+. 
+. contract  site  gold valuetype
+
+. 
+. rename value predict
+
+. 
+. drop value*
+variable value* not found
+r(111);
+
+. 
+. 
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       44   ->      23
+Number of variables                   4   ->       4
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. 
+. 
+. noi di "restrict to sites with clear gold standard values only"
+restrict to sites with clear gold standard values only
+
+. 
+. 
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2,084 observations deleted)
+
+. 
+. 
+. 
+. 
+. 
+. noi di "Typewriter"
+Typewriter
+
+. 
+. 
+. 
+. contract  site  gold valuetype
+
+. 
+. rename value predict
+
+. 
+. 
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       44   ->      23
+Number of variables                   4   ->       4
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+.  reshape wide combo*, i(site) j(gold) string
+variable combo* not found
+r(111);
+
+. 
+.  
+. 
+.  rename combo* *
+variable combo* not found
+r(111);
+
+. rename r combor
+
+. 
+. rename s combos
+
+. 
+. reshape wide combo*, i(site) j(gold) string
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       23   ->      12
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+
+. 
+. rename combo* *
+
+. gen sensitivity = TP/(TP+FN)
+TP not found
+r(111);
+
+. 
+. gen specificity = TN/(TN+FP)
+TN not found
+r(111);
+
+. 
+. 
+. 
+. gen predictPOS = TP+FP
+TP not found
+r(111);
+
+. 
+. gen predictNEG = TN +FN
+TN not found
+r(111);
+
+. 
+. 
+. 
+. gen trueNeg= TN +FP
+TN not found
+r(111);
+
+. 
+. gen truePos= TP +FN
+TP not found
+r(111);
+
+. 
+. 
+. 
+. gen MajorErrorRate = FP/truePos
+FP not found
+r(111);
+
+. 
+. gen VeryMajorErrorRate = FN/trueNeg
+FN not found
+r(111);
+
+. 
+. gen Agreement = (TP+TN)/(truNeg+truPos)
+TP not found
+r(111);
+
+. 
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+
+. 
+. rename rR TP
+
+. 
+. rename sR FN *so predicted sensitive but actually resistant
+syntax error
+    Syntax is
+        rename  oldname    newname   [, renumber[(#)] addnumber[(#)] sort ...]
+        rename (oldnames) (newnames) [, renumber[(#)] addnumber[(#)] sort ...]
+        rename  oldnames              , {upper|lower|proper}
+r(198);
+
+. 
+. rename rS FP * predicted resistant but actually sensitive
+syntax error
+    Syntax is
+        rename  oldname    newname   [, renumber[(#)] addnumber[(#)] sort ...]
+        rename (oldnames) (newnames) [, renumber[(#)] addnumber[(#)] sort ...]
+        rename  oldnames              , {upper|lower|proper}
+r(198);
+
+. 
+. 
+. 
+. gen sensitivity = TP/(TP+FN)
+FN not found
+r(111);
+
+. 
+. gen specificity = TN/(TN+FP)
+FP not found
+r(111);
+
+. 
+. 
+. 
+. gen predictPOS = TP+FP
+FP not found
+r(111);
+
+. 
+. gen predictNEG = TN +FN
+FN not found
+r(111);
+
+. 
+. 
+. 
+. gen trueNeg= TN +FP
+FP not found
+r(111);
+
+. 
+. gen truePos= TP +FN
+FN not found
+r(111);
+
+. 
+. 
+. 
+. gen MajorErrorRate = FP/truePos
+FP not found
+r(111);
+
+. 
+. gen VeryMajorErrorRate = FN/trueNeg
+FN not found
+r(111);
+
+. 
+. gen Agreement = (TP+TN)/(truNeg+truPos)
+truNeg not found
+r(111);
+
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+variable sS not found
+r(111);
+
+. 
+. rename rR TP
+variable rR not found
+r(111);
+
+. 
+. rename sR FN 
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+
+. 
+. * predicted resistant but actually sensitive
+
+. gen sensitivity = TP/(TP+FN)
+(2 missing values generated)
+
+. 
+. gen specificity = TN/(TN+FP)
+(1 missing value generated)
+
+. 
+. 
+. 
+. gen predictPOS = TP+FP
+(1 missing value generated)
+
+. 
+. gen predictNEG = TN +FN
+(2 missing values generated)
+
+. 
+. 
+. 
+. gen trueNeg= TN +FP
+(1 missing value generated)
+
+. 
+. gen truePos= TP +FN
+(2 missing values generated)
+
+. 
+. 
+. 
+. gen MajorErrorRate = FP/truePos
+(2 missing values generated)
+
+. 
+. gen VeryMajorErrorRate = FN/trueNeg
+(2 missing values generated)
+
+. 
+. gen Agreement = (TP+TN)/(truNeg+truPos)
+truNeg not found
+r(111);
+
+. gen Agreement = (TP+TN)/(trueNeg+truePos)
+(2 missing values generated)
+
+. for any TN TP FN FP: replace X=0 if X==.
+
+->  replace TN=0 if TN==.
+(0 real changes made)
+
+->  replace TP=0 if TP==.
+(1 real change made)
+
+->  replace FN=0 if FN==.
+(2 real changes made)
+
+->  replace FP=0 if FP==.
+(1 real change made)
+
+. * sensitivity/ specificity
+
+. 
+. noi di "find sensitivity and specifity of each method/antibiotic"
+find sensitivity and specifity of each method/antibiotic
+
+. 
+. 
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. 
+. 
+. noi di "restrict to sites with clear gold standard values only"
+restrict to sites with clear gold standard values only
+
+. 
+. 
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2,084 observations deleted)
+
+. 
+. 
+. 
+. 
+. 
+. noi di "Typewriter"
+Typewriter
+
+. 
+. 
+. 
+. contract  site  gold valuetype
+
+. 
+. rename value predict
+
+. 
+. 
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       44   ->      23
+Number of variables                   4   ->       4
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. rename r combor
+
+. 
+. rename s combos
+
+. 
+. reshape wide combo*, i(site) j(gold) string
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       23   ->      12
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+
+. 
+. rename combo* *
+
+. 
+. 
+. 
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+
+. 
+. rename rR TP
+
+. 
+. rename sR FN 
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+
+. 
+. * predicted resistant but actually sensitive
+
+. 
+. 
+. 
+. for any TN TP FN FP: replace X=0 if X==.
+
+->  replace TN=0 if TN==.
+(0 real changes made)
+
+->  replace TP=0 if TP==.
+(1 real change made)
+
+->  replace FN=0 if FN==.
+(2 real changes made)
+
+->  replace FP=0 if FP==.
+(1 real change made)
+
+. 
+. 
+. 
+. gen sensitivity = TP/(TP+FN)
+(1 missing value generated)
+
+. 
+. gen specificity = TN/(TN+FP)
+
+. 
+. 
+. 
+. gen predictPOS = TP+FP
+
+. 
+. gen predictNEG = TN +FN
+
+. 
+. 
+. 
+. gen trueNeg= TN +FP
+
+. 
+. gen truePos= TP +FN
+
+. 
+. 
+. 
+. gen MajorErrorRate = FP/truePos
+(1 missing value generated)
+
+. 
+. gen VeryMajorErrorRate = FN/trueNeg
+
+. 
+. gen Agreement = (TP+TN)/(trueNeg+truePos)
+
+. local max=_N
+
+. 
+. forvalues i=1(1)`max'{
+  2. 
+. cii  truePos[`i'] TP[`i']
+  3. 
+. replace lspec = r(lb) if _n==`i'
+  4. 
+. replace uspec = r(ub) if _n==`i'
+  5. 
+. cii  trueNeg[`i'] TN[`i']
+  6. 
+. replace lsens = r(lb) if _n==`i'
+  7. 
+. replace usens = r(ub) if _n==`i'
+  8. 
+. cii  trueNeg[`i'] FP[`i']
+  9. 
+. replace lme = r(lb) if _n==`i'
+ 10. 
+. replace ume = r(ub) if _n==`i'
+ 11. 
+. cii  truePos[`i'] FN[`i']
+ 12. 
+. replace lvme = r(lb) if _n==`i'
+ 13. 
+. replace uvme = r(ub) if _n==`i'
+ 14. 
+. }
+you must specify one of means, proportions, or variances following cii
+r(198);
+
+. help cii
+
+. help mcii
+
+.  . webuse promonone
+no; data in memory would be lost
+r(4);
+
+. 
+. 
+. 
+.     Obtain various binomial confidence intervals for proportions
+command Obtain is unrecognized
+r(199);
+
+. 
+.         . ci proportions promoted
+variable promoted not found
+r(111);
+
+.  . webuse promonone, clear
+
+.         . ci proportions promoted
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+    promoted |         20           0           0               0    .1684335*
+
+(*) one-sided, 97.5% confidence interval
+
+.         . ci means promoted
+
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+    promoted |         20           0           0               0           0
+
+. webuse petri
+
+. ci means count, poisson
+
+                                                         -- Poisson  Exact --
+    Variable |   Exposure        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+       count |         36    2.333333    .2545875        1.861158    2.888825
+
+. ci prop count
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+
+. cii proportions 10 1
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         10          .1    .0948683        .0025286    .4450161
+
+. help mcci
+
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. 
+. 
+. noi di "restrict to sites with clear gold standard values only"
+restrict to sites with clear gold standard values only
+
+. 
+. 
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2,084 observations deleted)
+
+. 
+. 
+. 
+. 
+. 
+. noi di "Typewriter"
+Typewriter
+
+. 
+. 
+. 
+. contract  site  gold valuetype
+
+. 
+. rename value predict
+
+. 
+. 
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       44   ->      23
+Number of variables                   4   ->       4
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. rename r combor
+
+. 
+. rename s combos
+
+. 
+. reshape wide combo*, i(site) j(gold) string
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       23   ->      12
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+
+. 
+. rename combo* *
+
+. 
+. 
+. 
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+
+. 
+. rename rR TP
+
+. 
+. rename sR FN 
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+
+. 
+. * predicted resistant but actually sensitive
+
+. 
+. 
+. 
+. for any TN TP FN FP: replace X=0 if X==.
+
+->  replace TN=0 if TN==.
+(0 real changes made)
+
+->  replace TP=0 if TP==.
+(1 real change made)
+
+->  replace FN=0 if FN==.
+(2 real changes made)
+
+->  replace FP=0 if FP==.
+(1 real change made)
+
+. 
+. 
+. 
+. gen sensitivity = TP/(TP+FN)
+(1 missing value generated)
+
+. 
+. gen specificity = TN/(TN+FP)
+
+. 
+. 
+. 
+. gen predictPOS = TP+FP
+
+. 
+. gen predictNEG = TN +FN
+
+. 
+. 
+. 
+. gen trueNeg= TN +FP
+
+. 
+. gen truePos= TP +FN
+
+. 
+. 
+. 
+. gen MajorErrorRate = FN/truePos
+(1 missing value generated)
+
+. 
+. gen VeryMajorErrorRate = FP/trueNeg
+
+. 
+. gen Agreement = (TP+TN)/(trueNeg+truePos)
+
+. cci 1032 1036
+'' found where integer expected
+r(7);
+
+. cci 1032 1036
+'' found where integer expected
+r(7);
+
+. cci 1036 1032
+'' found where integer expected
+r(7);
+
+. cci prop 1036 1032
+'prop' found where integer expected
+r(7);
+
+. cci proportional 1036 1032
+'proportional' found where integer expected
+r(7);
+
+. 
+. 
+. di _N
+12
+
+. cii means 166 19509 4379, level(90)
+
+    Variable |        Obs        Mean    Std. Err.       [90% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        166       19509    339.8763         18946.8     20071.2
+
+. cii proportions 10 1
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         10          .1    .0948683        .0025286    .4450161
+
+. cii proportions 1036 1032
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,036     .996139    .0019268         .990144     .998947
+
+. mcci 301 15 4 1032
+
+                 | Controls               |
+Cases            |   Exposed   Unexposed  |      Total
+-----------------+------------------------+------------
+         Exposed |       301          15  |        316
+       Unexposed |         4        1032  |       1036
+-----------------+------------------------+------------
+           Total |       305        1047  |       1352
+
+McNemar's chi2(1) =      6.37    Prob > chi2 = 0.0116
+Exact McNemar significance probability       = 0.0192
+
+Proportion with factor
+        Cases       .2337278
+        Controls    .2255917     [95% Conf. Interval]
+                   ---------     --------------------
+        difference  .0081361      .0010924   .0151798
+        ratio       1.036066      1.007943   1.064973
+        rel. diff.  .0105062      .0023894    .018623
+
+        odds ratio      3.75      1.194652   15.52222   (exact)
+
+. 
+. local max=_N
+
+. 
+. forvalues i=1(1)`max'{
+  2. 
+. cii prop  truePos[`i'] TP[`i']
+  3. 
+. replace lspec = r(lb) if _n==`i'
+  4. 
+. replace uspec = r(ub) if _n==`i'
+  5. 
+. cii prop trueNeg[`i'] TN[`i']
+  6. 
+. replace lsens = r(lb) if _n==`i'
+  7. 
+. replace usens = r(ub) if _n==`i'
+  8. 
+. cii prop trueNeg[`i'] FP[`i']
+  9. 
+. replace lme = r(lb) if _n==`i'
+ 10. 
+. replace ume = r(ub) if _n==`i'
+ 11. 
+. cii prop truePos[`i'] FN[`i']
+ 12. 
+. replace lvme = r(lb) if _n==`i'
+ 13. 
+. replace uvme = r(ub) if _n==`i'
+ 14. 
+. }
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        316    .9525316    .0119618        .9229159    .9731923
+variable lspec not found
+r(111);
+
+. * get confidence intervals
+
+. 
+. for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
+
+->  gen lsens=.
+(12 missing values generated)
+
+->  gen usens=.
+(12 missing values generated)
+
+->  gen lspec=.
+(12 missing values generated)
+
+->  gen uspec=.
+(12 missing values generated)
+
+->  gen lme=.
+(12 missing values generated)
+
+->  gen ume=.
+(12 missing values generated)
+
+->  gen lvme=.
+(12 missing values generated)
+
+->  gen uvme=.
+(12 missing values generated)
+
+. 
+. local max=_N
+
+. 
+. forvalues i=1(1)`max'{
+  2. 
+. cii prop  truePos[`i'] TP[`i']
+  3. 
+. replace lspec = r(lb) if _n==`i'
+  4. 
+. replace uspec = r(ub) if _n==`i'
+  5. 
+. cii prop trueNeg[`i'] TN[`i']
+  6. 
+. replace lsens = r(lb) if _n==`i'
+  7. 
+. replace usens = r(ub) if _n==`i'
+  8. 
+. cii prop trueNeg[`i'] FP[`i']
+  9. 
+. replace lme = r(lb) if _n==`i'
+ 10. 
+. replace ume = r(ub) if _n==`i'
+ 11. 
+. cii prop truePos[`i'] FN[`i']
+ 12. 
+. replace lvme = r(lb) if _n==`i'
+ 13. 
+. replace uvme = r(ub) if _n==`i'
+ 14. 
+. }
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        316    .9525316    .0119618        .9229159    .9731923
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,036     .996139    .0019268         .990144     .998947
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,036     .003861    .0019268         .001053     .009856
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        316    .0474684    .0119618        .0268077    .0770841
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        185     .972973    .0119224         .938058    .9911674
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        279     .921147    .0161351        .8830481     .949925
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        279     .078853    .0161351         .050075    .1169519
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        185     .027027    .0119224        .0088326     .061942
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        348    .9827586    .0069778        .9628523    .9936471
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,024    .9892578    .0032214        .9808607    .9946257
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,024    .0107422    .0032214        .0053743    .0191393
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        348    .0172414    .0069778        .0063529    .0371477
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        162    .8888889    .0246914        .8300889    .9328041
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,211    .9942197    .0021784        .9881267    .9976729
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,211    .0057803    .0021784        .0023271    .0118733
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        162    .1111111    .0246914        .0671959    .1699111
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         94    .7765957    .0429615        .6790029    .8560738
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,279    .9976544    .0013526        .9931607     .999516
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,279    .0023456    .0013526         .000484    .0068393
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         94    .2234043    .0429615        .1439262    .3209971
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        391    .9744246    .0079836        .9534699     .987669
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        962    .9948025    .0023183        .9879127    .9983103
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        962    .0051975    .0023183        .0016897    .0120873
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        391    .0255754    .0079836         .012331    .0465301
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |          6           1           0        .5407419           1*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,015    .9940887    .0024061        .9871782    .9978276
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,015    .0059113    .0024061        .0021724    .0128218
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |          6           0           0               0    .4592581*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,137    .9885664    .0031529        .9805276    .9938984
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        232     .862069     .022639        .8108955    .9037048
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        232     .137931     .022639        .0962952    .1891045
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,137    .0114336    .0031529        .0061016    .0194724
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         25         .92    .0542586        .7396942    .9901604
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,347    .9992576    .0007421        .9958707    .9999812
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,347    .0007424    .0007421        .0000188    .0041293
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         25         .08    .0542586        .0098396    .2603058
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        118    .9491525    .0202237        .8926097    .9811139
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,254    .9952153    .0019487         .989615    .9982421
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,254    .0047847    .0019487        .0017579     .010385
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        118    .0508475    .0202237        .0188861    .1073903
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         43    .8604651    .0528413        .7206752    .9470234
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        627    .9984051    .0015936        .9911461    .9999596
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        627    .0015949    .0015936        .0000404    .0088539
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         43    .1395349    .0528413        .0529766    .2793248
+(1 real change made)
+(1 real change made)
+first argument, #obs, must be a positive integer
+r(198);
+
+. help if
+
+. forvalues i=1(1)`max'{
+  2. 
+. if truePos[`i']>0{
+  3. 
+. cii prop  truePos[`i'] TP[`i']
+  4. 
+. replace lspec = r(lb) if _n==`i'
+  5. 
+. replace uspec = r(ub) if _n==`i'
+  6. 
+. cii prop truePos[`i'] FN[`i']
+  7. 
+. replace lvme = r(lb) if _n==`i'
+  8. 
+. replace uvme = r(ub) if _n==`i'
+  9. 
+. }
+ 10. 
+. else{
+ 11. 
+. noi di site[`i'] " has no positive samples"
+ 12. 
+. }
+ 13. 
+. if trueNeg[`i']>0{
+ 14. 
+. cii prop trueNeg[`i'] TN[`i']
+ 15. 
+. replace lsens = r(lb) if _n==`i'
+ 16. 
+. replace usens = r(ub) if _n==`i'
+ 17. 
+. cii prop trueNeg[`i'] FP[`i']
+ 18. 
+. replace lme = r(lb) if _n==`i'
+ 19. 
+. replace ume = r(ub) if _n==`i'
+ 20. 
+. }
+ 21. 
+. else{
+ 22. 
+. noi di site[`i'] " has no negative samples"
+ 23. 
+. }
+ 24. 
+. }
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        316    .9525316    .0119618        .9229159    .9731923
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        316    .0474684    .0119618        .0268077    .0770841
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,036     .996139    .0019268         .990144     .998947
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,036     .003861    .0019268         .001053     .009856
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        185     .972973    .0119224         .938058    .9911674
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        185     .027027    .0119224        .0088326     .061942
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        279     .921147    .0161351        .8830481     .949925
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        279     .078853    .0161351         .050075    .1169519
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        348    .9827586    .0069778        .9628523    .9936471
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        348    .0172414    .0069778        .0063529    .0371477
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,024    .9892578    .0032214        .9808607    .9946257
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,024    .0107422    .0032214        .0053743    .0191393
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        162    .8888889    .0246914        .8300889    .9328041
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        162    .1111111    .0246914        .0671959    .1699111
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,211    .9942197    .0021784        .9881267    .9976729
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,211    .0057803    .0021784        .0023271    .0118733
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         94    .7765957    .0429615        .6790029    .8560738
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         94    .2234043    .0429615        .1439262    .3209971
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,279    .9976544    .0013526        .9931607     .999516
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,279    .0023456    .0013526         .000484    .0068393
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        391    .9744246    .0079836        .9534699     .987669
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        391    .0255754    .0079836         .012331    .0465301
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        962    .9948025    .0023183        .9879127    .9983103
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        962    .0051975    .0023183        .0016897    .0120873
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |          6           1           0        .5407419           1*
+
+(*) one-sided, 97.5% confidence interval
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |          6           0           0               0    .4592581*
+
+(*) one-sided, 97.5% confidence interval
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,015    .9940887    .0024061        .9871782    .9978276
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,015    .0059113    .0024061        .0021724    .0128218
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,137    .9885664    .0031529        .9805276    .9938984
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,137    .0114336    .0031529        .0061016    .0194724
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        232     .862069     .022639        .8108955    .9037048
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        232     .137931     .022639        .0962952    .1891045
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         25         .92    .0542586        .7396942    .9901604
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         25         .08    .0542586        .0098396    .2603058
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,347    .9992576    .0007421        .9958707    .9999812
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,347    .0007424    .0007421        .0000188    .0041293
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        118    .9491525    .0202237        .8926097    .9811139
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        118    .0508475    .0202237        .0188861    .1073903
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,254    .9952153    .0019487         .989615    .9982421
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,254    .0047847    .0019487        .0017579     .010385
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         43    .8604651    .0528413        .7206752    .9470234
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         43    .1395349    .0528413        .0529766    .2793248
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        627    .9984051    .0015936        .9911461    .9999596
+(0 real changes made)
+(0 real changes made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        627    .0015949    .0015936        .0000404    .0088539
+(0 real changes made)
+(0 real changes made)
+vancomycin has no positive samples
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,373           1           0        .9973169           1*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,373           0           0               0    .0026831*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+. cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+
+. sort site
+
+. 
+. gen num =_n 
+
+. 
+. labmask num, values(site)
+
+. 
+. preserve
+
+. 
+. rename * tw_*
+
+. 
+. rename tw_site site
+
+. 
+. save typewriter, replace
+(note: file typewriter.dta not found)
+file typewriter.dta saved
+
+. 
+. restore
+
+. preserve
+
+. 
+. keep site  sens spec lsens usens lspec uspec
+
+. 
+. rename * tw_*
+
+. 
+. rename tw_site site
+
+. 
+. save typewriter, replace
+file typewriter.dta saved
+
+. 
+. restore
+
+. cd E:\users\amy.mason\Pipeline_27_07_2016
+E:\users\amy.mason\Pipeline_27_07_2016
+
+. do Analysis_Pipeline2.do
+
+. * Compare the three methods in phenotype predictions
+. 
+. set li 130
+
+. 
+. cap log close

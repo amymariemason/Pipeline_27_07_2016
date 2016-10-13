@@ -51,7 +51,7 @@ drop luk*
 foreach k in   eta etb etd meca mecc sea seb sec sed see seg seh sei sej selr sep seu tsst1 pvl{
 		noi di "`k'"
 		gen predict`k'= "p" if `k'==1
-		replace predict`k' = "s" if `k'==0
+		replace predict`k' = "a" if `k'==0
 		drop `k'
 		rename predict`k' `k'
 		noi tab `k', m
@@ -73,7 +73,7 @@ noi bysort site: tab method value
 noi display "counts differing between method: gene, type, mykrobe"
 
 reshape wide value, i(sample site) j(method) string
-gen valueall = valueg + valuet + valuez
+gen valueall = valueg + valuez + valuet
 noi tab valuea, m sort
 
 noi tab site valuea, m 
@@ -99,7 +99,7 @@ replace gold ="A" if gold=="S"
 noi merge 1:1 sample site using virulence_prediction_long, update
 assert _merge==3
 
-noi di "predictive is gene, type, mykrobe"
+noi di "predictive is gene,  mykrobe, type,"
 noi tab gold valuea
 
 noi bysort gold: tab site valuea

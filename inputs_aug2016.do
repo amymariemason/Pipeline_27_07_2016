@@ -48,7 +48,6 @@ save pipeline_data_gf, replace
 import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\Genefinder.xlsx", sheet("PHE-validation") firstrow allstring clear
 gen method="genefinder"
 gen set="Collindale"
-drop CX
 rename Sample_id sample
 rename remarks comments
 * there is a chromo site called 23s/ s, only genefinder reports on it: drop it
@@ -76,24 +75,63 @@ save pipeline_data_gf, replace
 
 * Mykroke sets
 noi di "Mykrobe sets"
-import delimited E:\users\amy.mason\Pipeline_27_07_2016\Inputs\mykrobe_11_oct_2016.tsv, clear
+import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\Mykrobe.xlsx", sheet("Oxford 501 derivation") cellrange(A2:CJ544) firstrow allstring  clear
 gen method="zam"
-*gen set=""
+gen set="Oxford501"
+rename A sample
+rename B comments
 *reshape to one line per site/sample
 renpfix "" value
-rename valuecomid sample
+rename valuesample sample
 rename valuemethod method
-rename valueremarks comments
-reshape long value, i(sample method comments) j(site) string
-drop comments
+rename valueset set
+rename valuecomments comments
+reshape long value, i(sample set method comments) j(site) string
 save pipeline_data_z, replace
 
+import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\Mykrobe.xlsx", sheet("Oxford 491 validation") cellrange(A2:CJ544) firstrow allstring  clear
+gen method="zam"
+gen set="Oxford491"
+rename A sample
+rename B comments
+*reshape to one line per site/sample
+renpfix "" value
+rename valuesample sample
+rename valuemethod method
+rename valueset set
+rename valuecomments comments
+reshape long value, i(sample set method comments) j(site) string
+append using pipeline_data_z.dta, force
+save pipeline_data_z, replace
+
+import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\Mykrobe.xlsx", sheet("Colindale 400") cellrange(A2:CJ544) firstrow allstring clear
+gen method="zam"
+gen set="Collindale"
+rename A sample
+rename B comments
+*reshape to one line per site/sample
+renpfix "" value
+rename valuesample sample
+rename valuemethod method
+rename valueset set
+rename valuecomments comments
+reshape long value, i(sample set method comments) j(site) string
+append using pipeline_data_z.dta, force
+save pipeline_data_z, replace
 
 
 * problem with extra samples; some in multiple sets with null results: drop any samples with duplicate results
 noi di "duplicate results for same sample - one set indentical or null"
 
 use pipeline_data_z, clear
+gsort sample site value -set
+by sample site value: gen extra = 1 if _n>1 
+replace extra=1 if inlist(sample, "C00011656", "C00011655") & comments==""
+replace extra=1  if sample=="C00007108" & strpos(set, "dale")
+summ extra if extra==1
+noi di r(N) " duplicate results dropped"
+noi drop if extra==1
+drop extra 
 noi di _N " results"
 bysort site: gen tab=1 if _n==1
 summ tab 
