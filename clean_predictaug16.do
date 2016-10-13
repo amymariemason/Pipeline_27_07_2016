@@ -15,9 +15,6 @@ noi di "combine"
 use pipeline_data_gf, clear
 append using pipeline_data_tw.dta, force
 append using pipeline_data_z2.dta, force
-gsort sample - set
-by sample: replace set=set[_n-1] if _n>1 & set==""
-by sample: assert set==set[_n-1] if _n>1
 replace site = lower(site)
 noi di _N " results"
 bysort site: gen tab=1 if _n==1
@@ -28,7 +25,7 @@ drop tab
 bysort sample: gen tab=1 if _n==1
 summ tab
 noi di "from " r(sum) " samples"
-tab set if tab==1, m
+tab set if tab==1
 drop tab
 
 save pipeline_predict_raw, replace
@@ -263,13 +260,6 @@ summ zbyte if inlist(site, "luk")
 noi di r(N) " luk only supplied by mykrobe, drop from database"
 noi drop if inlist(site, "luk")
 noi di _N " sample sites remaining" 
-* ar
-noi tab site new if strpos(site, "v44"), m
-summ zbyte if inlist(site, "v44")
-noi di r(N) "v44 only supplied by mykrobe, drop from database"
-noi drop if inlist(site, "v44")
-noi di _N " sample sites remaining" 
-
 
 * samples not in other sets
 vallist sample if new=="010", local(list)
@@ -371,22 +361,15 @@ noi di _n(5) _dup(80) "=" _n " 4 Match to antibiotic prediction" _n _dup(80) "="
 use temp4, clear
 reshape long
 
-
- noi di "missing values"
 replace value = upper(value)
 gen ambi = 1 if inlist(value, "ND", "NT", "LOW COV", "MIXED")
-replace ambi=1 if inlist(value, "NOT DONE", "N/A", "NF", "NA", "-", "X")
+replace ambi=1 if inlist(value, "NOT DONE", "N/A", "NF", "NA", "-")
 summ ambi if ambi ==1
-noi di r(N) " values have N/A or equivalent values, set these all to A"
+noi di r(N) " values have N/A or equivalent values, set these all to NA"
 noi list site value if ambi==1
-noi replace value = "A" if ambi==1
+noi replace value = "NA" if ambi==1
 tab site if ambi ==1
 drop ambi
-
-noi di "all values equal A or P, unless chromosonal"
-replace value=upper(value)
-
-assert inlist(value, "A", "P") if !strpos(type, "Chro")
 
 ***************
 gen count = 1 if strpos(value, "=>")
@@ -401,12 +384,6 @@ summ count
 noi di r(N) " remove all spaces in value reports"
 noi replace value = subinstr(value, " ", "",.)
 drop count 
-
-* fix new mykrobe output
-gen start=strpos(value,"_")
-gen end= strpos(value, "-")
-replace value= substr(value,start+2,end-start-3)+":"+substr(value,start+1,1)+"-" +substr(value,end-1,1) if site==lower(substr(value,1,4)) & strpos(type, "Chr") & method=="zam"
-drop start end
 
 *swap to binary the point mutations
 * clarify absenses
@@ -547,14 +524,6 @@ noi di "breakdown by site"
 noi bysort type site:  tab ValueA, sort m
 
 noi tab site ValueA, m
-gen agree  = (ValueA=="AAA"| ValueA=="PPP" )
-summ agree
-noi di r(sum) " out of " r(N) " site predictions" agree
-noi di r(sum)/_N*100
-
-summ agree if strpos(type, "Aqu") |strpos(type, "Chro")
-noi di r(sum) " out of " r(N) " aquired or chromosonal resistance site predictions" agree
-noi di r(sum)/r(N)*100
 
 save pipeline_clean_all_values_wide, replace
 

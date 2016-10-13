@@ -2,11 +2,11 @@
       name:  <unnamed>
        log:  E:\users\amy.mason\Pipeline_27_07_2016\Datasets\clean2.log
   log type:  text
- opened on:  14 Sep 2016, 18:43:18
+ opened on:  12 Oct 2016, 12:11:49
 
 . 
 . noi di "Run by AMM on $S_DATE $S_TIME"
-Run by AMM on 14 Sep 2016 18:43:18
+Run by AMM on 12 Oct 2016 12:11:49
 
 . 
 . cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
@@ -336,121 +336,32 @@ variable Mupirocin was str1 now str2
 ------------+-----------------------------------
       Total |      1,379      100.00
 
-. gen SEA = ""
-(1,379 missing values generated)
+. 
+.  
+. 
+. 
+. 
+. ************************************************
 
-. tab entero_pcr
+. 
+. noi di _n(5) _dup(80) "=" _n " 2 Use PCR/Array to interpret phenotypes" _n _dup(80) "="
 
-  entero_pcr |      Freq.     Percent        Cum.
--------------+-----------------------------------
-   A C G H I |          1        0.26        0.26
-           - |         43       10.97       11.22
-          A  |          5        1.28       12.50
-        A B  |          1        0.26       12.76
-A B D G I J  |          1        0.26       13.01
-    A B D J  |          1        0.26       13.27
-      A B H  |          2        0.51       13.78
-    A C G I  |          4        1.02       14.80
-       A C H |          1        0.26       15.05
-      A C H  |          1        0.26       15.31
-  A D G I J  |          2        0.51       15.82
-      A D J  |          2        0.51       16.33
-        A G  |          1        0.26       16.58
-      A G I  |          5        1.28       17.86
-        A H  |          2        0.51       18.37
-          B  |          3        0.77       19.13
-  B D G I J  |          1        0.26       19.39
-    B G H I  |          1        0.26       19.64
-      B G I  |          2        0.51       20.15
-        B H  |          2        0.51       20.66
-           C |          1        0.26       20.92
-          C  |          2        0.51       21.43
-  C D G I J  |          1        0.26       21.68
-        C G  |          1        0.26       21.94
-       C G I |          1        0.26       22.19
-      C G I  |          6        1.53       23.72
-    C G I J  |          1        0.26       23.98
-        C I  |          1        0.26       24.23
-     D G I J |          4        1.02       25.26
-    D G I J  |          3        0.77       26.02
-        D J  |          1        0.26       26.28
-           E |          1        0.26       26.53
-          E  |          2        0.51       27.04
-          G  |          1        0.26       27.30
-      G H I  |          3        0.77       28.06
-         G I |          4        1.02       29.08
-        G I  |         25        6.38       35.46
-      G I J  |          1        0.26       35.71
-          H  |          8        2.04       37.76
-          I  |          1        0.26       38.01
-          J  |          1        0.26       38.27
-          NT |        242       61.73      100.00
--------------+-----------------------------------
-       Total |        392      100.00
 
-. gen count= 1 if strpos( entero_pcr, "A")
-(1,350 missing values generated)
 
-. tab count
 
-      count |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |         29      100.00      100.00
-------------+-----------------------------------
-      Total |         29      100.00
 
-. tab entero_pcr, m
+================================================================================
+ 2 Use PCR/Array to interpret phenotypes
+================================================================================
 
-  entero_pcr |      Freq.     Percent        Cum.
--------------+-----------------------------------
-             |        987       71.57       71.57
-   A C G H I |          1        0.07       71.65
-           - |         43        3.12       74.76
-          A  |          5        0.36       75.13
-        A B  |          1        0.07       75.20
-A B D G I J  |          1        0.07       75.27
-    A B D J  |          1        0.07       75.34
-      A B H  |          2        0.15       75.49
-    A C G I  |          4        0.29       75.78
-       A C H |          1        0.07       75.85
-      A C H  |          1        0.07       75.92
-  A D G I J  |          2        0.15       76.07
-      A D J  |          2        0.15       76.21
-        A G  |          1        0.07       76.29
-      A G I  |          5        0.36       76.65
-        A H  |          2        0.15       76.79
-          B  |          3        0.22       77.01
-  B D G I J  |          1        0.07       77.08
-    B G H I  |          1        0.07       77.16
-      B G I  |          2        0.15       77.30
-        B H  |          2        0.15       77.45
-           C |          1        0.07       77.52
-          C  |          2        0.15       77.66
-  C D G I J  |          1        0.07       77.74
-        C G  |          1        0.07       77.81
-       C G I |          1        0.07       77.88
-      C G I  |          6        0.44       78.32
-    C G I J  |          1        0.07       78.39
-        C I  |          1        0.07       78.46
-     D G I J |          4        0.29       78.75
-    D G I J  |          3        0.22       78.97
-        D J  |          1        0.07       79.04
-           E |          1        0.07       79.12
-          E  |          2        0.15       79.26
-          G  |          1        0.07       79.33
-      G H I  |          3        0.22       79.55
-         G I |          4        0.29       79.84
-        G I  |         25        1.81       81.65
-      G I J  |          1        0.07       81.73
-          H  |          8        0.58       82.31
-          I  |          1        0.07       82.38
-          J  |          1        0.07       82.45
-          NT |        242       17.55      100.00
--------------+-----------------------------------
-       Total |      1,379      100.00
+. 
+. 
+. 
+. ************************************************
 
-. drop SEA
-
+. 
+. 
+. 
 . noi dis "based on entero pcr/array"
 based on entero pcr/array
 
@@ -635,6 +546,78 @@ variable SEU was str1 now str2
 ------------+-----------------------------------
       Total |      1,379      100.00
 
+. 
+. 
+. 
+. noi di "based on exfol_pcr/ array"
+based on exfol_pcr/ array
+
+. 
+. foreach x in A B D {
+  2. 
+. gen ET`x' = ""
+  3. 
+. replace ET`x' = "R" if strpos( exfol_pcr, "`x'") | strpos(exfol_array, "`x'")
+  4. 
+. replace ET`x' = "S" if !strpos( exfol_pcr, "`x'") & !strpos(exfol_array, "`x'")  & (exfol_pcr!=""|exfol_array!="")
+  5. 
+. replace ET`x' = "NT" if strpos( lower(exfol_pcr), "nt") & strpos(lower(exfol_array), "nt")
+  6. 
+. noi tab ET`x', m
+  7. 
+. }
+(1,379 missing values generated)
+(18 real changes made)
+(374 real changes made)
+variable ETA was str1 now str2
+(186 real changes made)
+
+        ETA |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        186       13.49       85.06
+          R |         18        1.31       86.37
+          S |        188       13.63      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(3 real changes made)
+(389 real changes made)
+variable ETB was str1 now str2
+(186 real changes made)
+
+        ETB |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        186       13.49       85.06
+          R |          3        0.22       85.28
+          S |        203       14.72      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+(1,379 missing values generated)
+(13 real changes made)
+(379 real changes made)
+variable ETD was str1 now str2
+(186 real changes made)
+
+        ETD |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        186       13.49       85.06
+          R |         13        0.94       86.00
+          S |        193       14.00      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+
+. 
+. 
+. 
+. noi di "based on tst pcr/array"
+based on tst pcr/array
+
+. 
+. 
+. 
 . gen TSST1 = "S" if strpos( tst_pcr, "-") | strpos(tst_array, "-")
 (1,194 missing values generated)
 
@@ -659,11 +642,1402 @@ variable TSST1 was str1 now str2
 ------------+-----------------------------------
       Total |      1,379      100.00
 
-. * clean data
+. 
+. 
+. 
+. noi di "based on PVL pcr and array"
+based on PVL pcr and array
 
 . 
-. cd E:\users\amy.mason\Pipeline_27_07_2016\
+. gen PVL = "S" if strpos( PVLbyPCR, "-") | strpos(PVL_array, "-")
+(1,138 missing values generated)
+
+. 
+. replace PVL = "R" if strpos( PVLbyPCR, "+") | strpos(PVL_array, "+")
+(95 real changes made)
+
+. 
+. replace PVL = "NT" if strpos( lower(PVLbyPCR), "nt") & strpos(lower(PVL_array), "nt")
+variable PVL was str1 now str2
+(58 real changes made)
+
+. 
+. noi tab PVL,m 
+
+        PVL |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |         58        4.21       75.78
+          R |         95        6.89       82.67
+          S |        239       17.33      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+
+. 
+. 
+. 
+. noi di "based on MecA pcr"
+based on MecA pcr
+
+. 
+. gen MECA = "S" if  mecA_pcr=="-"
+(1,202 missing values generated)
+
+. 
+. replace MECA = "R" if mecA_pcr=="+"
+(151 real changes made)
+
+. 
+. replace MECA = "NT" if mecA_pcr=="NT"
+variable MECA was str1 now str2
+(64 real changes made)
+
+. 
+. noi tab MECA, m
+
+       MECA |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |         64        4.64       76.21
+          R |        151       10.95       87.16
+          S |        177       12.84      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+
+. 
+. 
+. 
+. noi di "based on MecC pcr"
+based on MecC pcr
+
+. 
+. gen MECC = "S" if  mecC_pcr=="-"
+(1,224 missing values generated)
+
+. 
+. replace MECC = "R" if mecC_pcr=="+"
+(13 real changes made)
+
+. 
+. replace MECC = "NT" if mecC_pcr=="NT"
+variable MECC was str1 now str2
+(224 real changes made)
+
+. 
+. noi tab MECC, m
+
+       MECC |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        987       71.57       71.57
+         NT |        224       16.24       87.82
+          R |         13        0.94       88.76
+          S |        155       11.24      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+
+. 
+. 
+. 
+. drop  comments mecA_pcr mecC_pcr PVLbyPCR PVL_array entero_pcr entero_array exfol_pcr exfol_array tst_pcr tst_array
+
+. 
+. compress
+  (0 bytes saved)
+
+. 
+. 
+. 
+. * reduce variation in answers 
+
+. 
+. ************************************************
+
+. 
+. noi di _n(5) _dup(80) "=" _n "2 reduce variation in notation from method to method" _n _dup(80) "="
+
+
+
+
+
+================================================================================
+2 reduce variation in notation from method to method
+================================================================================
+
+. 
+. 
+. 
+. ************************************************
+
+. 
+. 
+. 
+. 
+. 
+. foreach k in Penicillin Methicillin Ciprofloxacin Erythromycin Clindamycin Tetracycline Fusidicacid Gentamicin Rifampicin Trimet
+> hoprim Vancomycin Mupirocin ClindDtest SEA SEB SEC SED SEE SEG SEH SEI SEJ SELR SEP SEU ETA ETB ETD TSST1 PVL MECA MECC{
+  2. 
+. noi di "`k'"
+  3. 
+. gen ambi = 1 if inlist(upper(`k'), "ND", "NT", "LOW COV", "MIXED")
+  4. 
+. replace ambi=1 if inlist(upper(`k'), "NOT DONE", "N/A", "NF", "NA")
+  5. 
+. summ ambi
+  6. 
+. noi di r(sum) " values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA"
+  7. 
+. replace `k' = "NA" if ambi==1
+  8. 
+. drop ambi
+  9. 
+. 
+. 
+. gen ambi = 1 if `k'=="B"
+ 10. 
+. summ ambi
+ 11. 
+. noi di r(sum)  " reported as B; replace with I for consistancy between methods "
+ 12. 
+. replace `k' ="I" if ambi==1
+ 13. 
+. drop ambi
+ 14. 
+. 
+. 
+. gen ambi = 1 if `k'==""
+ 15. 
+. summ ambi
+ 16. 
+. noi di r(sum)  " entirely missing values; replace with -"
+ 17. 
+. replace `k' ="-" if ambi==1
+ 18. 
+. drop ambi
+ 19. 
+. 
+. 
+. noi di "final version"
+ 20. 
+. noi tab `k', m
+ 21. 
+. }
+Penicillin
+(1,374 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          5           1           0          1          1
+5 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(5 real changes made)
+(1,374 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          5           1           0          1          1
+5 reported as B; replace with I for consistancy between methods 
+(5 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 entirely missing values; replace with -
+(0 real changes made)
+final version
+
+ Penicillin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          I |          5        0.36        0.36
+         NA |          5        0.36        0.73
+          R |      1,137       82.45       83.18
+          S |        232       16.82      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Methicillin
+(1,373 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          6           1           0          1          1
+6 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(6 real changes made)
+(1,359 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |         20           1           0          1          1
+20 reported as B; replace with I for consistancy between methods 
+(20 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 entirely missing values; replace with -
+(0 real changes made)
+final version
+
+Methicillin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          I |         20        1.45        1.45
+         NA |          6        0.44        1.89
+          R |        391       28.35       30.24
+          S |        962       69.76      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Ciprofloxacin
+(1,373 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          6           1           0          1          1
+6 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(6 real changes made)
+(1,358 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |         21           1           0          1          1
+21 reported as B; replace with I for consistancy between methods 
+(21 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 entirely missing values; replace with -
+(0 real changes made)
+final version
+
+Ciprofloxac |
+         in |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          I |         21        1.52        1.52
+         NA |          6        0.44        1.96
+          R |        316       22.92       24.87
+          S |      1,036       75.13      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Erythromycin
+(1,373 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          6           1           0          1          1
+6 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(6 real changes made)
+(1,378 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          1           1           .          1          1
+1 reported as B; replace with I for consistancy between methods 
+(1 real change made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 entirely missing values; replace with -
+(0 real changes made)
+final version
+
+Erythromyci |
+          n |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          I |          1        0.07        0.07
+         NA |          6        0.44        0.51
+          R |        348       25.24       25.74
+          S |      1,024       74.26      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Clindamycin
+(967 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        412           1           0          1          1
+412 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(412 real changes made)
+(1,377 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          2           1           0          1          1
+2 reported as B; replace with I for consistancy between methods 
+(2 real changes made)
+(878 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        501           1           0          1          1
+501 entirely missing values; replace with -
+(501 real changes made)
+final version
+
+Clindamycin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        501       36.33       36.33
+          I |          2        0.15       36.48
+         NA |        412       29.88       66.35
+          R |         68        4.93       71.28
+          S |        396       28.72      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Tetracycline
+(1,373 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          6           1           0          1          1
+6 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(6 real changes made)
+(1,378 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          1           1           .          1          1
+1 reported as B; replace with I for consistancy between methods 
+(1 real change made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 entirely missing values; replace with -
+(0 real changes made)
+final version
+
+Tetracyclin |
+          e |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          I |          1        0.07        0.07
+         NA |          6        0.44        0.51
+          R |        118        8.56        9.06
+          S |      1,254       90.94      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Fusidicacid
+(1,373 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          6           1           0          1          1
+6 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(6 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 entirely missing values; replace with -
+(0 real changes made)
+final version
+
+    Fusidic |
+       acid |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         NA |          6        0.44        0.44
+          R |        162       11.75       12.18
+          S |      1,211       87.82      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Gentamicin
+(1,373 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          6           1           0          1          1
+6 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(6 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 entirely missing values; replace with -
+(0 real changes made)
+final version
+
+ Gentamicin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         NA |          6        0.44        0.44
+          R |         94        6.82        7.25
+          S |      1,279       92.75      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Rifampicin
+(1,373 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          6           1           0          1          1
+6 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(6 real changes made)
+(1,378 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          1           1           .          1          1
+1 reported as B; replace with I for consistancy between methods 
+(1 real change made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 entirely missing values; replace with -
+(0 real changes made)
+final version
+
+ Rifampicin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          I |          1        0.07        0.07
+         NA |          6        0.44        0.51
+          R |         25        1.81        2.32
+          S |      1,347       97.68      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Trimethoprim
+(853 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        526           1           0          1          1
+526 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(526 real changes made)
+(1,374 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          5           1           0          1          1
+5 reported as B; replace with I for consistancy between methods 
+(5 real changes made)
+(1,201 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        178           1           0          1          1
+178 entirely missing values; replace with -
+(178 real changes made)
+final version
+
+Trimethopri |
+          m |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        178       12.91       12.91
+          I |          5        0.36       13.27
+         NA |        526       38.14       51.41
+          R |         43        3.12       54.53
+          S |        627       45.47      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Vancomycin
+(1,373 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          6           1           0          1          1
+6 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(6 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 entirely missing values; replace with -
+(0 real changes made)
+final version
+
+ Vancomycin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         NA |          6        0.44        0.44
+          S |      1,373       99.56      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+Mupirocin
+(1,368 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |         11           1           0          1          1
+11 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(11 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(1,056 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        323           1           0          1          1
+323 entirely missing values; replace with -
+(323 real changes made)
+final version
+
+  Mupirocin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        323       23.42       23.42
+          I |         24        1.74       25.16
+         NA |         11        0.80       25.96
+          R |          6        0.44       26.40
+          S |      1,015       73.60      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ClindDtest
+(1,379 missing values generated)
+(473 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        473           1           0          1          1
+473 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(473 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(598 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        781           1           0          1          1
+781 entirely missing values; replace with -
+(781 real changes made)
+final version
+
+   Clind (D |
+      test) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        781       56.64       56.64
+         NA |        473       34.30       90.94
+        NEG |          8        0.58       91.52
+        POS |        117        8.48      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEA
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEA |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |         40        2.90       88.03
+          S |        165       11.97      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEB
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEB |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |         21        1.52       86.66
+          S |        184       13.34      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEC
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEC |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |         28        2.03       87.16
+          S |        177       12.84      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SED
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SED |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |         16        1.16       86.29
+          S |        189       13.71      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEE
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEE |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |          3        0.22       85.35
+          S |        202       14.65      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEG
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEG |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |         77        5.58       90.72
+          S |        128        9.28      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEH
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEH |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |         26        1.89       87.02
+          S |        179       12.98      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEI
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEI |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |         76        5.51       90.65
+          S |        129        9.35      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEJ
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEJ |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |         20        1.45       86.58
+          S |        185       13.42      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SELR
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+       SELR |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          S |        205       14.87      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEP
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEP |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          S |        205       14.87      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+SEU
+(1,192 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        187           1           0          1          1
+187 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(187 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        SEU |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        187       13.56       85.13
+          R |         21        1.52       86.66
+          S |        184       13.34      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ETA
+(1,193 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        186           1           0          1          1
+186 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(186 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        ETA |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        186       13.49       85.06
+          R |         18        1.31       86.37
+          S |        188       13.63      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ETB
+(1,193 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        186           1           0          1          1
+186 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(186 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        ETB |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        186       13.49       85.06
+          R |          3        0.22       85.28
+          S |        203       14.72      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+ETD
+(1,193 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        186           1           0          1          1
+186 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(186 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        ETD |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        186       13.49       85.06
+          R |         13        0.94       86.00
+          S |        193       14.00      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+TSST1
+(1,194 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        185           1           0          1          1
+185 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(185 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+      TSST1 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        185       13.42       84.99
+          R |         22        1.60       86.58
+          S |        185       13.42      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+PVL
+(1,321 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |         58           1           0          1          1
+58 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(58 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+        PVL |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |         58        4.21       75.78
+          R |         95        6.89       82.67
+          S |        239       17.33      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+MECA
+(1,315 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |         64           1           0          1          1
+64 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(64 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+       MECA |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |         64        4.64       76.21
+          R |        151       10.95       87.16
+          S |        177       12.84      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+MECC
+(1,155 missing values generated)
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        224           1           0          1          1
+224 values are in list ND, NT, LOW COV, MIXED, N/A, NOT DONE, replacing with NA
+(224 real changes made)
+(1,379 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |          0
+0 reported as B; replace with I for consistancy between methods 
+(0 real changes made)
+(392 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ambi |        987           1           0          1          1
+987 entirely missing values; replace with -
+(987 real changes made)
+final version
+
+       MECC |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        987       71.57       71.57
+         NA |        224       16.24       87.82
+          R |         13        0.94       88.76
+          S |        155       11.24      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. * fix clindamycin tests
+
+. 
+. ************************************************
+
+. 
+. noi di _n(5) _dup(80) "=" _n "3   use D-test to fix clindamycin test results" _n _dup(80) "="
+
+
+
+
+
+================================================================================
+3   use D-test to fix clindamycin test results
+================================================================================
+
+. 
+. 
+. 
+. ************************************************
+
+. 
+. 
+. 
+. gen count =1 if  Clindamycin=="S" &  ClindDtest == "POS" 
+(1,262 missing values generated)
+
+. 
+. summ  count if count==1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       count |        117           1           0          1          1
+
+. 
+. noi di r(N) " clinddtest results are positive when clindamycin results = S -> replace clindamycin test with R"
+117 clinddtest results are positive when clindamycin results = S -> replace clindamycin test with R
+
+. 
+. replace  Clindamycin= "R" if count == 1
+(117 real changes made)
+
+. 
+. noi tab Clindamycin, m
+
+Clindamycin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          - |        501       36.33       36.33
+          I |          2        0.15       36.48
+         NA |        412       29.88       66.35
+          R |        185       13.42       79.77
+          S |        279       20.23      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
+
+. 
+. drop *ClindDtest count
+
+. 
+. 
+. 
+. noi di "SAVE: one record per sample with gold standard profile"
+SAVE: one record per sample with gold standard profile
+
+. 
+. save pipeline_gold_clean_wide, replace
+file pipeline_gold_clean_wide.dta saved
+
+. 
+. 
+. 
+. 
+. 
+. * reshape back and match up names
+
+. 
+. 
+. 
+. rename * value*
+
+. 
+. rename valuesample sample
+
+. 
+. rename valueset set
+
+. 
+. rename valuemethod method
+
+. 
+. 
+. 
+. reshape long value, i(sample) j(site) string
+(note: j = Ciprofloxacin Clindamycin ETA ETB ETD Erythromycin Fusidicacid Gentamicin MECA MECC Methicillin Mupirocin PVL Penicilli
+> n Rifampicin SEA SEB SEC SED SEE SEG SEH SEI SEJ SELR SEP SEU TSST1 Tetracycline Trimethoprim Vancomycin)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                     1379   ->   42749
+Number of variables                  34   ->       5
+j variable (31 values)                    ->   site
+xij variables:
+valueCiprofloxacin valueClindamycin ... valueVancomycin->value
+-----------------------------------------------------------------------------
+
+. 
+. replace site = lower(site)
+(42,749 real changes made)
+
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. rename value goldstandard
+
+. 
+. 
+. 
+. 
+. 
+. noi di "SAVE: one record per sample-site with gold standard profile"
+SAVE: one record per sample-site with gold standard profile
+
+. 
+. save pipeline_gold_clean_long, replace
+file pipeline_gold_clean_long.dta saved
+
+. 
+. 
+. 
+. 
+. 
+. noi cd E:\users\amy.mason\Pipeline_27_07_2016\
 E:\users\amy.mason\Pipeline_27_07_2016
 
+. * clean pipeline data
+
 . 
-. run clean_pheno.do
+. 
+. 
+. set li 130
+
+. 
+. 
+. 
+. cap log close
