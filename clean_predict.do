@@ -555,6 +555,7 @@ noi di r(sum)/_N*100
 summ agree if strpos(type, "Aqu") |strpos(type, "Chro")
 noi di r(sum) " out of " r(N) " aquired or chromosonal resistance site predictions" agree
 noi di r(sum)/r(N)*100
+drop agree
 
 save pipeline_clean_all_values_wide, replace
 
