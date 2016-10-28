@@ -264,10 +264,10 @@ noi di r(N) " luk only supplied by mykrobe, drop from database"
 noi drop if inlist(site, "luk")
 noi di _N " sample sites remaining" 
 * ar
-noi tab site new if strpos(site, "v44"), m
-summ zbyte if inlist(site, "v44")
-noi di r(N) "v44 only supplied by mykrobe, drop from database"
-noi drop if inlist(site, "v44")
+noi tab site new if strpos(site, "ar"), m
+summ zbyte if inlist(site, "ar")
+noi di r(N) "ar only supplied by mykrobe, drop from database"
+noi drop if inlist(site, "ar")
 noi di _N " sample sites remaining" 
 
 
@@ -283,14 +283,14 @@ drop if strpos("`list'", sample)
 drop count 
 
 *001
-summ zbyte if new =="001"
-noi di r(N) "Called only by typewriter"
-noi di "sites in sample-sites only supplied by typewriter"
+summ gbyte if new =="001"
+noi di r(N) "Called only by genefinder"
+noi di "sites in sample-sites only supplied by genefinder"
 noi tab site if new =="001"
 * allelicprofile - drop
 noi tab site new if inlist(site, "allelicprofile"), m
 summ zbyte if inlist(site, "allelicprofile")
-noi di r(N) " allelicprofile only supplied by typewriter, drop from database"
+noi di r(N) " allelicprofile only supplied by genefinder, drop from database"
 noi drop if inlist(site, "allelicprofile")
 noi di _N " sample sites remaining" 
 assert new!="001"
@@ -402,11 +402,15 @@ noi di r(N) " remove all spaces in value reports"
 noi replace value = subinstr(value, " ", "",.)
 drop count 
 
-* fix new mykrobe output
+
+* fix new mykrobe output to same format as typewriter/genefinder 
 gen start=strpos(value,"_")
 gen end= strpos(value, "-")
-replace value= substr(value,start+2,end-start-3)+":"+substr(value,start+1,1)+"-" +substr(value,end-1,1) if site==lower(substr(value,1,4)) & strpos(type, "Chr") & method=="zam"
+gen value2= value
+replace value= substr(value,start+2,end-start-3)+":"+substr(value,start+1,1)+"-" +substr(value,end-1,1) ///
+			if inlist(site, "fusa", "gyra", "grla", "rpob", "dfrb") & method=="zam" & value!="WT"
 drop start end
+
 
 *swap to binary the point mutations
 * clarify absenses
@@ -416,20 +420,38 @@ noi di r(N) "replace WT with A in typewriter/ genewriter/ zam  reports on chromo
 noi replace value = "A" if count==1 
 drop count
 
-* clarify point mutations based on clare's paper
+* clarify point mutations based on clare's paper *NOTE: need to do as strpos not inlist as there are multiple variations reported
 noi di "mutations: if count!=1 then no considered positive as not in panal on clare's paper"
 *gyra
 noi di "gyra mutations"
-gen count =1 if value =="84:S-L" & strpos(site, "gyra")
+gen count =1 if strpos(value,"84:S-L")  & strpos(site, "gyra")
+replace count =1 if strpos(value, "88:E-K")  & strpos(site, "gyra")
+replace count =1 if strpos(value, "106:G-D")  & strpos(site, "gyra")
+replace count =1 if strpos(value, "85:S-P")  & strpos(site, "gyra")
+replace count =1 if strpos(value, "88:E-G")  & strpos(site, "gyra")
+replace count =1 if strpos(value, "88:E-L")  & strpos(site, "gyra")
+
 noi tab value count if site=="gyra" & strpos(value, "-") , m
 replace value = "P" if count ==1
 noi tab value count if site=="gyra" , m
 drop count 
+
 *grla
 noi di "grla mutations"
-gen count =1 if strpos(value, "80:S-F") & strpos(site, "grla")
+gen count =1 if strpos(value, "80:S-F" ) & strpos(site, "grla")
 replace count=1 if strpos(value, "80:S-Y") & strpos(site, "grla")
-replace count=1  if strpos(value, "84:E-G") & strpos(site, "grla")
+replace count=1 if strpos(value, "84:E-K") & strpos(site, "grla")
+replace count=1 if strpos(value, "84:E-G") & strpos(site, "grla")
+replace count=1 if strpos(value, "84:E-V" ) & strpos(site, "grla")
+replace count=1 if strpos(value, "432:D-G") & strpos(site, "grla")
+replace count=1 if strpos(value, "83:Y-N" ) & strpos(site, "grla")
+replace count=1 if strpos(value, "116: A-E" ) & strpos(site, "grla")
+replace count=1 if strpos(value, "45:I-M") & strpos(site, "grla")
+replace count=1 if strpos(value, "48: A-T" ) & strpos(site, "grla")
+replace count=1 if strpos(value, "79:D-V" ) & strpos(site, "grla")
+replace count=1 if strpos(value, "41:V-G") & strpos(site, "grla")
+replace count=1 if strpos(value, "108:S-N" ) & strpos(site, "grla")
+
 noi tab value count if site=="grla" & strpos(value, "-") , m
 replace value = "P" if count ==1
 noi tab value count if site=="grla" , m
@@ -439,21 +461,66 @@ drop count
 * fusa
 noi di "fusa mutations"
 
-gen count =1 if strpos(value, "114:P-H") & strpos(site, "fusa")
-replace count =1  if strpos(value, "461:L-K") & strpos(site, "fusa")
-replace count =1  if strpos(value, "461:L-S") & strpos(site, "fusa")
-replace count =1  if strpos(value, "404:P-L") & strpos(site, "fusa")
-replace count =1  if strpos(value, "90:V-I") & strpos(site, "fusa")
-replace count =1  if strpos(value, "457:H-Y") & strpos(site, "fusa")
-replace count =1 if strpos(value, "67:A-T") & strpos(site, "fusa")
-replace count =1 if strpos(value, "406:P-L") & strpos(site, "fusa")
-replace count =1 if strpos(value, "464:R-S") & strpos(site, "fusa")
-replace count =1  if strpos(value, "464:R-H") & strpos(site, "fusa")
-replace count =1  if strpos(value, "457:H-Q") & strpos(site, "fusa")
-replace count =1  if strpos(value, "453:M-I") & strpos(site, "fusa")
-replace count =1  if strpos(value, "452:G-C") & strpos(site, "fusa")
-replace count =1  if strpos(value, "452:G-S") & strpos(site, "fusa")
-replace count =1  if strpos(value, "404:P-Q") & strpos(site, "fusa")
+gen count =1 if strpos(value, "160:A-V")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "376:A-V")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "655:A-E")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "655:A-P")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "655:A-V")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "67:A-T")   & strpos(site, "fusa")
+replace count =1 if strpos(value, "70:A-V")   & strpos(site, "fusa")
+replace count =1 if strpos(value, "71:A-V")   & strpos(site, "fusa")
+replace count =1 if strpos(value, "434:B-N")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "473:C-S")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "189:D-G")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "189:D-V")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "373:D-N")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "463:D-G")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "233:E-Q")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "444:E-K")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "444:E-V")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "449:E-K")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "441:F-Y")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "652:F-S")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "451:G-V")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "452:G-S")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "452:G-C")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "556:G-S" ) & strpos(site, "fusa")
+replace count =1 if strpos(value, "617:G-D")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "664:G-S")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "438:H-N")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "457:H-Q")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "457:H-Y" ) & strpos(site, "fusa")
+replace count =1 if strpos(value, "430:L-S")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "456:L-F")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "461:L-K")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "461:L-S")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "161:M-I" ) & strpos(site, "fusa")
+replace count =1 if strpos(value, "453:M-I")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "651:M-I")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "114:P-H")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "404:P-L")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "404:P-Q")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "406:P-L")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "478:P-S")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "115:Q-L")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "464:R-C")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "464:R-H")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "464:R-S")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "659:R-C")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "659:R-H")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "659:R-L")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "659:R-S")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "76:R-C")   & strpos(site, "fusa")
+replace count =1 if strpos(value, "416:S-F")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "385:T-N")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "387:T-I")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "436:T-I")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "656:T-K")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "607:V-I")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "90:V-A")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "90:V-I")  & strpos(site, "fusa")
+replace count =1 if strpos(value, "654:Y-N")  & strpos(site, "fusa")
+
 noi tab value count if site=="fusa" & strpos(value, "-") , m
 replace value = "P" if count ==1
 noi tab value count if site=="fusa" , m
@@ -462,26 +529,58 @@ drop count
 
 *rpob
 noi di "rpob mutations"
-gen count =1 if strpos(value, "464:S-P") & strpos(site, "rpob")
-replace count =1   if strpos(value, "468:Q-R") & strpos(site, "rpob")
-replace count =1  if strpos(value, "471:D-Y") & strpos(site, "rpob")
-replace count =1  if strpos(value, "477:A-D") & strpos(site, "rpob")
-replace count =1   if strpos(value, "481:H-N") & strpos(site, "rpob")
-replace count =1  if strpos(value, "481:H-Y") & strpos(site, "rpob")
+
+gen count =1 if strpos(value, "473:A-T") & strpos(site, "rpob")
+replace count =1 if strpos(value, "477:A-D") & strpos(site, "rpob")
+replace count =1 if strpos(value, "477:A-T") & strpos(site, "rpob")
+replace count =1 if strpos(value, "477:A-V") & strpos(site, "rpob")
+replace count =1 if strpos(value, "471:D-G") & strpos(site, "rpob")
+replace count =1 if strpos(value, "471:D-Y") & strpos(site, "rpob")
+replace count =1 if strpos(value, "550:D-G") & strpos(site, "rpob")
+replace count =1 if strpos(value, "481:H-D") & strpos(site, "rpob")
+replace count =1 if strpos(value, "481:H-N") & strpos(site, "rpob")
+replace count =1 if strpos(value, "481:H-Y") & strpos(site, "rpob")
+replace count =1 if strpos(value, "527:I-F") & strpos(site, "rpob")
+replace count =1 if strpos(value, "527:I-L") & strpos(site, "rpob")
+replace count =1 if strpos(value, "527:I-M") & strpos(site, "rpob")
+replace count =1 if strpos(value, "466:L-S") & strpos(site, "rpob")
+replace count =1 if strpos(value, "470:M-T") & strpos(site, "rpob")
+replace count =1 if strpos(value, "474:N-K") & strpos(site, "rpob")
+replace count =1 if strpos(value, "456:Q-K") & strpos(site, "rpob")
+replace count =1 if strpos(value, "468:Q-K") & strpos(site, "rpob")
+replace count =1 if strpos(value, "468:Q-L") & strpos(site, "rpob")
+replace count =1 if strpos(value, "468:Q-R") & strpos(site, "rpob")
+replace count =1 if strpos(value, "565:Q-R") & strpos(site, "rpob")
+replace count =1 if strpos(value, "484:R-H") & strpos(site, "rpob")
+replace count =1 if strpos(value, "463:S-P") & strpos(site, "rpob")
+replace count =1 if strpos(value, "464:S-P") & strpos(site, "rpob")
+replace count =1 if strpos(value, "486:S-L") & strpos(site, "rpob")
+replace count =1 if strpos(value, "529:S-L") & strpos(site, "rpob")
+
+* check insertion 
+gen insert =1 if strpos(site, "rpob") & (strpos(value,"475H") | strpos(value, "G475")) 
+summ insert
+noi di r(sum) " possible insertions in rpob mutations; check"
+noi list site value count if insert==1
+
 noi tab value count if site=="rpob" & strpos(value, "-") , m
 noi replace value = "P" if count ==1
 noi tab value count if site=="rpob" , m
-drop count 
+drop count insert
+
+
 
 
 *dfrb
 noi di "dfrb mutations"
-gen count =1 if  strpos(value, "150:H-R") & strpos(site, "dfrb")
-replace count =1   if  strpos(value, "21:L-V") & strpos(site, "dfrb")
-replace count =1   if strpos(value, "31:H-N") & strpos(site, "dfrb")
-replace count =1   if strpos(value, "41:L-F") & strpos(site, "dfrb")
-replace count =1   if strpos(value, "99:F-S") & strpos(site, "dfrb")
-replace count =1   if  strpos(value, "99:F-Y") & strpos(site, "dfrb")
+gen count =1 if  strpos(value, "99:F-Y" ) & strpos(site, "dfrb")
+replace count =1 if  strpos(value, "99:F-S") & strpos(site, "dfrb")
+replace count =1 if  strpos(value, "99:F-I" ) & strpos(site, "dfrb")
+replace count =1 if  strpos(value, "31:H-N" ) & strpos(site, "dfrb")
+replace count =1 if  strpos(value, "41:L-F") & strpos(site, "dfrb")
+replace count =1 if  strpos(value, "150:H-R") & strpos(site, "dfrb")
+replace count =1 if  strpos(value, "21:L-V") & strpos(site, "dfrb")
+replace count =1 if  strpos(value, "60:N-I") & strpos(site, "dfrb")
 noi tab value count if site=="dfrb" & strpos(value, "-") , m
 noi replace value = "P" if count ==1
 noi tab value count if site=="dfrb" , m
