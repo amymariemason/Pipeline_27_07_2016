@@ -76,8 +76,7 @@ save pipeline_data_gf, replace
 
 * Mykroke sets
 noi di "Mykrobe sets"
- import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\mykrobe_17_oct_2016.xlsx", sheet("mykrobe_17_oct_2016.tsv") firstrow clear
-
+import delimited E:\users\amy.mason\Pipeline_27_07_2016\Inputs\mykrobe_11_oct_2016.tsv, clear
 gen method="zam"
 *gen set=""
 *reshape to one line per site/sample

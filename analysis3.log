@@ -1,189 +1,147 @@
-Run by AMM on 14 Oct 2016 11:27:17
+. use pipeline_clean_all_values_wide, clear
 
+. keep if site=="grla"
+(115,836 observations deleted)
 
+. tab ValueA
 
+   ValueAll |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        AAA |        973       70.56       70.56
+        APA |         99        7.18       77.74
+        APP |          1        0.07       77.81
+        PAP |          6        0.44       78.25
+        PPP |        300       21.75      100.00
+------------+-----------------------------------
+      Total |      1,379      100.00
 
+. list if ValueA=="APA"
 
-================================================================================
- 1 virulence predictions by site
-================================================================================
- make bar chart of which methods differ on which virulence factor
+      +---------------------------------------------------------------------------------------------------------------+
+      |               sample   site   valueg~r   valuet~r   valuezam          set                     type   ValueAll |
+      |---------------------------------------------------------------------------------------------------------------|
+   6. |     H111940137-460-2   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+   8. |            C00012750   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+  19. |     H131320234-411-2   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+  41. |            C00003415   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+  45. |            C00013227   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+  71. |            C00003239   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+  81. |            C00003136   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+  85. |            C00013201   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 127. |            C00013317   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 138. |            C00003368   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 152. |            C00003353   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 167. |            C00012821   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 173. |            C00003377   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 179. |            C00012820   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 183. |            C00001132   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 200. |            C00003363   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 206. |            C00012835   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 207. |            C00003210   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 222. |            C00013363   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 230. |            C00003294   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 256. |            C00012825   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 257. |            C00013318   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 297. |            C00003156   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 306. |            C00003367   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 318. |            C00013215   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 320. |            C00003180   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 327. |            C00013383   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 335. |            C00003112   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 338. |            C00007081   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 340. |            C00013382   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 361. |            C00013226   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 371. |            C00003389   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 378. |     RH12000373-433-2   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+ 404. |            C00001143   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 415. |            C00003134   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 416. |            C00013221   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 423. |            C00001097   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 444. |     H125280642-841-2   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+ 449. |            C00003282   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 454. |            C00003352   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 486. |            C00003312   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 505. |            C00013405   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 533. |            C00003412   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 536. |            C00013354   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 556. |            C00003304   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 557. |            C00003328   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 587. |            C00012768   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 589. |            C00001109   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 594. |            C00001188   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 598. |            C00013224   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 602. |     H111600186-455-2   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+ 618. |            C00008971   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 620. |            C00003147   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 633. |     H113580127-202-1   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+ 650. |            C00003366   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 664. |            C00003347   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 666. |            C00013373   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 676. |            C00003280   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 688. |            C00013171   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 715. |            C00001157   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 758. |            C00012778   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 778. |            C00003373   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 793. |            C00013315   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 803. |            C00012801   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 810. |            C00001276   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 812. |            C00013249   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 815. |            C00001124   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 816. |            C00007070   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 818. |            C00013170   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 850. |            C00013251   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 857. |            C00001101   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 898. |            C00013319   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 906. |            C00003131   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 923. |            C00001141   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 925. |     H110740135-193-2   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 935. |            C00013337   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 941. |            C00003421   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 944. |            C00013364   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+ 981. |            C00003361   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+ 983. |            C00012748   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+ 987. |            C00012779   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+1005. |            C00001187   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+1074. |            C00003196   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+1106. |            C00003278   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+1108. |            C00013322   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+1115. |            C00012818   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+1116. |     H123860403-208-1   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+1154. |            C00003364   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+1164. |            C00001105   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+1166. | H125280642-356-F10-2   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+1212. | RH11000056-287-A02-2   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+1244. |            C00013344   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+1284. |            C00003348   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+1292. |            C00012757   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+1296. |     H113920133-128-1   grla          A          A          P   Collindale   Chromosomal Resistance        APA |
+      |---------------------------------------------------------------------------------------------------------------|
+1328. |            C00013320   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+1330. |            C00003181   grla          A          A          P    Oxford501   Chromosomal Resistance        APA |
+1353. |            C00012803   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+1359. |            C00012751   grla          A          A          P    Oxford491   Chromosomal Resistance        APA |
+      +---------------------------------------------------------------------------------------------------------------+
 
-
-
-
-
-================================================================================
- 2 phenotype predictions compared to gold standard
-================================================================================
-overall results
-
-goldstanda |                        valueall
-        rd |       aaa        apa        app        ppa        ppp |     Total
------------+-------------------------------------------------------+----------
-         - |    15,648         11          7         83      3,004 |    18,753 
-         A |     3,364         10          0         17         81 |     3,472 
-        NA |     2,858          1          0         22        452 |     3,333 
-         P |        12          2          0         10        619 |       643 
------------+-------------------------------------------------------+----------
-     Total |    21,882         24          7        132      4,156 |    26,201 
-
-results by site
-
-              |                        valueall
-         site |       aaa        apa        app        ppa        ppp |     Total
---------------+-------------------------------------------------------+----------
-          eta |     1,338          1          0          0         40 |     1,379 
-          etb |     1,372          1          0          1          5 |     1,379 
-          etd |     1,320          1          0          1         57 |     1,379 
-         meca |       999          1          0          2        377 |     1,379 
-         mecc |     1,362          0          0          0         17 |     1,379 
-          pvl |     1,266          3          0          1        109 |     1,379 
-          sea |     1,080          1          0          3        295 |     1,379 
-          seb |     1,267          1          0          2        109 |     1,379 
-          sec |     1,149          1          0          4        225 |     1,379 
-          sed |     1,313          0          0          0         66 |     1,379 
-          see |     1,375          0          0          0          4 |     1,379 
-          seg |       600          6          0         20        753 |     1,379 
-          seh |     1,241          2          0          2        134 |     1,379 
-          sei |       596          3          6         33        741 |     1,379 
-          sej |     1,310          0          0          0         69 |     1,379 
-         selr |     1,312          0          0          0         67 |     1,379 
-          sep |     1,268          0          1          2        108 |     1,379 
-          seu |       595          2          0         57        725 |     1,379 
-        tsst1 |     1,119          1          0          4        255 |     1,379 
---------------+-------------------------------------------------------+----------
-        Total |    21,882         24          7        132      4,156 |    26,201 
-
-comparision to clear gold value results
-
-goldstanda |                  valueall
-        rd |       aaa        apa        ppa        ppp |     Total
------------+--------------------------------------------+----------
-         A |     3,364         10         17         81 |     3,472 
-         P |        12          2         10        619 |       643 
------------+--------------------------------------------+----------
-     Total |     3,376         12         27        700 |     4,115 
-
-3983 out of 4115results agree between all methods and gold standard
-96.792224
-
-
-
-
-
-================================================================================
- 3 find sensitivity and specifity of each method/antibiotic
-================================================================================
-restrict to sites with clear gold standard values only
-4115 results are P/A
-Typewriter
-selr has no positive samples
-sep has no positive samples
-
-     +-------------------------------------------------------------------------+
-     |  site   sensit~y   specif~y      lsens      usens      lspec      uspec |
-     |-------------------------------------------------------------------------|
-  1. |   eta          1          1    .814698          1   .9805695          1 |
-  2. |   etb          1          1   .2924018          1   .9819923          1 |
-  3. |   etd          1          1   .7529474          1   .9810681          1 |
-  4. |  meca   .9933775   .9943503   .9636555   .9998323   .9689253   .9998569 |
-  5. |  mecc          1          1   .7529474          1   .9764817          1 |
-     |-------------------------------------------------------------------------|
-  6. |   pvl   .9578947          1   .8956916   .9884104   .9846839          1 |
-  7. |   sea       .925   .9939394   .7961352   .9842578   .9666966   .9998466 |
-  8. |   seb          1          1   .8389024          1   .9801514          1 |
-  9. |   sec   .9642857   .9943503   .8165224   .9990962   .9689253   .9998569 |
- 10. |   sed          1          1   .7940928          1   .9806713          1 |
-     |-------------------------------------------------------------------------|
- 11. |   see          1          1   .2924018          1    .981904          1 |
- 12. |   seg    .987013          1   .9297529   .9996713   .9715919          1 |
- 13. |   seh   .9230769   .9944134   .7486971   .9905446   .9692681   .9998586 |
- 14. |   sei   .8947368          1   .8030833   .9534464    .971809          1 |
- 15. |   sej        .95          1   .7512673   .9987349   .9802576          1 |
-     |-------------------------------------------------------------------------|
- 16. |  selr          .   .9073171          .          .   .8590496   .9432732 |
- 17. |   sep          .   .9463415          .          .   .9060199   .9729128 |
- 18. |   seu   .8571429   .7445652    .636576    .969511   .6751918   .8058804 |
- 19. | tsst1          1          1   .8456275          1   .9802576          1 |
-     +-------------------------------------------------------------------------+
-restrict to sites with clear gold standard values only
-4115 results are P/A
-Genefinder
-selr has no positive samples
-sep has no positive samples
-
-     +-------------------------------------------------------------------------+
-     |  site   sensit~y   specif~y      lsens      usens      lspec      uspec |
-     |-------------------------------------------------------------------------|
-  1. |   eta          1          1    .814698          1   .9805695          1 |
-  2. |   etb          1   .9950739   .2924018          1   .9728606   .9998753 |
-  3. |   etd          1          1   .7529474          1   .9810681          1 |
-  4. |  meca          1   .9943503   .9758663          1   .9689253   .9998569 |
-  5. |  mecc          1          1   .7529474          1   .9764817          1 |
-     |-------------------------------------------------------------------------|
-  6. |   pvl   .9578947          1   .8956916   .9884104   .9846839          1 |
-  7. |   sea       .925   .9878788   .7961352   .9842578   .9569018   .9985287 |
-  8. |   seb          1          1   .8389024          1   .9801514          1 |
-  9. |   sec   .9642857   .9887006   .8165224   .9990962   .9597806   .9986286 |
- 10. |   sed          1          1   .7940928          1   .9806713          1 |
-     |-------------------------------------------------------------------------|
- 11. |   see          1          1   .2924018          1    .981904          1 |
- 12. |   seg    .987013   .9921875   .9297529   .9996713   .9572409   .9998022 |
- 13. |   seh   .9230769   .9944134   .7486971   .9905446   .9692681   .9998586 |
- 14. |   sei   .9736842   .9922481   .9081505    .996797   .9575666   .9998038 |
- 15. |   sej        .95          1   .7512673   .9987349   .9802576          1 |
-     |-------------------------------------------------------------------------|
- 16. |  selr          .   .9073171          .          .   .8590496   .9432732 |
- 17. |   sep          .   .9463415          .          .   .9060199   .9729128 |
- 18. |   seu          1   .6847826   .8389024          1    .612345   .7511507 |
- 19. | tsst1          1   .9945946   .8456275          1   .9702525   .9998631 |
-     +-------------------------------------------------------------------------+
-restrict to sites with clear gold standard values only
-4115 results are P/A
-Mykrobe
-selr has no positive samples
-sep has no positive samples
-
-     +-------------------------------------------------------------------------+
-     |  site   sensit~y   specif~y      lsens      usens      lspec      uspec |
-     |-------------------------------------------------------------------------|
-  1. |   eta          1   .9946808    .814698          1   .9707214   .9998654 |
-  2. |   etb          1   .9950739   .2924018          1   .9728606   .9998753 |
-  3. |   etd          1   .9948186   .7529474          1    .971471   .9998688 |
-  4. |  meca          1   .9887006   .9758663          1   .9597806   .9986286 |
-  5. |  mecc          1          1   .7529474          1   .9764817          1 |
-     |-------------------------------------------------------------------------|
-  6. |   pvl    .968421   .9916318   .9104775   .9934397   .9700998   .9989849 |
-  7. |   sea       .925   .9878788   .7961352   .9842578   .9569018   .9985287 |
-  8. |   seb          1   .9945652   .8389024          1   .9700928   .9998624 |
-  9. |   sec   .9642857   .9830508   .8165224   .9990962   .9512687    .996491 |
- 10. |   sed          1          1   .7940928          1   .9806713          1 |
-     |-------------------------------------------------------------------------|
- 11. |   see          1          1   .2924018          1    .981904          1 |
- 12. |   seg    .987013    .984375   .9297529   .9996713   .9446974   .9981021 |
- 13. |   seh   .9230769   .9888268   .7486971   .9905446   .9602234    .998644 |
- 14. |   sei   .9868421   .9922481   .9288563   .9996669   .9575666   .9998038 |
- 15. |   sej        .95          1   .7512673   .9987349   .9802576          1 |
-     |-------------------------------------------------------------------------|
- 16. |  selr          .   .9073171          .          .   .8590496   .9432732 |
- 17. |   sep          .   .9463415          .          .   .9060199   .9729128 |
- 18. |   seu          1   .6847826   .8389024          1    .612345   .7511507 |
- 19. | tsst1          1   .9891892   .8456275          1   .9614952    .998688 |
-     +-------------------------------------------------------------------------+
-all methods
-4115 results are A/P
-4115 results are A/P
-4115 results are A/P
-
-     +-----------------------------------------------------------------------------+
-     |    method   sensit~y      lsens      usens   specif~y      lspec      uspec |
-     |-----------------------------------------------------------------------------|
-  1. |    valuez   .9813375   .9676275   .9903206    .968894   .9625663   .9744148 |
-  2. | valuetype    .962675   .9449704   .9759414   .9766705    .971086   .9814309 |
-  3. | valuegene   .9782271   .9637383   .9880466   .9717742   .9657084   .9770269 |
-     +-----------------------------------------------------------------------------+
+. cd E:\users\amy.mason\Pipeline_27_07_2016\
+E:\users\amy.mason\Pipeline_27_07_2016
 
 . 
-end of do-file
-
+. run clean_predict.do

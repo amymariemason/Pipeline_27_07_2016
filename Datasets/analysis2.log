@@ -2,11 +2,11 @@
       name:  <unnamed>
        log:  E:\users\amy.mason\Pipeline_27_07_2016\Datasets\analysis2.log
   log type:  text
- opened on:   4 Oct 2016, 18:40:49
+ opened on:  18 Oct 2016, 17:34:12
 
 . 
 . noi di "Run by AMM on $S_DATE $S_TIME"
-Run by AMM on  4 Oct 2016 18:40:50
+Run by AMM on 18 Oct 2016 17:34:12
 
 . 
 . cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
@@ -18,734 +18,3291 @@ E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 . *********** create phenotype predictions by site
 
 . 
-. 
-. 
-. use pipeline_clean_all_values_long, clear
+. use anti_panel_all, clear
 
 . 
 . 
 . 
-. * (based on new sheet by clare)
+. ******************************************************
+
+. 
+. noi di _n(5) _dup(80) "=" _n " 1 phenotype predictions by site" _n _dup(80) "="
+
+
+
+
+
+================================================================================
+ 1 phenotype predictions by site
+================================================================================
 
 . 
 . 
 . 
-. gen antibiotic =""
-(351,645 missing values generated)
-
-. 
-. replace antibiotic = "ciprofloxacin" if inlist(site, "gyra","gryb", "grla", "grlb")
-variable antibiotic was str1 now str13
-(8,274 real changes made)
-
-. 
-. replace antibiotic = "erythromycinclindamycin" if inlist(site, "erma", "ermb", "ermc", "ermt", "ermy")
-variable antibiotic was str13 now str23
-(20,685 real changes made)
-
-. 
-. replace antibiotic = "erythromycin" if inlist(site, "msra", "mphc")
-(8,274 real changes made)
-
-. 
-. replace antibiotic = "fusidic acid" if inlist(site, "fusb", "fusc", "fusa", "far")
-(12,411 real changes made)
-
-. 
-. replace antibiotic = "gentamicin" if inlist(site,"aac6aph2", "aph2ic")
-(8,274 real changes made)
-
-. 
-. replace antibiotic = "methicillinpenicillin" if inlist(site,"meca", "mecc")
-(8,274 real changes made)
-
-. 
-. replace antibiotic = "mupirocin" if inlist(site, "mupa", "mupb")
-(8,274 real changes made)
-
-. 
-. replace antibiotic = "penicillin" if site=="blaz"
-(4,137 real changes made)
-
-. 
-. replace antibiotic = "rifampicin" if site=="rpob"
-(4,137 real changes made)
-
-. 
-. replace antibiotic = "tetracycline" if inlist(site, "tetk", "tetl", "tetm", "teto")
-(16,548 real changes made)
-
-. 
-. replace antibiotic = "trimethoprim" if inlist(site, "dfra", "dfrc", "dfrb", "dfrb","dfrg", "dfrk")
-(20,685 real changes made)
-
-. 
-. replace antibiotic = "vancomycin" if inlist(site, "vana", "vanb", "vanc")
-(12,411 real changes made)
+. noi di" make bar chart of which methods differ on which antibiotic"
+ make bar chart of which methods differ on which antibiotic
 
 . 
 . 
 . 
-. drop if antibiotic==""
-(219,261 observations deleted)
+. contract  site  value*
+
+. 
+. rename valueall all
+
+. 
+. drop value*
 
 . 
 . 
 . 
-. * some summary stats
-
-. 
-. noi di "sites relevant to antibiotic prediction"
-sites relevant to antibiotic prediction
-
-. 
-. noi display _N " sample sites"
-132384 sample sites
-
-. 
-. noi tab type
-
-                  type |      Freq.     Percent        Cum.
------------------------+-----------------------------------
-    Aquired Resistance |    111,699       84.38       84.38
-Chromosomal Resistance |     20,685       15.63      100.00
------------------------+-----------------------------------
-                 Total |    132,384      100.00
-
-. 
-. bysort sample: gen count1=1 if _n==1
-(131,005 missing values generated)
-
-. 
-. summ count1
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-      count1 |      1,379           1           0          1          1
-
-. 
-. noi di r(sum) " samples"
-1379 samples
-
-. 
-. bysort site: gen count2=1 if _n==1
-(132,352 missing values generated)
-
-. 
-. summ count2
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-      count2 |         32           1           0          1          1
-
-. 
-. noi di r(sum) " sites"
-32 sites
-
-. 
-. bysort antibiotic: gen count3=1 if _n==1
-(132,372 missing values generated)
-
-. 
-. summ count3
-
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-      count3 |         12           1           0          1          1
-
-. 
-. noi di r(sum) " antibiotics"
-12 antibiotics
-
-. 
-. noi tab antibiotic, m
-
-             antibiotic |      Freq.     Percent        Cum.
-------------------------+-----------------------------------
-          ciprofloxacin |      8,274        6.25        6.25
-           erythromycin |      8,274        6.25       12.50
-erythromycinclindamycin |     20,685       15.63       28.13
-           fusidic acid |     12,411        9.38       37.50
-             gentamicin |      8,274        6.25       43.75
-  methicillinpenicillin |      8,274        6.25       50.00
-              mupirocin |      8,274        6.25       56.25
-             penicillin |      4,137        3.13       59.38
-             rifampicin |      4,137        3.13       62.50
-           tetracycline |     16,548       12.50       75.00
-           trimethoprim |     20,685       15.63       90.63
-             vancomycin |     12,411        9.38      100.00
-------------------------+-----------------------------------
-                  Total |    132,384      100.00
-
-. 
-. noi tab site anti
-
-               |                                             antibiotic
-          site | ciprofl..  erythro..  erythro..  fusidic..  gentami..  methici..  mupirocin  penicil..  rifampi.. |     Total
----------------+---------------------------------------------------------------------------------------------------+----------
-      aac6aph2 |         0          0          0          0      4,137          0          0          0          0 |     4,137 
-        aph2ic |         0          0          0          0      4,137          0          0          0          0 |     4,137 
-          blaz |         0          0          0          0          0          0          0      4,137          0 |     4,137 
-          dfra |         0          0          0          0          0          0          0          0          0 |     4,137 
-          dfrb |         0          0          0          0          0          0          0          0          0 |     4,137 
-          dfrc |         0          0          0          0          0          0          0          0          0 |     4,137 
-          dfrg |         0          0          0          0          0          0          0          0          0 |     4,137 
-          dfrk |         0          0          0          0          0          0          0          0          0 |     4,137 
-          erma |         0          0      4,137          0          0          0          0          0          0 |     4,137 
-          ermb |         0          0      4,137          0          0          0          0          0          0 |     4,137 
-          ermc |         0          0      4,137          0          0          0          0          0          0 |     4,137 
-          ermt |         0          0      4,137          0          0          0          0          0          0 |     4,137 
-          ermy |         0          0      4,137          0          0          0          0          0          0 |     4,137 
-          fusa |         0          0          0      4,137          0          0          0          0          0 |     4,137 
-          fusb |         0          0          0      4,137          0          0          0          0          0 |     4,137 
-          fusc |         0          0          0      4,137          0          0          0          0          0 |     4,137 
-          grla |     4,137          0          0          0          0          0          0          0          0 |     4,137 
-          gyra |     4,137          0          0          0          0          0          0          0          0 |     4,137 
-          meca |         0          0          0          0          0      4,137          0          0          0 |     4,137 
-          mecc |         0          0          0          0          0      4,137          0          0          0 |     4,137 
-          mphc |         0      4,137          0          0          0          0          0          0          0 |     4,137 
-          msra |         0      4,137          0          0          0          0          0          0          0 |     4,137 
-          mupa |         0          0          0          0          0          0      4,137          0          0 |     4,137 
-          mupb |         0          0          0          0          0          0      4,137          0          0 |     4,137 
-          rpob |         0          0          0          0          0          0          0          0      4,137 |     4,137 
-          tetk |         0          0          0          0          0          0          0          0          0 |     4,137 
-          tetl |         0          0          0          0          0          0          0          0          0 |     4,137 
-          tetm |         0          0          0          0          0          0          0          0          0 |     4,137 
-          teto |         0          0          0          0          0          0          0          0          0 |     4,137 
-          vana |         0          0          0          0          0          0          0          0          0 |     4,137 
-          vanb |         0          0          0          0          0          0          0          0          0 |     4,137 
-          vanc |         0          0          0          0          0          0          0          0          0 |     4,137 
----------------+---------------------------------------------------------------------------------------------------+----------
-         Total |     8,274      8,274     20,685     12,411      8,274      8,274      8,274      4,137      4,137 |   132,384 
-
-
-               |            antibiotic
-          site | tetracy..  trimeth..  vancomy.. |     Total
----------------+---------------------------------+----------
-      aac6aph2 |         0          0          0 |     4,137 
-        aph2ic |         0          0          0 |     4,137 
-          blaz |         0          0          0 |     4,137 
-          dfra |         0      4,137          0 |     4,137 
-          dfrb |         0      4,137          0 |     4,137 
-          dfrc |         0      4,137          0 |     4,137 
-          dfrg |         0      4,137          0 |     4,137 
-          dfrk |         0      4,137          0 |     4,137 
-          erma |         0          0          0 |     4,137 
-          ermb |         0          0          0 |     4,137 
-          ermc |         0          0          0 |     4,137 
-          ermt |         0          0          0 |     4,137 
-          ermy |         0          0          0 |     4,137 
-          fusa |         0          0          0 |     4,137 
-          fusb |         0          0          0 |     4,137 
-          fusc |         0          0          0 |     4,137 
-          grla |         0          0          0 |     4,137 
-          gyra |         0          0          0 |     4,137 
-          meca |         0          0          0 |     4,137 
-          mecc |         0          0          0 |     4,137 
-          mphc |         0          0          0 |     4,137 
-          msra |         0          0          0 |     4,137 
-          mupa |         0          0          0 |     4,137 
-          mupb |         0          0          0 |     4,137 
-          rpob |         0          0          0 |     4,137 
-          tetk |     4,137          0          0 |     4,137 
-          tetl |     4,137          0          0 |     4,137 
-          tetm |     4,137          0          0 |     4,137 
-          teto |     4,137          0          0 |     4,137 
-          vana |         0          0      4,137 |     4,137 
-          vanb |         0          0      4,137 |     4,137 
-          vanc |         0          0      4,137 |     4,137 
----------------+---------------------------------+----------
-         Total |    16,548     20,685     12,411 |   132,384 
-
-
-. 
-. drop count*
-
-. 
-. 
-. 
-. * create record per sample-antibiotic
-
-. 
-. 
-. 
-. gen countvalues = 1 if value=="P"
-(123,598 missing values generated)
-
-. 
-. replace countvalue = 0 if value=="A"
-(123,598 real changes made)
-
-. 
-. drop site set type
-
-. 
-. 
-. 
-. * collapse by antibiotic, so that one record per antibiotic/sample/method
-
-. 
-. bysort sample method antibiotic: egen value2= total(countvalue), missing
-
-. 
-. replace value2 = 1 if value2>1 
-(2,157 real changes made)
-
-. 
-. duplicates drop sample method antibiotic value2, force
-
-Duplicates in terms of sample method antibiotic value2
-
-(82,740 observations deleted)
-
-. 
-. drop value
-
-. 
-. drop countvalue
-
-. 
-. rename value2 value
-
-. 
-. 
-. 
-. 
-. 
-. * now create wide record, one column per antibiotic and clean up the mult indicators
-
-. 
-. reshape wide value, i( sample method) j(antibiotic) string
-(note: j = ciprofloxacin erythromycin erythromycinclindamycin fusidic acid gentamicin methicillinpenicillin mupirocin penicillin r
-> ifampicin tetracycline trimethoprim vancomycin)
-(note: no data for antibiotic == fusidic)
-(note: no data for antibiotic == acid)
+. reshape wide _freq, i(site) j(all) string
+(note: j = rrr rrs rsr rss srs sss)
 
 Data                               long   ->   wide
 -----------------------------------------------------------------------------
-Number of obs.                    49644   ->    4137
-Number of variables                   4   ->      13
-j variable (11 values)       antibiotic   ->   (dropped)
+Number of obs.                       47   ->      12
+Number of variables                   3   ->       7
+j variable (6 values)               all   ->   (dropped)
 xij variables:
-                                  value   ->   valueciprofloxacin valueerythromycin ... valuevancomycin
+                                  _freq   ->   _freqrrr _freqrrs ... _freqsss
 -----------------------------------------------------------------------------
 
 . 
-. 
-. 
-. rename value* *
-
-. 
-. replace erythromycin = 1 if (erythromycinclindamycin==1)
-(1,039 real changes made)
-
-. 
-. rename erythromycinclindamycin clindamycin
-
-. 
-. gen methicillin =  methicillinpenicillin
-
-. 
-. replace penicillin = 1 if  methicillinpenicillin==1
-(276 real changes made)
-
-. 
-. drop methicillinpenicillin
+. rename _freq* *
 
 . 
 . 
 . 
-. * reshape to long for purposes of merge later
+. 
+. 
+. * bar graph of predictions (antibiotics)
 
 . 
-. rename * predict*
+. graph bar (asis)  rrr rrs rsr rss srs sss,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder Mykrobe Typewriter ") legend( label(1 "rrr") label( 2 "rrs" ) label (3 "rsr") label (4 "rss" ) label (5 "s
+> rs") label( 6 "sss" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6
+> , color(gs12))
 
 . 
-. rename (predictsample predictmethod) (sample method)
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif", as(tif) width(2550) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif written in TIFF format)
 
 . 
 . 
 . 
-. reshape long predict, i(sample method) j(Antibiotic) string
-(note: j = ciprofloxacin clindamycin erythromycin gentamicin methicillin mupirocin penicillin rifampicin tetracycline trimethoprim
->  vancomycin)
-
-Data                               wide   ->   long
------------------------------------------------------------------------------
-Number of obs.                     4137   ->   45507
-Number of variables                  13   ->       4
-j variable (11 values)                    ->   Antibiotic
-xij variables:
-predictciprofloxacin predictclindamycin ... predictvancomycin->predict
------------------------------------------------------------------------------
+. 
+. 
+. *************************************************************
 
 . 
-. gen predict2 = "R" if predict==1
-(36,692 missing values generated)
+. 
+. 
+. ******************************************************
 
 . 
-. replace predict2 ="S" if inlist(predict,0)
-(36,692 real changes made)
+. noi di _n(5) _dup(80) "=" _n " 2 phenotype predictions compared to gold standard" _n _dup(80) "="
+
+
+
+
+
+================================================================================
+ 2 phenotype predictions compared to gold standard
+================================================================================
 
 . 
-. replace predict2 ="S" if inlist(predict,.) & method=="zam"
-(0 real changes made)
+. use anti_panel_all, clear
 
 . 
-. drop predict
+. 
+. 
+. * in table
 
 . 
-. rename predict2 predict
+. noi tab gold valueall
+
+goldstanda |                             valueall
+        rd |       rrr        rrs        rsr        rss        srs        sss |     Total
+-----------+------------------------------------------------------------------+----------
+         - |       189          3          0          0          7        803 |     1,002 
+         I |         6          0          0          0          0         74 |        80 
+        NA |        99          5          0          0          2        896 |     1,002 
+         R |     2,669          8         54          1          4         89 |     2,825 
+         S |        93         12          5          4         22     11,503 |    11,639 
+-----------+------------------------------------------------------------------+----------
+     Total |     3,056         28         59          5         35     13,365 |    16,548 
+
 
 . 
-. rename Antibiotic site
+. 
+. 
+. * reduced table
 
 . 
-. replace site = subinstr(site, " ", "",.)
-(0 real changes made)
+. drop if !inlist(gold, "R", "S")
+(2,084 observations deleted)
 
 . 
-. reshape wide predict, i (sample site) j(method) string
-(note: j = genefinder typewriter zam)
+. noi tab gold valueall
+
+goldstanda |                             valueall
+        rd |       rrr        rrs        rsr        rss        srs        sss |     Total
+-----------+------------------------------------------------------------------+----------
+         R |     2,669          8         54          1          4         89 |     2,825 
+         S |        93         12          5          4         22     11,503 |    11,639 
+-----------+------------------------------------------------------------------+----------
+     Total |     2,762         20         59          5         26     11,592 |    14,464 
+
+
+. 
+. gen agree = (valueall=="rrr" & gold=="R")|(valueall=="sss" & gold=="S")
+
+. 
+. summ agree
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       agree |     14,464    .9798119     .140648          0          1
+
+. 
+. noi di r(sum) " out of " r(N) "results agree between all methods and gold standard"
+14172 out of 14464results agree between all methods and gold standard
+
+. 
+. noi di r(sum)/r(N)*100
+97.981195
+
+. 
+. 
+. 
+. * in graph
+
+. 
+. preserve
+already preserved
+r(621);
+
+. 
+. contract  site  gold valueall
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(valueall) string
+(note: j = rrr rrs rsr rss srs sss)
 
 Data                               long   ->   wide
 -----------------------------------------------------------------------------
-Number of obs.                    45507   ->   15169
+Number of obs.                       72   ->      23
+Number of variables                   4   ->       8
+j variable (6 values)          valueall   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqrrr _freqrrs ... _freqsss
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. 
+. 
+. sort gold site
+
+. 
+.  gen num =_n
+
+. 
+.  replace num=num+1 if gold=="S"
+(12 real changes made)
+
+. 
+. labmask num, values(site)
+
+. 
+. gen goldlabel = "Gold standard " + gold
+
+. 
+. 
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis) rrr rrs rsr rss srs sss if inlist(golds,"R", "S"),graphregion(color(white))    over(site, label(angle(90) labsi
+> ze(tiny)) )  over(goldlabel, label(labsize(small)) ) stack  title("Prediction combinations") subtitle("Results given as Genefind
+> er Mykrobe Typewriter") legend(rows(2) label(1 "rrr") label( 2 "rrs" ) label (3 "rsr") label (4 "rss" ) label (5 "srs") label( 6
+>  "sss" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, color(gs12)
+> ) ylabel(0(500)1000 1400)
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements_withgold.tif", as(tif) width(2550) r
+> eplace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements_withgold.tif written in TIFF format)
+
+. 
+. 
+. 
+. restore
+
+. 
+. 
+. 
+. * sensitivity/ specificity
+
+. 
+. 
+. 
+. ******************************************************
+
+. 
+. noi di _n(5) _dup(80) "=" _n " 3 find sensitivity and specifity of each method/antibiotic" _n _dup(80) "="
+
+
+
+
+
+================================================================================
+ 3 find sensitivity and specifity of each method/antibiotic
+================================================================================
+
+. 
+. 
+. 
+. **************************
+
+. 
+. * TYPE WRITER
+
+. 
+. ****************************
+
+. 
+. 
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. 
+. 
+. noi di "restrict to sites with clear gold standard values only"
+restrict to sites with clear gold standard values only
+
+. 
+. 
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2,084 observations deleted)
+
+. 
+. 
+. 
+. 
+. 
+. noi di "Typewriter"
+Typewriter
+
+. 
+. 
+. 
+. contract  site  gold valuetype
+
+. 
+. rename value predict
+
+. 
+. 
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       44   ->      23
+Number of variables                   4   ->       4
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. rename r combor
+
+. 
+. rename s combos
+
+. 
+. reshape wide combo*, i(site) j(gold) string
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       23   ->      12
 Number of variables                   4   ->       5
-j variable (3 values)            method   ->   (dropped)
+j variable (2 values)      goldstandard   ->   (dropped)
 xij variables:
-                                predict   ->   predictgenefinder predicttypewriter predictzam
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
 -----------------------------------------------------------------------------
 
 . 
-. drop if sample==""
-(0 observations deleted)
+. rename combo* *
 
 . 
 . 
 . 
-. save antibiotic_prediction, replace
-file antibiotic_prediction.dta saved
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+
+. 
+. rename rR TP
+
+. 
+. rename sR FN 
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+
+. 
+. * predicted resistant but actually sensitive
 
 . 
 . 
 . 
-. * produce stats
+. for any TN TP FN FP: replace X=0 if X==.
+
+->  replace TN=0 if TN==.
+(0 real changes made)
+
+->  replace TP=0 if TP==.
+(1 real change made)
+
+->  replace FN=0 if FN==.
+(2 real changes made)
+
+->  replace FP=0 if FP==.
+(1 real change made)
 
 . 
 . 
 . 
-. gen all = predictt+predictz+ predictg
+. gen sensitivity = TP/(TP+FN)
+(1 missing value generated)
+
+. 
+. gen specificity = TN/(TN+FP)
 
 . 
 . 
 . 
-. noi di "predictions: type, zam, gene"
-predictions: type, zam, gene
+. gen predictPOS = TP+FP
 
 . 
-. noi tab all
-
-        all |      Freq.     Percent        Cum.
-------------+-----------------------------------
-        RRR |      2,745       18.10       18.10
-        RSR |        219        1.44       19.54
-        SRR |         26        0.17       19.71
-        SRS |         87        0.57       20.28
-        SSR |          3        0.02       20.30
-        SSS |     12,089       79.70      100.00
-------------+-----------------------------------
-      Total |     15,169      100.00
+. gen predictNEG = TN +FN
 
 . 
 . 
 . 
-. noi di "by antibotic"
-by antibotic
+. gen trueNeg= TN +FP
+
+. 
+. gen truePos= TP +FN
+
+. 
+. 
+. 
+. gen MajorErrorRate = FN/truePos
+(1 missing value generated)
+
+. 
+. gen VeryMajorErrorRate = FP/trueNeg
+
+. 
+. gen Agreement = (TP+TN)/(trueNeg+truePos)
+
+. 
+. 
+. 
+. * get confidence intervals
+
+. 
+. for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
+
+->  gen lsens=.
+(12 missing values generated)
+
+->  gen usens=.
+(12 missing values generated)
+
+->  gen lspec=.
+(12 missing values generated)
+
+->  gen uspec=.
+(12 missing values generated)
+
+->  gen lme=.
+(12 missing values generated)
+
+->  gen ume=.
+(12 missing values generated)
+
+->  gen lvme=.
+(12 missing values generated)
+
+->  gen uvme=.
+(12 missing values generated)
+
+. 
+. local max=_N
+
+. 
+. forvalues i=1(1)`max'{
+  2. 
+. if truePos[`i']>0{
+  3. 
+. cii prop  truePos[`i'] TP[`i']
+  4. 
+. replace lsens = r(lb) if _n==`i'
+  5. 
+. replace usens = r(ub) if _n==`i'
+  6. 
+. cii prop truePos[`i'] FN[`i']
+  7. 
+. replace lvme = r(lb) if _n==`i'
+  8. 
+. replace uvme = r(ub) if _n==`i'
+  9. 
+. }
+ 10. 
+. else{
+ 11. 
+. noi di site[`i'] " has no positive samples"
+ 12. 
+. }
+ 13. 
+. if trueNeg[`i']>0{
+ 14. 
+. cii prop trueNeg[`i'] TN[`i']
+ 15. 
+. replace lspec = r(lb) if _n==`i'
+ 16. 
+. replace uspec = r(ub) if _n==`i'
+ 17. 
+. cii prop trueNeg[`i'] FP[`i']
+ 18. 
+. replace lme = r(lb) if _n==`i'
+ 19. 
+. replace ume = r(ub) if _n==`i'
+ 20. 
+. }
+ 21. 
+. else{
+ 22. 
+. noi di site[`i'] " has no negative samples"
+ 23. 
+. }
+ 24. 
+. }
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        316    .9525316    .0119618        .9229159    .9731923
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        316    .0474684    .0119618        .0268077    .0770841
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,036     .996139    .0019268         .990144     .998947
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,036     .003861    .0019268         .001053     .009856
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        185     .972973    .0119224         .938058    .9911674
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        185     .027027    .0119224        .0088326     .061942
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        279     .921147    .0161351        .8830481     .949925
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        279     .078853    .0161351         .050075    .1169519
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        348    .9827586    .0069778        .9628523    .9936471
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        348    .0172414    .0069778        .0063529    .0371477
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,024    .9892578    .0032214        .9808607    .9946257
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,024    .0107422    .0032214        .0053743    .0191393
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        162    .8888889    .0246914        .8300889    .9328041
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        162    .1111111    .0246914        .0671959    .1699111
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,211    .9942197    .0021784        .9881267    .9976729
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,211    .0057803    .0021784        .0023271    .0118733
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         94    .7765957    .0429615        .6790029    .8560738
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         94    .2234043    .0429615        .1439262    .3209971
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,279    .9976544    .0013526        .9931607     .999516
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,279    .0023456    .0013526         .000484    .0068393
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        391    .9744246    .0079836        .9534699     .987669
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        391    .0255754    .0079836         .012331    .0465301
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        962    .9948025    .0023183        .9879127    .9983103
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        962    .0051975    .0023183        .0016897    .0120873
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |          6           1           0        .5407419           1*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |          6           0           0               0    .4592581*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,015    .9940887    .0024061        .9871782    .9978276
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,015    .0059113    .0024061        .0021724    .0128218
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,137    .9885664    .0031529        .9805276    .9938984
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,137    .0114336    .0031529        .0061016    .0194724
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        232     .862069     .022639        .8108955    .9037048
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        232     .137931     .022639        .0962952    .1891045
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         25         .92    .0542586        .7396942    .9901604
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         25         .08    .0542586        .0098396    .2603058
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,347    .9992576    .0007421        .9958707    .9999812
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,347    .0007424    .0007421        .0000188    .0041293
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        118    .9491525    .0202237        .8926097    .9811139
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        118    .0508475    .0202237        .0188861    .1073903
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,254    .9952153    .0019487         .989615    .9982421
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,254    .0047847    .0019487        .0017579     .010385
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         43    .8604651    .0528413        .7206752    .9470234
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         43    .1395349    .0528413        .0529766    .2793248
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        627    .9984051    .0015936        .9911461    .9999596
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        627    .0015949    .0015936        .0000404    .0088539
+(1 real change made)
+(1 real change made)
+vancomycin has no positive samples
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,373           1           0        .9973169           1*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,373           0           0               0    .0026831*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+. 
+. 
+. 
+. * save values for combining into graphs
+
+. 
+. 
+. 
+. 
+. 
+. keep site  sens spec lsens usens lspec uspec
+
+. 
+. noi list  site  sens spec lsens usens lspec uspec
+
+     +---------------------------------------------------------------------------------+
+     |          site   sensit~y   specif~y      lsens      usens      lspec      uspec |
+     |---------------------------------------------------------------------------------|
+  1. | ciprofloxacin   .9525316    .996139   .9229159   .9731923    .990144    .998947 |
+  2. |   clindamycin    .972973   .9211469    .938058   .9911674   .8830481    .949925 |
+  3. |  erythromycin   .9827586   .9892578   .9628524   .9936471   .9808607   .9946257 |
+  4. |   fusidicacid   .8888889   .9942197   .8300889   .9328041   .9881268   .9976729 |
+  5. |    gentamicin   .7765958   .9976544   .6790029   .8560738   .9931607    .999516 |
+     |---------------------------------------------------------------------------------|
+  6. |   methicillin   .9744245   .9948025   .9534699   .9876689   .9879128   .9983103 |
+  7. |     mupirocin          1   .9940886   .5407419          1   .9871782   .9978276 |
+  8. |    penicillin   .9885664    .862069   .9805276   .9938985   .8108956   .9037048 |
+  9. |    rifampicin        .92   .9992576   .7396942   .9901604   .9958706   .9999812 |
+ 10. |  tetracycline   .9491525   .9952153   .8926097   .9811139    .989615   .9982421 |
+     |---------------------------------------------------------------------------------|
+ 11. |  trimethoprim   .8604651   .9984051   .7206752   .9470235   .9911461   .9999596 |
+ 12. |    vancomycin          .          1          .          .   .9973169          1 |
+     +---------------------------------------------------------------------------------+
+
+. 
+. rename * tw_*
+
+. 
+. rename tw_site site
+
+. 
+. save typewriter, replace
+file typewriter.dta saved
+
+. 
+. 
+. 
+. * graph
+
+. 
+. use typewriter, clear
 
 . 
 . sort site
 
 . 
-. noi tab site all, m
+. gen num =_n 
 
-              |                                all
-         site |       RRR        RSR        SRR        SRS        SSR        SSS |     Total
---------------+------------------------------------------------------------------+----------
-ciprofloxacin |       299          7          0          0          1      1,072 |     1,379 
-  clindamycin |       338          0          7         25          0      1,009 |     1,379 
- erythromycin |       354          0          6         23          0        996 |     1,379 
-   gentamicin |        76          0          1          3          0      1,299 |     1,379 
-  methicillin |       393          0          2          9          0        975 |     1,379 
-    mupirocin |        15          0          2          0          0      1,362 |     1,379 
-   penicillin |     1,005        156          1          8          2        207 |     1,379 
-   rifampicin |         7         17          0          0          0      1,355 |     1,379 
- tetracycline |       121          0          4         16          0      1,238 |     1,379 
- trimethoprim |       137         39          3          3          0      1,197 |     1,379 
-   vancomycin |         0          0          0          0          0      1,379 |     1,379 
---------------+------------------------------------------------------------------+----------
-        Total |     2,745        219         26         87          3     12,089 |    15,169 
+. 
+. labmask num, values(site)
 
+. 
+. local max= _N
 
 . 
 . 
 . 
-. drop all
+. #delimit ;
+Unknown #command
+
+. 
+. twoway rcap tw_usens tw_lsens num || scatter tw_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+
+. 
+. legend(off) title("Typewriter vs. Lab") 
+command legend is unrecognized
+r(199);
+
+. 
+. subtitle("Sensitivity in Phenotype prediction");
+command subtitle is unrecognized
+r(199);
+
+. 
+. #delimit cr
+Unknown #command
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_sens.tif", as(tif) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_sens.tif written in TIFF format)
 
 . 
 . 
 . 
-. * make graph
-
-. 
-. preserve
-
-. 
-. contract  site  predict*
-
-. 
-. gen all = predictt+predictz+ predictg
-
 . 
 . 
+. #delimit ;
+Unknown #command
+
 . 
-. reshape wide _freq, i(site) j(all) string
-(note: j = RRR RSR SRR SRS SSR SSS)
-variable predictgenefinder not constant within site
-variable predicttypewriter not constant within site
-variable predictzam not constant within site
-    Your data are currently long.  You are performing a reshape wide.  You typed something like
+. twoway rcap tw_uspec tw_lspec num || scatter tw_spec num,  xlabel(1(1)`max', valuelabel angle(90))
 
-        . reshape wide a b, i(site) j(all)
+. 
+. legend(off) title("Typewriter vs. Lab") 
+command legend is unrecognized
+r(199);
 
-    There are variables other than a, b, site, all in your data.  They must be constant within site because that is the only way
-    they can fit into wide data without loss of information.
+. 
+. subtitle("Specificity in Phenotype prediction");
+command subtitle is unrecognized
+r(199);
 
-    The variable or variables listed above are not constant within site.  Perhaps the values are in error.  Type reshape error
-    for a list of the problem observations.
+. 
+. #delimit cr
+Unknown #command
 
-    Either that, or the values vary because they should vary, in which case you must either add the variables to the list of xij
-    variables to be reshaped, or drop them.
-r(9);
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_spec.tif", as(tif) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_spec.tif written in TIFF format)
+
+. 
+. 
+. 
+. 
+. 
+. ***************************************************
+
+. 
+. * GENEFINDER
+
+. 
+. ***************************************************
+
+. 
+. 
+. 
+. 
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. 
+. 
+. noi di "restrict to sites with clear gold standard values only"
+restrict to sites with clear gold standard values only
+
+. 
+. 
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2,084 observations deleted)
+
+. 
+. 
+. 
+. 
+. 
+. noi di "Genefinder"
+Genefinder
+
+. 
+. 
+. 
+. contract  site  gold valuegene
+
+. 
+. rename value predict
+
+. 
+. 
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       44   ->      23
+Number of variables                   4   ->       4
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
 
 . 
 . rename _freq* *
-1 new variable name invalid
-    You attempted to rename _freq to .  That is an invalid Stata variable name.
+
+. 
+. 
+. 
+. rename r combor
+
+. 
+. rename s combos
+
+. 
+. reshape wide combo*, i(site) j(gold) string
+(note: j = R S)
+--Break--
+r(1);
+
+. 
+. rename combo* *
+
+. 
+. 
+. 
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+variable sS not found
+r(111);
+
+. 
+. rename rR TP
+variable rR not found
+r(111);
+
+. 
+. rename sR FN 
+variable sR not found
+r(111);
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+variable rS not found
+r(111);
+
+. 
+. * predicted resistant but actually sensitive
+
+. 
+. 
+. 
+. for any TN TP FN FP: replace X=0 if X==.
+
+->  replace TN=0 if TN==.
+variable TN not found
+r(111);
+
+. 
+. 
+. 
+. gen sensitivity = TP/(TP+FN)
+TP not found
+r(111);
+
+. 
+. gen specificity = TN/(TN+FP)
+TN not found
+r(111);
+
+. 
+. 
+. 
+. gen predictPOS = TP+FP
+TP not found
+r(111);
+
+. 
+. gen predictNEG = TN +FN
+TN not found
+r(111);
+
+. 
+. 
+. 
+. gen trueNeg= TN +FP
+TN not found
+r(111);
+
+. 
+. gen truePos= TP +FN
+TP not found
+r(111);
+
+. 
+. 
+. 
+. gen MajorErrorRate = FN/truePos
+FN not found
+r(111);
+
+. 
+. gen VeryMajorErrorRate = FP/trueNeg
+FP not found
+r(111);
+
+. 
+. gen Agreement = (TP+TN)/(trueNeg+truePos)
+TP not found
+r(111);
+
+. 
+. 
+. 
+. * get confidence intervals
+
+. 
+. for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
+
+->  gen lsens=.
+(23 missing values generated)
+
+->  gen usens=.
+(23 missing values generated)
+
+->  gen lspec=.
+(23 missing values generated)
+
+->  gen uspec=.
+(23 missing values generated)
+
+->  gen lme=.
+(23 missing values generated)
+
+->  gen ume=.
+(23 missing values generated)
+
+->  gen lvme=.
+(23 missing values generated)
+
+->  gen uvme=.
+(23 missing values generated)
+
+. 
+. local max=_N
+
+. 
+. forvalues i=1(1)`max'{
+  2. 
+. if truePos[`i']>0{
+  3. 
+. cii prop  truePos[`i'] TP[`i']
+  4. 
+. replace lsens = r(lb) if _n==`i'
+  5. 
+. replace usens = r(ub) if _n==`i'
+  6. 
+. cii prop truePos[`i'] FN[`i']
+  7. 
+. replace lvme = r(lb) if _n==`i'
+  8. 
+. replace uvme = r(ub) if _n==`i'
+  9. 
+. }
+ 10. 
+. else{
+ 11. 
+. noi di site[`i'] " has no positive samples"
+ 12. 
+. }
+ 13. 
+. if trueNeg[`i']>0{
+ 14. 
+. cii prop trueNeg[`i'] TN[`i']
+ 15. 
+. replace lspec = r(lb) if _n==`i'
+ 16. 
+. replace uspec = r(ub) if _n==`i'
+ 17. 
+. cii prop trueNeg[`i'] FP[`i']
+ 18. 
+. replace lme = r(lb) if _n==`i'
+ 19. 
+. replace ume = r(ub) if _n==`i'
+ 20. 
+. }
+ 21. 
+. else{
+ 22. 
+. noi di site[`i'] " has no negative samples"
+ 23. 
+. }
+ 24. 
+. }
+truePos not found
+r(111);
+
+. 
+. 
+. 
+. * save values for combining into graphs
+
+. 
+. 
+. 
+. 
+. 
+. keep site  sens spec lsens usens lspec uspec
+variable sens not found
+r(111);
+
+. 
+. noi list  site  sens spec lsens usens lspec uspec
+variable sens not found
+r(111);
+
+. 
+. rename * gf_*
+
+. 
+. rename gf_site site
+
+. 
+. save genefinder, replace
+file genefinder.dta saved
+
+. 
+. 
+. 
+. 
+. 
+. * graph
+
+. 
+. use genefinder, clear
+
+. 
+. sort site
+
+. 
+. gen num =_n 
+
+. 
+. labmask num, values(site)
+
+. 
+. local max= _N
+
+. 
+. 
+. 
+. #delimit ;
+Unknown #command
+
+. 
+. twoway rcap gf_usens gf_lsens num || scatter gf_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+--Break--
+(error occurred while loading axis.class)
+axis.new: class member function not found
+unexpected end of file
+(error occurred while loading twowaygraph_g.class)
+twowaygraph_g.new (rcap gf_usens gf_lsens num) (scatter gf_sens num), xlabel(1(1)23, valuelabel angle(90)): class member
+    function not found
+
+twoway is not a valid graph subcommand
 r(198);
 
-. drop predict*
+. 
+. legend(off) title("Genefinder vs. Lab") 
+command legend is unrecognized
+r(199);
+
+. 
+. subtitle("Sensitivity in Phenotype prediction");
+command subtitle is unrecognized
+r(199);
+
+. 
+. #delimit cr
+Unknown #command
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_sens.tif", as(tif) replace
+could not find Graph window
+r(693);
 
 . 
 . 
 . 
-. reshape wide _freq, i(site) j(all) string
-(note: j = RRR RSR SRR SRS SSR SSS)
-
-Data                               long   ->   wide
------------------------------------------------------------------------------
-Number of obs.                       42   ->      11
-Number of variables                   3   ->       7
-j variable (6 values)               all   ->   (dropped)
-xij variables:
-                                  _freq   ->   _freqRRR _freqRSR ... _freqSSS
------------------------------------------------------------------------------
+. 
+. 
+. #delimit ;
+Unknown #command
 
 . 
-. rename _freq* *
-
-. 
-. * bar graph of predictions (antibiotics)
-
-. 
-. graph bar (asis) RRR RRS SSR RSR RSS SSS if strpos(type, "Pheno"), over(site, label(angle(90))) stack  title("Combinations of Re
-> sults") subtitle("Results given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label
->  (4 "RSR" ) label (5 "RSS") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(
-> 5, color(yellow)) bar(6, color(gs12))
-type not found
+. twoway rcap gf_uspec gf_lspec num || scatter gf_spec num,  xlabel(1(1)`max', valuelabel angle(90))
+variable gf_spec not found
 r(111);
 
-. graph bar (asis) RRR RRS SSR RSR RSS SSS, over(site, label(angle(90))) stack  title("Combinations of Results") subtitle("Results
->  given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RSS
-> ") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, 
-> color(gs12))
+. 
+. legend(off) title("Genefinder vs. Lab") 
+command legend is unrecognized
+r(199);
 
-. graph bar (asis) RRR RRS SSR RSR RSS SSS, over(site, label(angle(90))) stack
+. 
+. subtitle("Specificity in Phenotype prediction");
+command subtitle is unrecognized
+r(199);
 
-. graph bar (asis) RRR RRS SSR RSR RSS SSS, stack
-varlist, if exp, or in range required
-r(100);
+. 
+. #delimit cr
+Unknown #command
 
-. graph bar RRR RRS SSR RSR RSS SSS, stack
-variable RRS not found
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_spec.tif", as(tif) replace
+could not find Graph window
+r(693);
+
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. ***************************************************
+
+. 
+. * MYKROBE
+
+. 
+. ***************************************************
+
+. 
+. 
+. 
+. 
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. 
+. 
+. noi di "restrict to sites with clear gold standard values only"
+restrict to sites with clear gold standard values only
+
+. 
+. 
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2,084 observations deleted)
+
+. 
+. 
+. 
+. 
+. 
+. noi di "Mykrobe"
+Mykrobe
+
+. 
+. 
+. 
+. contract  site  gold valuezam
+
+. 
+. rename value predict
+
+. 
+. 
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       43   ->      23
+Number of variables                   4   ->       4
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. rename r combor
+
+. 
+. rename s combos
+
+. 
+. reshape wide combo*, i(site) j(gold) string
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       23   ->      12
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+
+. 
+. rename combo* *
+
+. 
+. 
+. 
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+
+. 
+. rename rR TP
+
+. 
+. rename sR FN 
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+
+. 
+. * predicted resistant but actually sensitive
+
+. 
+. 
+. 
+. for any TN TP FN FP: replace X=0 if X==.
+
+->  replace TN=0 if TN==.
+(0 real changes made)
+
+->  replace TP=0 if TP==.
+(1 real change made)
+
+->  replace FN=0 if FN==.
+(2 real changes made)
+
+->  replace FP=0 if FP==.
+(2 real changes made)
+
+. 
+. 
+. 
+. gen sensitivity = TP/(TP+FN)
+(1 missing value generated)
+
+. 
+. gen specificity = TN/(TN+FP)
+
+. 
+. 
+. 
+. gen predictPOS = TP+FP
+
+. 
+. gen predictNEG = TN +FN
+
+. 
+. 
+. 
+. gen trueNeg= TN +FP
+
+. 
+. gen truePos= TP +FN
+
+. 
+. 
+. 
+. gen MajorErrorRate = FN/truePos
+(1 missing value generated)
+
+. 
+. gen VeryMajorErrorRate = FP/trueNeg
+
+. 
+. gen Agreement = (TP+TN)/(trueNeg+truePos)
+
+. 
+. 
+. 
+. * get confidence intervals
+
+. 
+. for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
+
+->  gen lsens=.
+(12 missing values generated)
+
+->  gen usens=.
+(12 missing values generated)
+
+->  gen lspec=.
+(12 missing values generated)
+
+->  gen uspec=.
+(12 missing values generated)
+
+->  gen lme=.
+(12 missing values generated)
+
+->  gen ume=.
+(12 missing values generated)
+
+->  gen lvme=.
+(12 missing values generated)
+
+->  gen uvme=.
+(12 missing values generated)
+
+. 
+. local max=_N
+
+. 
+. forvalues i=1(1)`max'{
+  2. 
+. if truePos[`i']>0{
+  3. 
+. cii prop  truePos[`i'] TP[`i']
+  4. 
+. replace lsens = r(lb) if _n==`i'
+  5. 
+. replace usens = r(ub) if _n==`i'
+  6. 
+. cii prop truePos[`i'] FN[`i']
+  7. 
+. replace lvme = r(lb) if _n==`i'
+  8. 
+. replace uvme = r(ub) if _n==`i'
+  9. 
+. }
+ 10. 
+. else{
+ 11. 
+. noi di site[`i'] " has no positive samples"
+ 12. 
+. }
+ 13. 
+. if trueNeg[`i']>0{
+ 14. 
+. cii prop trueNeg[`i'] TN[`i']
+ 15. 
+. replace lspec = r(lb) if _n==`i'
+ 16. 
+. replace uspec = r(ub) if _n==`i'
+ 17. 
+. cii prop trueNeg[`i'] FP[`i']
+ 18. 
+. replace lme = r(lb) if _n==`i'
+ 19. 
+. replace ume = r(ub) if _n==`i'
+ 20. 
+. }
+ 21. 
+. else{
+ 22. 
+. noi di site[`i'] " has no negative samples"
+ 23. 
+. }
+ 24. 
+. }
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        316    .9462025     .012692        .9152605    .9683523
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        316    .0537975     .012692        .0316477    .0847395
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,036    .9951737    .0021532        .9887733    .9984311
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,036    .0048263    .0021532        .0015689    .0112267
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        185     .972973    .0119224         .938058    .9911674
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        185     .027027    .0119224        .0088326     .061942
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        279      .90681    .0174037        .8664392    .9382196
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        279      .09319    .0174037        .0617804    .1335608
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        348    .9827586    .0069778        .9628523    .9936471
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        348    .0172414    .0069778        .0063529    .0371477
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,024    .9755859    .0048228        .9641699    .9841396
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,024    .0244141    .0048228        .0158604    .0358301
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        162    .5987654    .0385097        .5189639    .6748845
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        162    .4012346    .0385097        .3251155    .4810361
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,211    .9966969    .0016488        .9915646    .9990993
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,211    .0033031    .0016488        .0009007    .0084354
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         94    .7978723    .0414205        .7024887    .8736973
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         94    .2021277    .0414205        .1263027    .2975113
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,279    .9968726    .0015613         .992012    .9991472
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,279    .0031274    .0015613        .0008528     .007988
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        391    .9795396    .0071594        .9600844    .9911263
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        391    .0204604    .0071594        .0088737    .0399156
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        962    .9948025    .0023183        .9879127    .9983103
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        962    .0051975    .0023183        .0016897    .0120873
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |          6           1           0        .5407419           1*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |          6           0           0               0    .4592581*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,015    .9940887    .0024061        .9871782    .9978276
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,015    .0059113    .0024061        .0021724    .0128218
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,137    .9912049     .002769        .9838852    .9957746
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,137    .0087951     .002769        .0042254    .0161148
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        232    .8448276     .023771        .7917048    .8888914
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        232    .1551724     .023771        .1111086    .2082952
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         25         .88    .0649923        .6878097    .9745346
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         25         .12    .0649923        .0254654    .3121903
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,347    .9985152    .0010491        .9946469    .9998201
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,347    .0014848    .0010491        .0001799    .0053531
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        118    .9576271    .0185439        .9038842    .9861006
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        118    .0423729    .0185439        .0138994    .0961158
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,254    .9888357    .0029671        .9813391    .9938833
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,254    .0111643    .0029671        .0061167    .0186609
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         43    .8604651    .0528413        .7206752    .9470234
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |         43    .1395349    .0528413        .0529766    .2793248
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        627           1           0        .9941339           1*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        627           0           0               0    .0058661*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+vancomycin has no positive samples
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,373           1           0        .9973169           1*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      1,373           0           0               0    .0026831*
+
+(*) one-sided, 97.5% confidence interval
+(1 real change made)
+(1 real change made)
+
+. 
+. 
+. 
+. * save values for combining into graphs
+
+. 
+. 
+. 
+. 
+. 
+. keep site  sens spec lsens usens lspec uspec
+
+. 
+. noi list  site  sens spec lsens usens lspec uspec
+
+     +---------------------------------------------------------------------------------+
+     |          site   sensit~y   specif~y      lsens      usens      lspec      uspec |
+     |---------------------------------------------------------------------------------|
+  1. | ciprofloxacin   .9462025   .9951738   .9152605   .9683523   .9887733   .9984311 |
+  2. |   clindamycin    .972973     .90681    .938058   .9911674   .8664392   .9382196 |
+  3. |  erythromycin   .9827586   .9755859   .9628524   .9936471   .9641699   .9841396 |
+  4. |   fusidicacid   .5987654   .9966969   .5189639   .6748845   .9915646   .9990993 |
+  5. |    gentamicin   .7978724   .9968725   .7024887   .8736973    .992012   .9991472 |
+     |---------------------------------------------------------------------------------|
+  6. |   methicillin   .9795396   .9948025   .9600844   .9911263   .9879128   .9983103 |
+  7. |     mupirocin          1   .9940886   .5407419          1   .9871782   .9978276 |
+  8. |    penicillin   .9912049   .8448276   .9838852   .9957746   .7917048   .8888914 |
+  9. |    rifampicin        .88   .9985152   .6878097   .9745346   .9946468   .9998201 |
+ 10. |  tetracycline   .9576271   .9888358   .9038842   .9861006   .9813391   .9938833 |
+     |---------------------------------------------------------------------------------|
+ 11. |  trimethoprim   .8604651          1   .7206752   .9470235   .9941339          1 |
+ 12. |    vancomycin          .          1          .          .   .9973169          1 |
+     +---------------------------------------------------------------------------------+
+
+. 
+. rename * z_*
+
+. 
+. rename z_site site
+
+. 
+. save mykrobe, replace
+file mykrobe.dta saved
+
+. 
+. 
+. 
+. 
+. 
+. * graph
+
+. 
+. use mykrobe, clear
+
+. 
+. sort site
+
+. 
+. gen num =_n 
+
+. 
+. labmask num, values(site)
+
+. 
+. local max= _N
+
+. 
+. 
+. 
+. #delimit ;
+Unknown #command
+
+. 
+. twoway rcap z_usens z_lsens num || scatter z_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+
+. 
+. legend(off) title("Mykrobe vs. Lab") 
+command legend is unrecognized
+r(199);
+
+. 
+. subtitle("Sensitivity in Phenotype prediction");
+command subtitle is unrecognized
+r(199);
+
+. 
+. #delimit cr
+Unknown #command
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_sens.tif", as(tif) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_sens.tif written in TIFF format)
+
+. 
+. 
+. 
+. 
+. 
+. #delimit ;
+Unknown #command
+
+. 
+. twoway rcap z_uspec z_lspec num || scatter z_spec num,  xlabel(1(1)`max', valuelabel angle(90))
+
+. 
+. legend(off) title("Mykrobe vs. Lab") 
+command legend is unrecognized
+r(199);
+
+. 
+. subtitle("Specificity in Phenotype prediction");
+command subtitle is unrecognized
+r(199);
+
+. 
+. #delimit cr
+Unknown #command
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_spec.tif", as(tif) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_spec.tif written in TIFF format)
+
+. 
+. 
+. 
+. ***************************
+
+. 
+. * COMBINED
+
+. 
+. ***************************
+
+. 
+. 
+. 
+. * merge the three sets
+
+. 
+. use typewriter, clear
+
+. 
+.  merge 1:1 site using genefinder, update
+variable site does not uniquely identify observations in the using data
+r(459);
+
+. 
+.  assert _merge==3
+_merge not found
 r(111);
 
-. graph bar (asis) RRR SSR RSR RSS SSS, over(site) stack
-
-. graph bar RRR
-
-. graph bar RRR, over(site)
-
-. graph bar RRR,  over(site, label(angle(90)))
-
-. graph bar RRR SSS,  over(site, label(angle(90)))
-
-. graph bar RRR SSS,  over(site, label(angle(90))) stack
-
-. graph bar (asis)RRR SSS,  over(site, label(angle(90))) stack
-
-. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack
-
-. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
-> s given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RS
-> S") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6,
->  color(gs12))
-
-. restore
-
-. * make graph
+. 
+.  drop _merge
+variable _merge not found
+r(111);
 
 . 
-. preserve
+.  merge 1:1 site using mykrobe, update 
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                                12
+        not updated                        12  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
 
 . 
-. contract  site  predict*
+.  assert _merge==3
 
 . 
-. gen all = predictg+predictt+ predictz
+.  drop _merge
 
 . 
-. drop predict*
+.  
+. 
+.  * reshape to enable graph
+
+. 
+. reshape long tw_ gf_ z_, i(site) j(new) string
+(note: j = lsens lspec sensitivity specificity usens uspec)
+(note: gf_lsens not found)
+(note: gf_lspec not found)
+(note: gf_sensitivity not found)
+(note: gf_specificity not found)
+(note: gf_usens not found)
+(note: gf_uspec not found)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                       12   ->      72
+Number of variables                  13   ->       5
+j variable (6 values)                     ->   new
+xij variables:
+         tw_lsens tw_lspec ... tw_uspec   ->   tw_
+         gf_lsens gf_lspec ... gf_uspec   ->   gf_
+            z_lsens z_lspec ... z_uspec   ->   z_
+-----------------------------------------------------------------------------
+
+. 
+. rename tw_ meth_tw
+
+. 
+. rename gf_ meth_gf
+
+. 
+. rename z_ meth_z
 
 . 
 . 
 . 
-. reshape wide _freq, i(site) j(all) string
-(note: j = RRR RRS RSR RSS SSR SSS)
+. reshape long meth_, i(site new) j(method) string
+(note: j = gf tw z)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                       72   ->     216
+Number of variables                   5   ->       4
+j variable (3 values)                     ->   method
+xij variables:
+                 meth_gf meth_tw meth_z   ->   meth_
+-----------------------------------------------------------------------------
+
+. 
+. rename meth_ value
+
+. 
+. 
+. 
+. reshape wide value, i(site method) j(new) string
+(note: j = lsens lspec sensitivity specificity usens uspec)
 
 Data                               long   ->   wide
 -----------------------------------------------------------------------------
-Number of obs.                       42   ->      11
-Number of variables                   3   ->       7
-j variable (6 values)               all   ->   (dropped)
+Number of obs.                      216   ->      36
+Number of variables                   4   ->       8
+j variable (6 values)               new   ->   (dropped)
 xij variables:
-                                  _freq   ->   _freqRRR _freqRRS ... _freqSSS
+                                  value   ->   valuelsens valuelspec ... valueuspec
+-----------------------------------------------------------------------------
+
+. 
+. rename value* *
+
+. 
+. 
+. 
+. order site method sens lsens usens spec lspec uspec
+
+. 
+. 
+. 
+. 
+. 
+. * sneaky creating gaps on graphs
+
+. 
+. expand 3 if method =="gf", gen(dups)
+(24 observations created)
+
+. 
+. replace method ="blank" if dups==1
+variable method was str2 now str5
+(24 real changes made)
+
+. 
+. replace sens=. if method=="blank"
+(0 real changes made)
+
+. 
+. replace lsens=. if method=="blank"
+(0 real changes made)
+
+. 
+. replace usens=. if method=="blank"
+(0 real changes made)
+
+. 
+. replace uspec=. if method=="blank"
+(0 real changes made)
+
+. 
+. replace lspec=. if method=="blank"
+(0 real changes made)
+
+. 
+. replace spec=. if method=="blank"
+(0 real changes made)
+
+. 
+. 
+. 
+. * order bits
+
+. 
+. encode(method), gen(order)
+
+. 
+. sort site order
+
+. 
+. gen newcount = _n
+
+. 
+. local max =_N
+
+. 
+. replace site = "fusidic acid" if strpos(site, "fus")
+(5 real changes made)
+
+. 
+. labmask newcount, values(site)
+
+. 
+. 
+. 
+. #delimit ;
+Unknown #command
+
+. 
+. twoway rcap usens lsens newcount, ylabel(,format(%3.2f)) xlabel(4(5)59, valuelabel angle(90))
+
+. 
+. || scatter  sens newcount if method=="gf", mcolor(orange)
+| is not a valid command name
+r(199);
+
+. 
+. ||  scatter  sensitivity newcount if method =="tw", mcolor(red) 
+| is not a valid command name
+r(199);
+
+. 
+. || scatter  sens newcount if method=="z", mcolor(blue)
+| is not a valid command name
+r(199);
+
+. 
+. legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe"))
+command legend is unrecognized
+r(199);
+
+. 
+. subtitle("Sensitivity in Phenotype prediction") graphregion(fcolor(white));
+command subtitle is unrecognized
+r(199);
+
+. 
+. #delimit cr
+Unknown #command
+
+. 
+. 
+. 
+. graph save Graph "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_sens.gph", replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_sens.gph saved)
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_sens.tif", as(tif) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_sens.tif written in TIFF format)
+
+. 
+. 
+. 
+. #delimit ;
+Unknown #command
+
+. 
+. twoway rcap uspec lspec newcount, ylabel(,format(%3.2f))
+
+. 
+. || scatter  spec newcount if method=="gf", mcolor(orange)
+| is not a valid command name
+r(199);
+
+. 
+. || scatter  spec newcount if method =="tw", mcolor(red)
+| is not a valid command name
+r(199);
+
+. 
+. || scatter  spec newcount if method=="z", mcolor(blue)
+| is not a valid command name
+r(199);
+
+. 
+. xlabel(4(5)59, valuelabel angle(90))
+command xlabel is unrecognized
+r(199);
+
+. 
+. legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe") )
+command legend is unrecognized
+r(199);
+
+. 
+. subtitle("Specificity in Phenotype prediction") graphregion(fcolor(white));
+command subtitle is unrecognized
+r(199);
+
+. 
+. #delimit cr
+Unknown #command
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_spec.tif", as(tif) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_spec.tif written in TIFF format)
+
+. 
+. 
+. 
+. 
+. 
+. **************************************************
+
+. 
+. * OVERALL
+
+. 
+. **************************************************
+
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. noi di "all methods"
+all methods
+
+. 
+. tempfile temp
+
+. 
+. use anti_panel_all, clear
+
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. * restrict to clear goldstandard values
+
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2,084 observations deleted)
+
+. 
+. contract  gold valuegene
+
+. 
+. rename value predict
+
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. reshape wide _freq, i( gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
 -----------------------------------------------------------------------------
 
 . 
 . rename _freq* *
 
 . 
-. 
-. 
-. 
-. 
-. * bar graph of predictions (antibiotics)
+. rename r combor
 
 . 
-. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
-> s given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RS
-> S") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6,
->  color(gs12))
+. rename s combos
 
 . 
-. 
-. 
-. restore
-
-. * make graph
+. gen method = "valuegene"
 
 . 
-. preserve
-
-. 
-. contract  site  predict*
-
-. 
-. gen all = predictg+predictt+ predictz
-
-. 
-. drop predict*
-
-. 
-. 
-. 
-. reshape wide _freq, i(site) j(all) string
-(note: j = RRR RRS RSR RSS SSR SSS)
+. reshape wide combo*, i(method) j(gold) string
+(note: j = R S)
 
 Data                               long   ->   wide
 -----------------------------------------------------------------------------
-Number of obs.                       42   ->      11
-Number of variables                   3   ->       7
-j variable (6 values)               all   ->   (dropped)
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
 xij variables:
-                                  _freq   ->   _freqRRR _freqRRS ... _freqSSS
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
 -----------------------------------------------------------------------------
 
 . 
+. rename combo* *
+
+. 
+. 
+. 
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+
+. 
+. rename rR TP
+
+. 
+. rename sR FN 
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+
+. 
+. * predicted resistant but actually sensitive
+
+. 
+. save temp, replace
+file temp.dta saved
+
+. 
+. 
+. 
+. foreach k in valuetype valuez{
+  2. 
+. use anti_panel_all, clear
+  3. 
+. assert site!=""
+  4. 
+. assert _N==16548
+  5. 
+. * restrict to clear goldstandard values
+. 
+. gen clear=inlist(gold, "R", "S")
+  6. 
+. summ clear
+  7. 
+. noi di r(sum) " results are R/S"
+  8. 
+. drop if clear!=1
+  9. 
+. contract  gold `k'
+ 10. 
+. rename value predict
+ 11. 
+. assert predict!=""
+ 12. 
+. * reshape
+. 
+. reshape wide _freq, i( gold) j(predict) string
+ 13. 
 . rename _freq* *
+ 14. 
+. rename r combor
+ 15. 
+. rename s combos
+ 16. 
+. gen method = "`k'"
+ 17. 
+. reshape wide combo*, i(method) j(gold) string
+ 18. 
+. rename combo* *
+ 19. 
+. 
+. 
+. * remember : resistance = postive result
+. 
+. rename sS TN
+ 20. 
+. rename rR TP
+ 21. 
+. rename sR FN 
+ 22. 
+. *so predicted sensitive but actually resistant
+. 
+. rename rS FP 
+ 23. 
+. * predicted resistant but actually sensitive
+. 
+. append using temp
+ 24. 
+. save temp, replace
+ 25. 
+. }
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+14464 results are R/S
+(2,084 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+file temp.dta saved
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       clear |     16,548    .8740633     .331788          0          1
+14464 results are R/S
+(2,084 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+(note: variable method was str6, now str9 to accommodate using data's values)
+file temp.dta saved
 
 . 
 . 
 . 
 . 
 . 
-. * bar graph of predictions (antibiotics)
+. 
+. 
+. for any TN TP FN FP: replace X=0 if X==.
+
+->  replace TN=0 if TN==.
+(0 real changes made)
+
+->  replace TP=0 if TP==.
+(0 real changes made)
+
+->  replace FN=0 if FN==.
+(0 real changes made)
+
+->  replace FP=0 if FP==.
+(0 real changes made)
 
 . 
-. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
-> s given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RS
-> S") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6,
->  color(gs12))
-
-. graph bar (asis)  RRR RSR SRR SRS SSR SSS,  over(site, label(angle(90))) stack
-
-. graph bar (asis)  RRR RRS RSR RSS SSR SSS,  over(site, label(angle(90))) stack
-
-. graph bar (asis)  RRR RRS RSR RSS SSR SSS,  over(site, label(angle(90))) stack
-
-. graph bar (asis)  RRR RRS RSR RSS SSR SSS,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
-> s given as Genefinder Typewriter Mykrobe") legend( label(1 "RRR") label( 2 "RRS" ) label (3 "SSR") label (4 "RSR" ) label (5 "RS
-> S") label( 6 "SSS" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6,
->  color(gs12))
-
-. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif", as(tif) width(2550) replace
-(note: file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif not found)
-(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif written in TIFF format)
-
-. *******************
+. 
+. 
+. gen sensitivity = TP/(TP+FN)
 
 . 
+. gen specificity = TN/(TN+FP)
+
+. 
+. 
+. 
+. gen predictPOS = TP+FP
+
+. 
+. gen predictNEG = TN +FN
+
+. 
+. 
+. 
+. gen trueNeg= TN +FP
+
+. 
+. gen truePos= TP +FN
+
+. 
+. 
+. 
+. gen MajorErrorRate = FN/truePos
+
+. 
+. gen VeryMajorErrorRate = FP/trueNeg
+
+. 
+. gen Agreement = (TP+TN)/(trueNeg+truePos)
+
+. 
+. 
+. 
+. * get confidence intervals
+
+. 
+. for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
+
+->  gen lsens=.
+(3 missing values generated)
+
+->  gen usens=.
+(3 missing values generated)
+
+->  gen lspec=.
+(3 missing values generated)
+
+->  gen uspec=.
+(3 missing values generated)
+
+->  gen lme=.
+(3 missing values generated)
+
+->  gen ume=.
+(3 missing values generated)
+
+->  gen lvme=.
+(3 missing values generated)
+
+->  gen uvme=.
+(3 missing values generated)
+
+. 
+. local max=_N
+
+. 
+. forvalues i=1(1)`max'{
+  2. 
+. if truePos[`i']>0{
+  3. 
+. cii prop  truePos[`i'] TP[`i']
+  4. 
+. replace lsens = r(lb) if _n==`i'
+  5. 
+. replace usens = r(ub) if _n==`i'
+  6. 
+. cii prop truePos[`i'] FN[`i']
+  7. 
+. replace lvme = r(lb) if _n==`i'
+  8. 
+. replace uvme = r(ub) if _n==`i'
+  9. 
+. }
+ 10. 
+. else{
+ 11. 
+. noi di site[`i'] " has no positive samples"
+ 12. 
+. }
+ 13. 
+. if trueNeg[`i']>0{
+ 14. 
+. cii prop trueNeg[`i'] TN[`i']
+ 15. 
+. replace lspec = r(lb) if _n==`i'
+ 16. 
+. replace uspec = r(ub) if _n==`i'
+ 17. 
+. cii prop trueNeg[`i'] FP[`i']
+ 18. 
+. replace lme = r(lb) if _n==`i'
+ 19. 
+. replace ume = r(ub) if _n==`i'
+ 20. 
+. }
+ 21. 
+. else{
+ 22. 
+. noi di site[`i'] " has no negative samples"
+ 23. 
+. }
+ 24. 
+. }
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      2,825    .9490265    .0041381         .940262    .9568452
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      2,825    .0509735    .0041381        .0431548     .059738
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |     11,639    .9890884     .000963        .9870307    .9908956
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |     11,639    .0109116     .000963        .0091044    .0129693
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      2,825    .9638938    .0035099        .9563399    .9704657
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      2,825    .0361062    .0035099        .0295343    .0436601
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |     11,639      .99158     .000847        .9897482    .9931591
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |     11,639      .00842     .000847        .0068409    .0102518
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      2,825    .9670796     .003357        .9598206    .9733485
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |      2,825    .0329204     .003357        .0266515    .0401794
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |     11,639    .9902053    .0009128        .9882452     .991914
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs  Proportion    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |     11,639    .0097947    .0009128         .008086    .0117548
+(1 real change made)
+(1 real change made)
+
+. 
+. 
+. 
+. * save values for combining for table
+
+. 
+. noi list method sens lsens usens spec lspec uspec
+
+     +-----------------------------------------------------------------------------+
+     |    method   sensit~y      lsens      usens   specif~y      lspec      uspec |
+     |-----------------------------------------------------------------------------|
+  1. |    valuez   .9490265    .940262   .9568452   .9890884   .9870307   .9908956 |
+  2. | valuetype   .9638938   .9563399   .9704657     .99158   .9897482   .9931591 |
+  3. | valuegene   .9670796   .9598206   .9733485   .9902053   .9882452    .991914 |
+     +-----------------------------------------------------------------------------+
+
+. 
+. 
+. 
+. 
+. 
+. ************************
+
+. 
+. *antibiotic specific: rifampicin, fusicidic acid, pencilin
+
+. 
+. ***********************
+
+. 
+. * rpob
+
+. 
+. noi di "results for rifamcipin (site: rpob)"
+results for rifamcipin (site: rpob)
+
+. 
+. use anti_panel_all, clear
+
+. 
+. keep if strpos(site, "rif")
+(15,169 observations deleted)
+
+. 
+. noi di "Recall order is  Typewriter Mykrobe Genefinder (lower case) Gold (uppercase)"
+Recall order is  Typewriter Mykrobe Genefinder (lower case) Gold (uppercase)
+
+. 
+. noi tab gold valuea
+
+goldstanda |                  valueall
+        rd |       rrr        rsr        srs        sss |     Total
+-----------+--------------------------------------------+----------
+         I |         0          0          0          1 |         1 
+        NA |         0          0          0          6 |         6 
+         R |        22          1          0          2 |        25 
+         S |         1          0          1      1,345 |     1,347 
+-----------+--------------------------------------------+----------
+     Total |        23          1          1      1,354 |     1,379 
+
+
+. 
+. 
+. 
+. *fusa, fusb, fusc
+
+. 
+. noi di "results for fusidic acid: fusb, fusc, fusa"
+results for fusidic acid: fusb, fusc, fusa
+
+. 
+. use anti_panel_all, clear
+
+. 
+. keep if strpos(site, "fus")
+(15,169 observations deleted)
+
+. 
+. noi di "Recall order is  Typewriter Mykrobe Genefinder (lower case) Gold (uppercase)"
+Recall order is  Typewriter Mykrobe Genefinder (lower case) Gold (uppercase)
+
+. 
+. noi tab gold valuea
+
+goldstanda |                             valueall
+        rd |       rrr        rrs        rsr        rss        srs        sss |     Total
+-----------+------------------------------------------------------------------+----------
+        NA |         0          0          0          0          0          6 |         6 
+         R |        93          2         51          1          2         13 |       162 
+         S |         3          0          4          1          1      1,202 |     1,211 
+-----------+------------------------------------------------------------------+----------
+     Total |        96          2         55          2          3      1,221 |     1,379 
+
+
+. 
+. * split into site by site results
+
+. 
+. tempfile fustemp
+
+. 
+. keep sample gold valuez
+
+. 
+. save fustemp, replace
+file fustemp.dta saved
+
+. 
+. 
+. 
+. use pipeline_clean_all_values_wide, clear
+
+. 
+. keep if inlist(site, "fusa", "fusb", "fusc")
+(113,078 observations deleted)
+
+. 
+. noi tab site ValueA
+
+               |                             ValueAll
+          site |       AAA        AAP        APA        APP        PAP        PPP |     Total
+---------------+------------------------------------------------------------------+----------
+          fusa |     1,320          2          0          0         57          0 |     1,379 
+          fusb |     1,355          0          2          0          0         22 |     1,379 
+          fusc |     1,302          0          1          2          0         74 |     1,379 
+---------------+------------------------------------------------------------------+----------
+         Total |     3,977          2          3          2         57         96 |     4,137 
+
+
+. 
+. keep sample site ValueA
+
+. 
+. reshape wide ValueA, i(sample) j(site) string
+(note: j = fusa fusb fusc)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                     4137   ->    1379
+Number of variables                   3   ->       4
+j variable (3 values)              site   ->   (dropped)
+xij variables:
+                               ValueAll   ->   ValueAllfusa ValueAllfusb ValueAllfusc
+-----------------------------------------------------------------------------
+
+. 
+. merge 1:1 sample using fustemp, update
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                             1,379
+        not updated                     1,379  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
+
+. 
+. assert _merge==3
+
+. 
+. drop _merge
+
+. 
+. 
+. 
+. gen ABC= "A:" + ValueAllfusa + ",B:"+  ValueAllfusb + ",C:" + ValueAllfusc
+
+. 
+. noi tab ABC gold
+
+                  |           goldstandard
+              ABC |        NA          R          S |     Total
+------------------+---------------------------------+----------
+A:AAA,B:AAA,C:AAA |         6         13      1,202 |     1,221 
+A:AAA,B:AAA,C:APA |         0          1          0 |         1 
+A:AAA,B:AAA,C:APP |         0          2          0 |         2 
+A:AAA,B:AAA,C:PPP |         0         73          1 |        74 
+A:AAA,B:APA,C:AAA |         0          1          1 |         2 
+A:AAA,B:PPP,C:AAA |         0         18          2 |        20 
+A:AAP,B:AAA,C:AAA |         0          1          1 |         2 
+A:PAP,B:AAA,C:AAA |         0         51          4 |        55 
+A:PAP,B:PPP,C:AAA |         0          2          0 |         2 
+------------------+---------------------------------+----------
+            Total |         6        162      1,211 |     1,379 
+
+
+. 
+. keep if gold=="R"
+(1,217 observations deleted)
+
+. 
+. noi di "for resistant samples"
+for resistant samples
+
+. 
+. noi tab ABC valuez
+
+                  |       zam value
+              ABC |         r          s |     Total
+------------------+----------------------+----------
+A:AAA,B:AAA,C:AAA |         0         13 |        13 
+A:AAA,B:AAA,C:APA |         1          0 |         1 
+A:AAA,B:AAA,C:APP |         2          0 |         2 
+A:AAA,B:AAA,C:PPP |        73          0 |        73 
+A:AAA,B:APA,C:AAA |         1          0 |         1 
+A:AAA,B:PPP,C:AAA |        18          0 |        18 
+A:AAP,B:AAA,C:AAA |         0          1 |         1 
+A:PAP,B:AAA,C:AAA |         0         51 |        51 
+A:PAP,B:PPP,C:AAA |         2          0 |         2 
+------------------+----------------------+----------
+            Total |        97         65 |       162 
+
+
+. 
+. 
+. 
+. 
+. 
+. * meca, mecc, blaz
+
+. 
+. noi di "results for penicillin: meca, mecc, blaz"
+results for penicillin: meca, mecc, blaz
+
+. 
+. use anti_panel_all, clear
+
+. 
+. keep if strpos(site, "pen")
+(15,169 observations deleted)
+
+. 
+. noi di "Recall order is  Typewriter Mykrobe Genefinder (lower case) Gold (uppercase)"
+Recall order is  Typewriter Mykrobe Genefinder (lower case) Gold (uppercase)
+
+. 
+. noi tab gold valuea
+
+goldstanda |                  valueall
+        rd |       rrr        rrs        srs        sss |     Total
+-----------+--------------------------------------------+----------
+         I |         1          0          0          4 |         5 
+        NA |         4          0          0          1 |         5 
+         R |     1,124          2          1         10 |     1,137 
+         S |        32          1          3        196 |       232 
+-----------+--------------------------------------------+----------
+     Total |     1,161          3          4        211 |     1,379 
+
+
+. 
+. * split into site by site results
+
+. 
+. tempfile pentemp
+
+. 
+. keep sample gold valuez
+
+. 
+. save pentemp, replace
+file pentemp.dta saved
+
+. 
+. 
+. 
+. use pipeline_clean_all_values_wide, clear
+
+. 
+. keep if inlist(site, "meca", "mecc", "blaz")
+(113,078 observations deleted)
+
+. 
+. noi tab site ValueA
+
+               |                        ValueAll
+          site |       AAA        APA        APP        PPA        PPP |     Total
+---------------+-------------------------------------------------------+----------
+          blaz |       222         19          7          1      1,130 |     1,379 
+          meca |       999          1          2          0        377 |     1,379 
+          mecc |     1,362          0          0          0         17 |     1,379 
+---------------+-------------------------------------------------------+----------
+         Total |     2,583         20          9          1      1,524 |     4,137 
+
+
+. 
+. keep sample site ValueA
+
+. 
+. reshape wide ValueA, i(sample) j(site) string
+(note: j = blaz meca mecc)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                     4137   ->    1379
+Number of variables                   3   ->       4
+j variable (3 values)              site   ->   (dropped)
+xij variables:
+                               ValueAll   ->   ValueAllblaz ValueAllmeca ValueAllmecc
+-----------------------------------------------------------------------------
+
+. 
+. merge 1:1 sample using pentemp, update
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                             1,379
+        not updated                     1,379  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
+
+. 
+. assert _merge==3
+
+. 
+. drop _merge
+
+. 
+. 
+. 
+. gen ABC= "A:" + ValueAllmeca + ",C:"+  ValueAllmecc + ",Z:" + ValueAllblaz
+
+. 
+. noi tab ABC gold
+
+                  |                goldstandard
+              ABC |         I         NA          R          S |     Total
+------------------+--------------------------------------------+----------
+A:AAA,C:AAA,Z:AAA |         4          1         10        196 |       211 
+A:AAA,C:AAA,Z:APA |         0          0          1          3 |         4 
+A:AAA,C:AAA,Z:APP |         0          0          2          1 |         3 
+A:AAA,C:AAA,Z:PPP |         1          1        733         31 |       766 
+A:AAA,C:PPP,Z:APA |         0          0         15          0 |        15 
+A:APA,C:PPP,Z:APP |         0          0          1          0 |         1 
+A:APP,C:AAA,Z:PPP |         0          0          2          0 |         2 
+A:PPP,C:AAA,Z:AAA |         0          0         11          0 |        11 
+A:PPP,C:AAA,Z:APP |         0          0          2          1 |         3 
+A:PPP,C:AAA,Z:PPA |         0          0          1          0 |         1 
+A:PPP,C:AAA,Z:PPP |         0          3        358          0 |       361 
+A:PPP,C:PPP,Z:PPP |         0          0          1          0 |         1 
+------------------+--------------------------------------------+----------
+            Total |         5          5      1,137        232 |     1,379 
+
+
+. 
+. keep if gold=="R"
+(242 observations deleted)
+
+. 
+. noi di "for resistant samples"
+for resistant samples
+
+. 
+. noi tab ABC valuez
+
+                  |       zam value
+              ABC |         r          s |     Total
+------------------+----------------------+----------
+A:AAA,C:AAA,Z:AAA |         0         10 |        10 
+A:AAA,C:AAA,Z:APA |         1          0 |         1 
+A:AAA,C:AAA,Z:APP |         2          0 |         2 
+A:AAA,C:AAA,Z:PPP |       733          0 |       733 
+A:AAA,C:PPP,Z:APA |        15          0 |        15 
+A:APA,C:PPP,Z:APP |         1          0 |         1 
+A:APP,C:AAA,Z:PPP |         2          0 |         2 
+A:PPP,C:AAA,Z:AAA |        11          0 |        11 
+A:PPP,C:AAA,Z:APP |         2          0 |         2 
+A:PPP,C:AAA,Z:PPA |         1          0 |         1 
+A:PPP,C:AAA,Z:PPP |       358          0 |       358 
+A:PPP,C:PPP,Z:PPP |         1          0 |         1 
+------------------+----------------------+----------
+            Total |     1,127         10 |     1,137 
+
+
 . cd E:\users\amy.mason\Pipeline_27_07_2016\
 E:\users\amy.mason\Pipeline_27_07_2016
 
-. do master_sept2016.do
-
-. ********************************
-. * PIPELINE ANALYSIS MASTER DOC
-. ********************************
-. * MASTER.DO
 . 
-. * project: staph pipeline
-. * author: Amy Mason
-. * start date: July 2016
-. * raw data files in E:\users\amy.mason\Pipeline_27_07_2016\Inputs
-. 
-. sysdir set PERSONAL "E:\users\amy.mason\ADO"
-
-. sysdir set STBPLUS  "E:\users\amy.mason\ADO\stbplus"
-
-. sysdir set OLDPLACE "E:\users\amy.mason\ADO\oldplace"
-
-. set logtype text
-
-. 
-. *******************
-. cd E:\users\amy.mason\Pipeline_27_07_2016\
-E:\users\amy.mason\Pipeline_27_07_2016
-
-. 
-. set more off
-
-. * data input
-. run inputs016.do
+. run Analysis_Pipeline2.do

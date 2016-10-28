@@ -1,0 +1,17 @@
+<NotepadPlus>
+    <Session activeView="1">
+        <mainView activeIndex="0" />
+        <subView activeIndex="4">
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="2196" startPos="345" endPos="304" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\Analysis_Pipeline.do" />
+            <File firstVisibleLine="3" xOffset="0" scrollWidth="1219" startPos="511" endPos="511" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\Master.do" />
+            <File firstVisibleLine="69" xOffset="0" scrollWidth="1451" startPos="2730" endPos="2730" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\inputs.do" />
+            <File firstVisibleLine="230" xOffset="0" scrollWidth="2106" startPos="5549" endPos="7861" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\update_combo_method_sens.do" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="5049" startPos="1797" endPos="1797" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\Analysis_Pipeline2.do" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="4833" startPos="263" endPos="263" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\Analysis_Pipeline3.do" />
+            <File firstVisibleLine="64" xOffset="0" scrollWidth="1026" startPos="2907" endPos="2907" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\create_predict_viru.do" />
+            <File firstVisibleLine="390" xOffset="0" scrollWidth="1927" startPos="13900" endPos="13900" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\clean_predict.do" />
+            <File firstVisibleLine="2" xOffset="0" scrollWidth="1215" startPos="712" endPos="1054" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\Mykrobe_prob.do" />
+            <File firstVisibleLine="73" xOffset="0" scrollWidth="1413" startPos="2651" endPos="2651" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\create_predict_anti.do" />
+        </subView>
+    </Session>
+</NotepadPlus>
