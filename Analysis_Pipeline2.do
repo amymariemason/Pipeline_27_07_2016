@@ -13,7 +13,31 @@ use anti_panel_all, clear
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 1 phenotype predictions by site" _n _dup(80) "="
 
+
+noi tab site valuea, m
+gen agree  = (valuea=="rrr"| valuea=="sss" )
+summ agree
+noi di r(sum) " out of " r(N) " phenotype predictions agree"
+noi di r(sum)/_N*100
+
+noi di "largest disagreements"
+noi tab site if agree!=1, sort
+noi tab site valuea if agree!=1
+
+gen m_overcall = 1 if valuea=="srs"
+summ m_overcall
+noi di r(sum) " out of " r(N) "mykrobe overcall"
+noi di r(sum)/_N*100
+
+gen t_undercall = 1 if valuea=="rrs"
+summ t_undercall
+noi di r(sum) " out of " r(N) "typewriter undercall"
+noi di r(sum)/_N*100
+
+
+
 noi di" make bar chart of which methods differ on which antibiotic"
+
 
 contract  site  value*
 rename valueall all
@@ -36,14 +60,44 @@ use anti_panel_all, clear
 
 * in table
 noi tab gold valueall
+gen agree = (valueall=="rrr")|(valueall=="sss")
+summ agree
+noi di r(sum) " out of " r(N) "results agree between all methods"
+noi di r(sum)/r(N)*100
+
+
+noi di "disagreements by site"
+noi bysort gold: tab site valueall
+
+noi di "discrenpancies"
+sort site gold valueall sample site
+noi list sample site valueall if agree!=1
+
+drop agree
 
 * reduced table
+noi di "disagreements with gold standard"
+
 drop if !inlist(gold, "R", "S")
 noi tab gold valueall
 gen agree = (valueall=="rrr" & gold=="R")|(valueall=="sss" & gold=="S")
 summ agree
 noi di r(sum) " out of " r(N) "results agree between all methods and gold standard"
 noi di r(sum)/r(N)*100
+
+
+noi di "disagreements by site"
+noi bysort gold: tab site valueall
+
+noi di "discrenpancies"
+sort site gold valueall sample site
+noi list sample site gold valueall if agree!=1
+
+
+
+
+
+
 
 * in graph
 
@@ -674,3 +728,65 @@ noi tab ABC gold
 keep if gold=="R"
 noi di "for resistant samples"
 noi tab ABC valuez
+
+
+*cipro
+noi di "results for ciprofloxin: fusb, fusc, fusa"
+use anti_panel_all, clear
+keep if strpos(site, "cipro")
+noi di "Recall order is  Typewriter Mykrobe Genefinder (lower case) Gold (uppercase)"
+noi tab gold valuea
+* split into site by site results
+tempfile ciprotemp
+keep sample gold valuez
+save ciprotemp, replace
+
+use pipeline_clean_all_values_wide, clear
+keep if inlist(site, "grla/gyra")
+noi tab site ValueA
+keep sample site ValueA
+merge 1:1 sample using ciprotemp, update
+assert _merge==3
+drop _merge
+
+noi tab ValueAll gold
+keep if gold=="R"
+noi di "for resistant samples"
+noi tab ValueAll valuez
+
+
+
+* meca, mecc, blaz
+noi di "results for erthytomycin: msta, mphc, erma, ermb, ermc, ermt, ermy"
+use anti_panel_all, clear
+keep if strpos(site, "ery")
+noi di "Recall order is  Typewriter Mykrobe Genefinder (lower case) Gold (uppercase)"
+noi tab gold valuea
+* split into site by site results
+tempfile ertemp
+keep sample gold valuez
+save ertemp, replace
+
+use pipeline_clean_all_values_wide, clear
+keep if inlist(site, "erma", "ermb", "ermc", "ermt", "ermy", "msra", "mphc" )
+noi tab site ValueA
+keep sample site ValueA
+reshape wide ValueA, i(sample) j(site) string
+merge 1:1 sample using ertemp, update
+assert _merge==3
+drop _merge
+
+gen ABC= "a:" + ValueAllerma + ",B:"+  ValueAllermb + ",C:" + ValueAllermc + ",T:" + ValueAllermt + ",Y:" + ValueAllermy + ",M1:" + ValueAllmsra + ",M2:" + ValueAllmphc
+noi tab ABC gold
+noi di "drop those with complete agreement on all sites and with gold"
+gen P_present = strpos(ABC, "P")
+drop if P_present==0 & gold=="S"
+gen P_agree = strpos(ABC, "PPP")
+drop if P_agree!=0 & gold=="R"
+sort ABC sample
+
+noi di "resistant gold"
+noi list sample ABC if gold=="R"
+
+noi di "sensitive gold"
+noi list sample ABC if gold=="S"

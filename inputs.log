@@ -1,0 +1,30 @@
+Run by AMM on 10 Nov 2016 12:25:02
+Genefinder sets
+136122 results
+on 98 sites
+from 1389 samples
+Mykrobe sets
+duplicate results for same sample - one set indentical or null
+124323 results
+on 87 sites
+from 1429 samples
+typewriter
+134733 results
+on 98 sites
+from 1389 samples
+Lab gold standard
+include extra toxin panal
+1389 samples
+. 
+. 
+. 
+. 
+. 
+. * clean data
+
+. 
+. cd E:\users\amy.mason\Pipeline_27_07_2016\
+E:\users\amy.mason\Pipeline_27_07_2016
+
+. 
+. run clean_pheno.do

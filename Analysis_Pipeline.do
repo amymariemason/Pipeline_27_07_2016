@@ -17,10 +17,21 @@ use pipeline_clean_all_values_wide, clear
 noi di _n(5) _dup(80) "=" _n " Overall summary" _n _dup(80) "="
 **************************
 noi di  "Recall order is  Mykrobe Mykrobe Genefinder"
-noi tab ValueAll, sort
-gen agree =inlist(ValueAll, "AAA", "PPP")
-summ agree 
-noi di r(sum) " out of " r(N) " predictions are identical between all three methods"
+
+
+noi tab site ValueA, m
+gen agree  = (ValueA=="AAA"| ValueA=="PPP" )
+summ agree
+noi di r(sum) " out of " r(N) " site predictions agree"
+noi di r(sum)/_N*100
+
+noi di "largest disagreements"
+noi tab site if agree!=1, sort
+noi tab site ValueA if agree!=1
+
+summ agree if strpos(type, "Aqu") |strpos(type, "Chro")
+noi di r(sum) " out of " r(N) " aquired or chromosonal resistance site predictions agree"
+noi di r(sum)/r(N)*100
 
 noi tab ValueAll if strpos(type, "Aquired"), sort
 summ agree  if strpos(type, "Aquired")
@@ -42,6 +53,11 @@ noi di r(sum) " out of " r(N) " predictions are identical between all three meth
 noi tab ValueAll if strpos(type, "Chrom")|strpos(type, "Aquired"), sort
 summ agree  if strpos(type, "Chrom")|strpos(type, "Aquired")
 noi di r(sum) " out of " r(N) " predictions are identical between all three methods on antibiotic prediction"
+
+
+*sample discrenpancies
+
+noi list sample site Value if agree!=1
 
 
 ******************************************************
@@ -180,13 +196,13 @@ labmask num2, values(site)
 #delimit ;
 twoway rcapsym lci uci num2 if method=="tz", s(i) ||
 scatter diff num2 if method=="tz" & strpos(type, "Aqu") ,mcolor(red) msize(small) 
-	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.3,angle(0))  ||
+	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.05,angle(0))  ||
 scatter diff num2 if method=="tz" & strpos(type, "Chromo") ,mcolor(blue) msize(small) 
-	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.3,angle(0)) 	||
+	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.05,angle(0)) 	||
 scatter diff num2 if method=="tz" & strpos(type, "viru") ,mcolor(green) msize(small) 
-	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.3,angle(0)) ||
+	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.05,angle(0)) ||
 scatter diff num2 if method=="tz" & strpos(type, "ccr") ,mcolor(black) msize(small) 
-	xlabel(1(1)85, valuelabel angle(90) labsize(tiny))  ylabel(-0.05(0.05)0.3,angle(0)) 	
+	xlabel(1(1)85, valuelabel angle(90) labsize(tiny))  ylabel(-0.05(0.05)0.05,angle(0)) 	
 title("Mykrobe vs. Typewriter agreement",size(small) )  
 subtitle("More cases where Mykrobe=A and Typewriter=P is positive", size(small) )
 graphregion(fcolor(white)) xtitle("")  
@@ -245,13 +261,13 @@ labmask num2, values(site)
 #delimit ;
 twoway rcapsym lci uci num2 if method=="zg", s(i) ||
 scatter diff num2 if method=="zg" & strpos(type, "Aqu") ,mcolor(red) msize(small) 
-	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.3(0.05)0.05,angle(0))  ||
+	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.05,angle(0))  ||
 scatter diff num2 if method=="zg" & strpos(type, "Chromo") ,mcolor(blue) msize(small) 
-	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.3(0.05)0.05,angle(0)) 	||
+	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.05,angle(0)) 	||
 scatter diff num2 if method=="zg" & strpos(type, "viru") ,mcolor(green) msize(small) 
-	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.3(0.05)0.05,angle(0)) ||
+	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.05,angle(0)) ||
 scatter diff num2 if method=="zg" & strpos(type, "ccr") ,mcolor(black) msize(small) 
-	xlabel(1(1)85, valuelabel angle(90) labsize(tiny))  ylabel(-0.3(0.05)0.05,angle(0)) 	
+	xlabel(1(1)85, valuelabel angle(90) labsize(tiny))  ylabel(-0.05(0.05)0.05,angle(0)) 	
 title("Genefinder vs. Mykrobe agreement",size(small) )  
 subtitle("More cases where Genefinder=A and Mykrobe=P is positive", size(small) )
 graphregion(fcolor(white)) xtitle("")
@@ -289,13 +305,13 @@ labmask newid, values(site)
 #delimit ;
 twoway rcapsym lci uci newid if method=="zg", s(i) ||
 scatter diff newid if method=="zg" & strpos(type, "Aqu") ,mcolor(red) msize(vsmall) 
-	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.3(0.3)0.3,angle(0))  ||
+	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.05,angle(0))  ||
 scatter diff newid if method=="zg" & strpos(type, "Chromo") ,mcolor(blue) msize(vsmall) 
-	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.3(0.3)0.3,angle(0)) 	||
+	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.05,angle(0)) 	||
 scatter diff newid if method=="zg" & strpos(type, "viru") ,mcolor(green) msize(vsmall) 
-	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.3(0.3)0.3,angle(0)) ||
+	xlabel(1(1)85, valuelabel angle(90))  ylabel(-0.05(0.05)0.05,angle(0)) ||
 scatter diff newid if method=="zg" & strpos(type, "ccr") ,mcolor(black) msize(vsmall) 
-	xlabel(1(1)85, valuelabel angle(90) labsize(tiny))  ylabel(-0.3(0.3)0.3,angle(0)) 	
+	xlabel(1(1)85, valuelabel angle(90) labsize(tiny))  ylabel(-0.05(0.05)0.05,angle(0)) 	
 title("Genefinder vs. Mykrobe agreement",size(small) )  
 subtitle("More cases where Genefinder=P and Mykrobe=A is positive", size(small) )
 graphregion(fcolor(white)) xtitle("")
@@ -309,13 +325,13 @@ graph save graph3, replace
 #delimit ;
 twoway rcapsym lci uci newid if method=="tg", s(i) ||
 scatter diff newid if method=="tg" & strpos(type, "Aqu") ,mcolor(red) msize(vsmall) 
-	xlabel(none) xtitle("")  ylabel(-0.3(0.3)0.3,angle(0))  ||
+	xlabel(none) xtitle("")  ylabel(-0.05(0.05)0.05,angle(0))  ||
 scatter diff newid if method=="tg" & strpos(type, "Chromo") ,mcolor(blue) msize(vsmall) 
-	xlabel(none) xtitle("") ylabel(-0.3(0.3)0.3,angle(0)) 	||
+	xlabel(none) xtitle("") ylabel(-0.05(0.05)0.05,angle(0)) 	||
 scatter diff newid if method=="tg" & strpos(type, "viru") ,mcolor(green) msize(vsmall) 
-	xlabel(none) xtitle("")  ylabel(-0.3(0.3)0.3,angle(0)) ||
+	xlabel(none) xtitle("")  ylabel(-0.05(0.05)0.05,angle(0)) ||
 scatter diff newid if method=="tg" & strpos(type, "ccr") ,mcolor(black) msize(vsmall) 
-	xlabel(none) xtitle("") ylabel(-0.3(0.3)0.3,angle(0)) 	
+	xlabel(none) xtitle("") ylabel(-0.05(0.05)0.05,angle(0)) 	
 title("Genefinder vs. Typewriter agreement",size(small) )  
 subtitle("More cases where Genefinder=P and Typewriter=A is positive", size(small) )
 graphregion(fcolor(white)) xtitle("") legend(off) fysize(30);
@@ -326,13 +342,13 @@ graph save graph2, replace
 #delimit ;
 twoway rcapsym lci uci newid if method=="tz", s(i) ||
 scatter diff newid if method=="tz" & strpos(type, "Aqu") ,mcolor(red) msize(vsmall) 
-	xlabel(none) xtitle("")  ylabel(-0.3(0.3)0.3,angle(0))  ||
+	xlabel(none) xtitle("")  ylabel(-0.05(0.05)0.05,angle(0))  ||
 scatter diff newid if method=="tz" & strpos(type, "Chromo") ,mcolor(blue) msize(vsmall) 
-	xlabel(none) xtitle("") ylabel(-0.3(0.3)0.3,angle(0)) 	||
+	xlabel(none) xtitle("") ylabel(-0.05(0.05)0.05,angle(0)) 	||
 scatter diff newid if method=="tz" & strpos(type, "viru") ,mcolor(green) msize(vsmall) 
-	xlabel(none) xtitle("")  ylabel(-0.3(0.3)0.3,angle(0)) ||
+	xlabel(none) xtitle("")  ylabel(-0.05(0.05)0.05,angle(0)) ||
 scatter diff newid if method=="tz" & strpos(type, "ccr") ,mcolor(black) msize(vsmall) 
-	xlabel(none) xtitle("") ylabel(-0.3(0.3)0.3,angle(0)) 	
+	xlabel(none) xtitle("") ylabel(-0.05(0.05)0.05,angle(0)) 	
 title("Mykrobe vs. Typewriter agreement",size(small) )  
 subtitle("More cases where Mykrobe=P and Typewriter=A is positive", size(small) )
 graphregion(fcolor(white)) xtitle("")  
@@ -347,4 +363,6 @@ graph combine graph1.gph graph2.gph graph3.gph, cols(1) ycommon
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\method_disagreements_all.tif", as(tif) width(2550) replace
 
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\method_disagreements_all.eps", as(eps) replace
+
+
 
