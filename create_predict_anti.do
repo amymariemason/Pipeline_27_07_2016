@@ -18,7 +18,7 @@ noi di _n(5) _dup(80) "=" _n " 1 create antibiotic resistance prediction panels"
 use pipeline_clean_all_values_long, clear
 
 gen antibiotic =""
-replace antibiotic = "ciprofloxacin" if inlist(site, "gyra","gryb", "grla", "grlb")
+replace antibiotic = "ciprofloxacin" if inlist(site, "grla/gyra")
 replace antibiotic = "erythromycinclindamycin" if inlist(site, "erma", "ermb", "ermc", "ermt", "ermy")
 replace antibiotic = "erythromycin" if inlist(site, "msra", "mphc")
 replace antibiotic = "fusidicacid" if inlist(site, "fusb", "fusc", "fusa", "far")

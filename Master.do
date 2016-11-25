@@ -42,6 +42,12 @@ run Analysis_Pipeline2.do
 *compares phenotype predictions; makes agreement graph 2
 *compares phenotype predictions to goldstandard; makes agreement graph 3; makes sensitivity and specifitity tables/graphs
 
+
 cd E:\users\amy.mason\Pipeline_27_07_2016\
 run Analysis_Pipeline3.do 
 * compares virulence predictions
+
+*discrepancies check
+run site.do
+
+

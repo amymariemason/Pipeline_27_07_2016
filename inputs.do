@@ -196,7 +196,43 @@ noi di _N " samples"
 
 save pipeline_data_gs, replace
 
+******************************************************************
+* input coverage files 
 
 
 
+* typewriter sets
+noi di "typewriter coverage"
+
+import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\Typewriter_thresholds_10Feb15.xlsx", sheet("target list 1") firstrow clear
+rename s twentythree_s
+gen method="typewriter coverage"
+rename BLASTDB sample
+drop if sample ==""
+*reshape to one line per site/sample
+renpfix "" value
+rename valuesample sample
+rename valuemethod method
+reshape long value, i(sample method) j(site) string
+save coverage_tw1, replace
+
+import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\Typewriter_thresholds_10Feb15.xlsx", sheet("target list 2") firstrow clear
+
+gen method="typewriter coverage"
+rename BLASTDB sample
+drop if sample ==""
+*reshape to one line per site/sample
+renpfix "" value
+rename valuesample sample
+rename valuemethod method
+reshape long value, i(sample method) j(site) string
+
+append using coverage_tw1.dta, force
+*clean sample names
+gen break = strpos(sample, "_PHE")
+gen shortsample = substr(sample, 1, break-1) if break!=0
+replace shortsample=sample if break==0
+drop sample
+rename shortsample sample
+save coverage_tw, replace
 

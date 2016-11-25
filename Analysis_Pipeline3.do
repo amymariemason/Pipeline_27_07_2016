@@ -13,6 +13,35 @@ use viru_panel_all, clear
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 1 virulence predictions by site" _n _dup(80) "="
 
+
+noi tab site valuea, m
+gen agree  = (valuea=="ppp"| valuea=="aaa" )
+summ agree
+noi di r(sum) " out of " r(N) " virulence predictions agree"
+noi di r(sum)/_N*100
+
+
+noi di "disagreements by site"
+noi bysort gold: tab site valueall
+
+noi di "discrenpancies"
+sort site gold valueall sample site
+noi list sample site valueall if agree!=1
+
+drop agree
+
+noi di "largest disagreements"
+noi tab site if agree!=1, sort
+noi tab site valuea if agree!=1
+
+gen t_undercall = (valuea=="ppa")
+summ t_undercall
+noi di r(sum) " out of " r(N) "typewriter undercall"
+noi di r(sum)/_N*100
+
+
+
+
 noi di" make bar chart of which methods differ on which virulence factor"
 preserve
 contract  site  value*
@@ -33,6 +62,8 @@ graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\virulence_di
 
 restore
 
+drop agree
+
 * ppp = gs8, ppa= cyan, pap = red, paa=blue, apa = yellow, aaa= gs12
 * app = green , aap = doesn't occur
 *************************************************************
@@ -49,6 +80,9 @@ noi tab gold valueall
 noi di "results by site"
 noi tab site valueall
 
+
+
+
 * reduced table
 noi di "comparision to clear gold value results"
 drop if !inlist(gold, "A", "P")
@@ -57,6 +91,9 @@ gen agree = (valueall=="ppp" & gold=="P")|(valueall=="aaa" & gold=="A")
 summ agree
 noi di r(sum) " out of " r(N) "results agree between all methods and gold standard"
 noi di r(sum)/r(N)*100
+
+noi di "disagreements by site"
+noi bysort gold: tab site valueall
 
 * in graph
 preserve

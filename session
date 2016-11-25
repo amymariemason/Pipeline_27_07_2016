@@ -1,0 +1,25 @@
+<NotepadPlus>
+    <Session activeView="1">
+        <mainView activeIndex="0" />
+        <subView activeIndex="14">
+            <File firstVisibleLine="167" xOffset="0" scrollWidth="1451" startPos="638" endPos="638" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\inputs.do" />
+            <File firstVisibleLine="119" xOffset="0" scrollWidth="2412" startPos="3408" endPos="3408" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\clean_pheno.do" />
+            <File firstVisibleLine="390" xOffset="0" scrollWidth="891" startPos="30059" endPos="30059" selMode="0" lang="Normal Text" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\clean2.log" />
+            <File firstVisibleLine="681" xOffset="0" scrollWidth="1927" startPos="30542" endPos="30542" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\clean_predict.do" />
+            <File firstVisibleLine="2671" xOffset="0" scrollWidth="1170" startPos="8042" endPos="8042" selMode="0" lang="Normal Text" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\clean.log" />
+            <File firstVisibleLine="2" xOffset="0" scrollWidth="1413" startPos="2518" endPos="2518" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\create_predict_anti.do" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1170" startPos="8042" endPos="8042" selMode="0" lang="Normal Text" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\panal_anti.log" />
+            <File firstVisibleLine="14" xOffset="0" scrollWidth="1026" startPos="885" endPos="885" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\create_predict_viru.do" />
+            <File firstVisibleLine="623" xOffset="0" scrollWidth="1170" startPos="8042" endPos="8042" selMode="0" lang="Normal Text" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\panal_viru.log" />
+            <File firstVisibleLine="27" xOffset="0" scrollWidth="2196" startPos="595" endPos="595" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\Analysis_Pipeline.do" />
+            <File firstVisibleLine="1073" xOffset="0" scrollWidth="1170" startPos="8042" endPos="8042" selMode="0" lang="Normal Text" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\analysis1.log" />
+            <File firstVisibleLine="53" xOffset="0" scrollWidth="5049" startPos="2363" endPos="1985" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\Analysis_Pipeline2.do">
+                <Mark line="60" />
+            </File>
+            <File firstVisibleLine="38" xOffset="0" scrollWidth="1170" startPos="2240" endPos="2240" selMode="0" lang="Normal Text" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\analysis2.log" />
+            <File firstVisibleLine="6" xOffset="0" scrollWidth="4833" startPos="265" endPos="792" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\Analysis_Pipeline3.do" />
+            <File firstVisibleLine="134" xOffset="0" scrollWidth="1170" startPos="7761" endPos="7761" selMode="0" lang="Normal Text" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\analysis3.log" />
+            <File firstVisibleLine="12" xOffset="0" scrollWidth="943" startPos="1080" endPos="1008" selMode="0" lang="Stata Commands" encoding="-1" filename="E:\users\amy.mason\Pipeline_27_07_2016\Master.do" />
+        </subView>
+    </Session>
+</NotepadPlus>
