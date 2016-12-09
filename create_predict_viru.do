@@ -1,5 +1,18 @@
+************************************************
+* CREATE_PREDICT_VIRU.DO 
+************************************************
 
-* create resistance prediction panal for all methods; add goldstandard
+* Takes the  site predictions from the three methods, and creates virulence predictions
+
+*Inputs:  pipeline_clean_all_values_long (one record per sample, per method, per site) (from clean_predict.do) and pipeline_gold_clean_long (from clean_pheno.do)
+* Outputs : virulence_prediction_long  (one record per sample per virulence factor)  viru_panel_all (one record per sample per virulence factor, with the three predictions and the gold standard result if known)
+
+
+* Written by: Amy Mason
+
+
+
+
 
 set li 130
 
@@ -9,16 +22,15 @@ noi di "Run by AMM on $S_DATE $S_TIME"
 cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 
 ************************
-* add antibiotic relevance to sites
-
+* VIRULENCE PREDICTION PANEL
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 1 create virulence prediction panels" _n _dup(80) "="
 **************************
+* for each virulence factor in our panel, and for each sample we want to know which methods predict it present or not and what the final lab result was.
 ************************
 use pipeline_clean_all_values_long, clear
 
-
-******* keep non antibiotics
+* keep only the sites that relevant to virulence
 
 no di "drop sites with no virulence test"
 keep if strpos(site, "tsst") | strpos(site, "et") | strpos(site, "se") | strpos(site, "luk") | strpos(site, "mec")
@@ -27,7 +39,7 @@ drop if strpos(site, "tet")
 compress
 noi tab site, sort
 
-
+* create presence marker
 gen marker = (value=="P")
 drop set type value
 
@@ -47,7 +59,7 @@ gen pvl = 1 if  lukpvf==1 & lukpvs ==1
 replace pvl =0 if lukpvf==0 | lukpvs ==0
 drop luk*
 
-
+*generate prediction variable; use a/p as resistance/ sensitive doesn't make sense in this context
 foreach k in   eta etb etd meca mecc sea seb sec sed see seg seh sei sej selr sep seu tsst1 pvl{
 		noi di "`k'"
 		gen predict`k'= "p" if `k'==1
@@ -57,12 +69,12 @@ foreach k in   eta etb etd meca mecc sea seb sec sed see seg seh sei sej selr se
 		noi tab `k', m
 		}
 
+		* save
 noi display "save panal"
 
 save virulence_prediction, replace
 
-preserve
-
+* reshape long and save
 rename * value*
 rename valuesample sample
 rename valuemethod method
@@ -79,20 +91,21 @@ noi tab valuea, m sort
 noi tab site valuea, m 
 save virulence_prediction_long, replace
 
-restore
 
-**********************************
 ******************************************************
 
 *****************************************************
 noi di _n(5) _dup(80) "=" _n " 1 add gold standard" _n _dup(80) "="
-**************************
+****************************************************
+* add in the gold standard results from clean_pheno; note not all values have results
+
 cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 use pipeline_gold_clean_long, clear
 drop if inlist(site, "ciprofloxacin","erythromycin","clindamycin","fusidicacid","gentamicin")
 drop if inlist(site,"mupirocin","penicillin","rifampicin","tetracycline")
 drop if inlist(site,"trimethoprim","vancomycin","methicillin")
 		
+* swap to A/P as resistance/ sensitive doesn't make sense in this context		
 replace gold = "P" if gold=="R"
 replace gold ="A" if gold=="S"
 		

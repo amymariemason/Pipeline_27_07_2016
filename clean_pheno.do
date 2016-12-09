@@ -1,4 +1,10 @@
-* clean pipeline phenotype data
+************************************************
+*CLEAN_PHENO.DO
+************************************************
+* cleans pipeline phenotype data read for matching to the predictions from the three methods
+* inputs: pipeline_data_gs from INPUT.DO
+*output: pipeline_gold_clean_wide (one record per sample) and pipeline_gold_clean_long (one record per sample and per test)
+* Written by: Amy Mason
 
 set li 130
 
@@ -9,14 +15,13 @@ cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 
 
 *************************************************
-
+* input the phenotype data
 use pipeline_data_gs, clear
-* to distinguish blank responses in pcrs checked from blacnk boxes formed by long -> wide
 
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 1 drop contaminated samples" _n _dup(80) "="
 **************************
-
+* 10 samples were identified by the three groups as being contaminated. 
 gen contam=.
 replace contam=1 if inlist(sample,"C00012813", "C00001215", "C00001249", "C00012746", "C00012791")
 replace contam=1 if inlist(sample,"H113120068-138-1","H121000461-388-2","H131100031-408-2","H111840168-459-2","H111200061-196-2")
@@ -30,6 +35,7 @@ drop contam count
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 2 Match up names from method to method" _n _dup(80) "="
 *********************************************************
+* the results were done across two different labs - this reconsiles the test-names from the two different reporting methods. 
 
 local list1 "ClindDtest Clindamycin Penicillin Methicillin Ciprofloxacin  Clindamycin  Erythromycin  Tetracycline Fusidicacid Gentamicin Rifampicin Trimethoprim Vancomycin Mupirocin"
 local list2 "Dtest Clindamycindisc PEN OXA CIP CLI ERY TET FUS GEN RIF TMP VAN MUP"
@@ -54,8 +60,9 @@ forval i = 1/`n1' {
  * reduce variation in answers 
 ************************************************
 noi di _n(5) _dup(80) "=" _n "2 reduce variation in notation from method to method (antibiotics) " _n _dup(80) "="
-
 ************************************************
+* reducing results to I (for intermediate) and NA (for test not performed, or flawed in some way)  for the variously blank, or indecisive results.
+
 local NAcount=0
 local Bcount =0
 local blankcount=0
@@ -95,6 +102,10 @@ noi di "in total " `blankcount' " entirely missing values; replace with NA"
 noi di _n(5) _dup(80) "=" _n " 3 Use PCR/Array to interpret phenotypes" _n _dup(80) "="
 
 ************************************************
+*some of the tests report the various variations seen rather than a yes/no answer for each variation (eg SEA vs SEB)
+* this section replace this with individual tests for each variation
+*details of what has been done are in the interpretion table in the supplementary of the paper
+
 
 noi dis "based on entero pcr/array"
 foreach x in A B C D E G H I J LR P U{
@@ -143,15 +154,14 @@ noi tab MECC, m
 drop  comments mecA_pcr mecC_pcr PVLbyPCR PVL_array entero_pcr entero_array exfol_pcr exfol_array tst_pcr tst_array
 compress
 
-
-		
-
 	
 * fix clindamycin tests
 ************************************************
-noi di _n(5) _dup(80) "=" _n "4   use D-test to fix clindamycin test results" _n _dup(80) "="
-
+noi di _n(5) _dup(80) "=" _n "4   use D-test to clarify clindamycin test results" _n _dup(80) "="
 ************************************************
+* Clindamycin tests can report sensitve and need to be double checked with D test. This combines the two results to form single R/S clindamycin result
+
+
 
 gen count =1 if  Clindamycin=="S" &  ClindDtest == "POS" 
 summ  count if count==1
@@ -159,6 +169,11 @@ noi di r(N) " clinddtest results are positive when clindamycin results = S -> re
 replace  Clindamycin= "R" if count == 1
 noi tab Clindamycin, m
 drop *ClindDtest count
+
+******************************************************************
+*save result per sample
+********************************************************************
+
 
 	noi di "SAVE: one record per sample with gold standard profile"
 	save pipeline_gold_clean_wide, replace

@@ -1,5 +1,16 @@
+************************************************
+* CREATE_PREDICT_ANTI.DO 
+************************************************
 
-* create resistance prediction panal for all methods; add goldstandard
+* Takes the  site predictions from the three methods, and creates antibiotic predictions
+
+*Inputs:  pipeline_clean_all_values_long (one record per sample, per method, per site) (from clean_predict.do) and pipeline_gold_clean_long (from clean_pheno.do)
+* Outputs : anti_prediction_long (one record per sample per antibiotic), anti_panel_all (one record per sample per antibiotic, with the three predictions and the gold standard result if known)
+
+
+* Written by: Amy Mason
+
+
 
 set li 130
 
@@ -8,15 +19,17 @@ log using panal_anti.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
 cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 
-************************
-* add antibiotic relevance to sites
-
+**************************************************************
+* ANTIBIOTIC RESISTANCE PANEL
 ******************************************************
+* for each antibiotic in our panel, and for each sample we want to know which methods predict it resistant or not and what the final lab result was.
+
 noi di _n(5) _dup(80) "=" _n " 1 create antibiotic resistance prediction panels" _n _dup(80) "="
 **************************
 ************************
 use pipeline_clean_all_values_long, clear
 
+* match up each antibiotic to the sites that predict it; according to table in supplementary
 gen antibiotic =""
 replace antibiotic = "ciprofloxacin" if inlist(site, "grla/gyra")
 replace antibiotic = "erythromycinclindamycin" if inlist(site, "erma", "ermb", "ermc", "ermt", "ermy")
@@ -31,24 +44,24 @@ replace antibiotic = "tetracycline" if inlist(site, "tetk", "tetl", "tetm", "tet
 replace antibiotic = "trimethoprim" if inlist(site, "dfra", "dfrc", "dfrb", "dfrb","dfrg", "dfrk")
 replace antibiotic = "vancomycin" if inlist(site, "vana", "vanb", "vanc")
 
-******* keep just antibiotics
+*drop if not predicting antibiotics
 
 keep if antibiotic!=""
 compress
+
+* create marker for presence of an resistance predicting site
 gen marker = (value=="P")
 drop site set type
 
-* collapse by antibiotic, so that one record per antibiotic/sample/method
+* collapse by antibiotic, so that there is one record per antibiotic/sample/method
 bysort sample method antibiotic: egen maxmarker= max(marker)
 duplicates drop sample method antibiotic maxmarker, force
 drop value marker
 
-
 * now create wide record, one column per antibiotic
 reshape wide maxmarker, i( sample method) j(antibiotic) string
 
-
-* clean up multiple indicators
+* clean up multiple indicators for erthromycin / clindamycin and methicillin/ penicillin
 rename maxmarker* *
 replace erythromycin = 1 if (erythromycinclindamycin==1)
 rename erythromycinclindamycin clindamycin
@@ -56,7 +69,7 @@ gen methicillin =  methicillinpenicillin
 replace penicillin = 1 if  methicillinpenicillin==1
 drop methicillinpenicillin
 
-
+* generate prediction variable
 foreach k in  ciprofloxacin erythromycin clindamycin fusidicacid gentamicin mupirocin penicillin rifampicin tetracycline trimethoprim vancomycin methicillin{
 		noi di "`k'"
 		gen predict`k'= "r" if `k'==1
@@ -66,10 +79,11 @@ foreach k in  ciprofloxacin erythromycin clindamycin fusidicacid gentamicin mupi
 		noi tab `k', m
 		}
 
+* save
 noi display "save panal"
 save anti_prediction, replace
 
-preserve
+* reshape to long
 
 rename * value*
 rename valuesample sample
@@ -85,14 +99,16 @@ gen valueall = valueg + valuez + valuet
 noi tab valuea, m sort
 
 noi tab site valuea, m 
-save anti_prediction_long, replace
 
-restore
-**********************************
+*save
+save anti_prediction_long, replace
 
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 1 add gold standard" _n _dup(80) "="
-**************************
+*********************************************************
+* add in the gold standard results from clean_pheno; note not all values have results
+
+
 cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 use pipeline_gold_clean_long, clear
 drop if inlist(upper(site), "SEA", "SEB", "SEC", "SED", "SEE", "SEG", "SEH")

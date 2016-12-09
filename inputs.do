@@ -1,5 +1,13 @@
-* Import data from excel sheets
-* based on code by Tim Peto
+************************************************
+* INPUTS.DO 
+************************************************
+
+* Takes the input raw files (results from the three methods, and coverage info from typewriter and mykrobe) from the excel and makes datasets for each method
+*Inputs: Genefinder.xlsx, mykrobe_17_oct_2016.xlsx, Typewriter.xlsx, Typewriter_thresholds_10Feb15, gene_coverage_myrkobe.csv, var_coverage_myrkobe.csv
+* Outputs : pipeline_data_z (the mykrobe results); pipeline_data_gf (genefinder results);  pipeline_data_tw (typewriter results), pipeline_data_gs (lab results)
+* Outputs: coverage_tw (gene coverage values from typewriter), gene_coverage_zam and var_coverage_zam (gene and var coverage for Mykrobe)
+* Written by: Amy Mason
+* based on initial code by Tim Peto
 
 set li 130
 
@@ -8,7 +16,10 @@ log using inputs.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
 cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 
-************NEW DATA***************
+***************
+*INPUT DATA
+***************
+
 *genefinder sets
 noi di "Genefinder sets"
 import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\Genefinder.xlsx", sheet("Oxford-validation") firstrow allstring clear
@@ -73,7 +84,7 @@ drop tab
 save pipeline_data_gf, replace
 
 
-
+*******************************************************************************
 * Mykroke sets
 noi di "Mykrobe sets"
  import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\mykrobe_17_oct_2016.xlsx", sheet("mykrobe_17_oct_2016.tsv") firstrow clear
@@ -89,11 +100,7 @@ reshape long value, i(sample method comments) j(site) string
 drop comments
 save pipeline_data_z, replace
 
-
-
-* problem with extra samples; some in multiple sets with null results: drop any samples with duplicate results
-noi di "duplicate results for same sample - one set indentical or null"
-
+* count how many results
 use pipeline_data_z, clear
 noi di _N " results"
 bysort site: gen tab=1 if _n==1
@@ -105,6 +112,8 @@ summ tab
 noi di "from " r(sum) " samples"
 drop tab
 save pipeline_data_z2, replace
+
+******************************************************************************
 
 * typewriter sets
 noi di "typewriter"
@@ -164,7 +173,8 @@ noi di "from " r(sum) " samples"
 drop tab
 save pipeline_data_tw, replace
 
-***************** import gold standard 
+******************************************
+*import gold standard 
 noi di "Lab gold standard"
 import excel "E:\users\amy.mason\Pipeline_27_07_2016\Inputs\Typewriter.xlsx", sheet("OxValidation_phenotype") cellrange(A2:O494) firstrow allstring clear
 * picks up extra blank line - drop 
@@ -197,9 +207,7 @@ noi di _N " samples"
 save pipeline_data_gs, replace
 
 ******************************************************************
-* input coverage files 
-
-
+* coverage files 
 
 * typewriter sets
 noi di "typewriter coverage"
@@ -235,4 +243,15 @@ replace shortsample=sample if break==0
 drop sample
 rename shortsample sample
 save coverage_tw, replace
+
+*********************************************************************************************
+
+*mykrobe sets 
+ import delimited E:\users\amy.mason\Pipeline_27_07_2016\Inputs\gene_coverage_myrkobe.csv, clear 
+save gene_coverage_zam, replace
+
+import delimited E:\users\amy.mason\Pipeline_27_07_2016\Inputs\var_coverage_mykrobe.csv, clear 
+save var_coverage_zam, replace
+
+
 
