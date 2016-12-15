@@ -787,6 +787,9 @@ noi bysort type: tab ValueA, sort  m
 noi di "breakdown by site"
 noi bysort type site:  tab ValueA, sort 
 
+noi di "breakdown by set"
+noi bysort set:  tab ValueA, sort 
+
 save pipeline_clean_all_values_wide, replace
 
 cd E:\users\amy.mason\Pipeline_27_07_2016\

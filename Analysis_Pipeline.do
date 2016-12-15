@@ -74,6 +74,24 @@ noi tab sample if agree!=1, sort
 noi list sample site Value if agree!=1
 
 
+*which set  have the most discrenpacies
+noi di "site discrenpacies by set"
+noi tab set if agree!=1, sort
+noi tab set agree, row
+noi tab set agree, chi2
+noi list set site Value if agree!=1
+
+*which set and type  have the most discrenpacies
+noi di "site discrenpacies by set and type"
+gen new = set + type
+noi tab new if agree!=1, sort
+noi tab new agree, row
+noi tab new agree, chi2
+
+
+exit
+
+
 *Kappa statistics for paper
 noi di "Kappa statistics site by site"
 gen gf = ( valuegenefinder=="P")
