@@ -1,4 +1,15 @@
-* Compare the three methods in virulence predictions
+************************************************
+* ANALYSIS_PIPELINE3.DO 
+************************************************
+
+* Analyses the three methods on virulence factor predictions; creates summary tables and graphs
+
+*Inputs: viru_panel_all  from create_predict_viru.do
+* Outputs : virulence_disagreements.tif ( bar chart of method results by antibiotic)
+*  virulence_disagreements_withgold.tif ( bar charts of method results by antibiotic and lab results, restricted to results where lab result either R or S)
+* all_viru_sens.tif ( sensitivity of each method, by virulence factor) and all_viru_spec.tif (specificity of each method, by virulence factor)
+* graphs saved to Graph folder
+* Written by: Amy Mason
 
 set li 130
 
@@ -7,12 +18,12 @@ log using analysis3.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
 cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 
-*********** create virulence predictions by site g
+*********************************************
 use viru_panel_all, clear
 
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 1 virulence predictions by site" _n _dup(80) "="
-
+* create summary tables
 
 noi tab site valuea, m
 gen agree  = (valuea=="ppp"| valuea=="aaa" )
@@ -28,11 +39,12 @@ noi di "discrenpancies"
 sort site gold valueall sample site
 noi list sample site valueall if agree!=1
 
-drop agree
+
 
 noi di "largest disagreements"
 noi tab site if agree!=1, sort
 noi tab site valuea if agree!=1
+
 
 gen t_undercall = (valuea=="ppa")
 summ t_undercall
@@ -41,7 +53,7 @@ noi di r(sum)/_N*100
 
 
 
-
+* contract to make first bar chart
 noi di" make bar chart of which methods differ on which virulence factor"
 preserve
 contract  site  value*
@@ -64,10 +76,8 @@ restore
 
 drop agree
 
-* ppp = gs8, ppa= cyan, pap = red, paa=blue, apa = yellow, aaa= gs12
-* app = green , aap = doesn't occur
 *************************************************************
-
+*  create bar chart comparing virulence to lab results (restricted to those we have results for)
 
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 2 phenotype predictions compared to gold standard" _n _dup(80) "="
@@ -79,8 +89,6 @@ noi tab gold valueall
 
 noi di "results by site"
 noi tab site valueall
-
-
 
 
 * reduced table
@@ -95,7 +103,7 @@ noi di r(sum)/r(N)*100
 noi di "disagreements by site"
 noi bysort gold: tab site valueall
 
-* in graph
+* contract to make graph values
 preserve
 contract  site  gold valueall
 
@@ -111,7 +119,7 @@ sort gold site
 labmask num, values(site)
 gen goldlabel = "Gold standard " + gold
 
-* bar graph of predictions (antibiotics)
+* bar graph of predictions  compared to lab results
 #delimit ;
 graph bar (asis) ppp  ppa apa aaa if inlist(golds,"A", "P"),graphregion(color(white))    
 over(site, label(angle(90) labsize(tiny)) )  over(goldlabel, label(labsize(small)) ) stack  
@@ -120,14 +128,15 @@ legend( label(1 "ppp")  label (2 "ppa") label (3 "apa" ) label (4 "aaa") )
 bar(1, color(gs8))  bar(2, color(cyan)) bar(3, color(yellow)) bar(4, color(gs12))
 ylabel(0(50)250);
 #delimit cr
+*save graph
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\virulence_disagreements_withgold.tif", as(tif) width(2550) replace
 
 restore
-
-* sensitivity/ specificity
+*********************************************************************
+* sensitivity/ specificity for each method/ virulance factor
 
 ******************************************************
-noi di _n(5) _dup(80) "=" _n " 3 find sensitivity and specifity of each method/antibiotic" _n _dup(80) "="
+noi di _n(5) _dup(80) "=" _n " 3 find sensitivity and specifity of each method/virulence" _n _dup(80) "="
 
 **************************
 * TYPE WRITER
@@ -138,6 +147,7 @@ use viru_panel_all, clear
 assert site!=""
 assert _N==26201
 
+* drop samples without lab results
 noi di "restrict to sites with clear gold standard values only"
 
 gen clear=inlist(gold, "P", "A")
@@ -145,13 +155,14 @@ summ clear
 noi di r(sum) " results are P/A"
 drop if clear!=1
 
-
+* contract to get result totals
 noi di "Typewriter"
 
 contract  site  gold valuetype
 rename value predict
 
 assert predict!=""
+
 * reshape
 
 reshape wide _freq, i(site gold) j(predict) string
@@ -172,6 +183,7 @@ rename pA FP
 
 for any TN TP FN FP: replace X=0 if X==.
 
+* point estimates for sensitivity and specificity 
 gen sensitivity = TP/(TP+FN)
 gen specificity = TN/(TN+FP)
 
@@ -222,26 +234,29 @@ rename * tw_*
 rename tw_site site
 save typewriter, replace
 
-* graph
+* graph ordering/labels
 use typewriter, clear
 sort site
 gen num =_n 
 labmask num, values(site)
 local max= _N
 
+* make sens graph
 #delimit ;
-twoway rcap tw_usens tw_lsens num || scatter tw_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike tw_usens tw_lsens num, lcolor(black) || scatter tw_sens num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Typewriter vs. Lab") 
 subtitle("Sensitivity in Virulence prediction");
 #delimit cr
+*save graph
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_viru_sens.tif", as(tif) replace
 
-
+* make spec graph
 #delimit ;
-twoway rcap tw_uspec tw_lspec num || scatter tw_spec num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike tw_uspec tw_lspec num, lcolor(black) || scatter tw_spec num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Typewriter vs. Lab") 
 subtitle("Specificity in Virulence prediction");
 #delimit cr
+* save graph
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_viru_spec.tif", as(tif) replace
 
 
@@ -252,7 +267,7 @@ use viru_panel_all, clear
 
 assert site!=""
 assert _N==26201
-
+* restrict
 noi di "restrict to sites with clear gold standard values only"
 
 gen clear=inlist(gold, "A", "P")
@@ -260,7 +275,7 @@ summ clear
 noi di r(sum) " results are P/A"
 drop if clear!=1
 
-
+* contract
 noi di "Genefinder"
 
 contract  site  gold valuegene
@@ -286,7 +301,7 @@ rename pA FP
 * predicted resistant but actually sensitive
 
 for any TN TP FN FP: replace X=0 if X==.
-
+* point estimates
 gen sensitivity = TP/(TP+FN)
 gen specificity = TN/(TN+FP)
 
@@ -338,28 +353,29 @@ rename gf_site site
 save genefinder, replace
 
 
-* graph
+* graph labels
 use genefinder, clear
 sort site
 gen num =_n 
 labmask num, values(site)
 local max= _N
 
+* sensitivity graph
 #delimit ;
-twoway rcap gf_usens gf_lsens num || scatter gf_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike gf_usens gf_lsens num, lcolor(black) || scatter gf_sens num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Genefinder vs. Lab") 
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
-
+* save
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_viru_sens.tif", as(tif) replace
 
-
+* specificity graph
 #delimit ;
-twoway rcap gf_uspec gf_lspec num || scatter gf_spec num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike gf_uspec gf_lspec num, lcolor(black) || scatter gf_spec num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Genefinder vs. Lab") 
 subtitle("Specificity in Phenotype prediction");
 #delimit cr
-
+* save
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_viru_spec.tif", as(tif) replace
 
 
@@ -371,7 +387,7 @@ use viru_panel_all, clear
 
 assert site!=""
 assert _N==26201
-
+* restrict
 noi di "restrict to sites with clear gold standard values only"
 
 gen clear=inlist(gold, "A", "P")
@@ -379,7 +395,7 @@ summ clear
 noi di r(sum) " results are P/A"
 drop if clear!=1
 
-
+* contract
 noi di "Mykrobe"
 
 contract  site  gold valuezam
@@ -405,7 +421,7 @@ rename pA FP
 * predicted resistant but actually sensitive
 
 for any TN TP FN FP: replace X=0 if X==.
-
+* point estimates
 gen sensitivity = TP/(TP+FN)
 gen specificity = TN/(TN+FP)
 
@@ -457,33 +473,35 @@ rename z_site site
 save mykrobe, replace
 
 
-* graph
+* graph labels
 use mykrobe, clear
 sort site
 gen num =_n 
 labmask num, values(site)
 local max= _N
 
+* sens graph
 #delimit ;
-twoway rcap z_usens z_lsens num || scatter z_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike z_usens z_lsens num, lcolor(black) || scatter z_sens num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Mykrobe vs. Lab") 
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
-
+*save
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_viru_sens.tif", as(tif) replace
 
-
+*spec graph
 #delimit ;
-twoway rcap z_uspec z_lspec num || scatter z_spec num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike z_uspec z_lspec num, lcolor(black) || scatter z_spec num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Mykrobe vs. Lab") 
 subtitle("Specificity in Phenotype prediction");
 #delimit cr
+*save
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_viru_spec.tif", as(tif) replace
 
 
-***************************
-* COMBINED
-***************************
+********************************************
+* COMBINE THE SENSITIVITY AND SPECIFICITY GRAPHS
+*******************************************
 
 * merge the three sets
 use typewriter, clear
@@ -527,32 +545,38 @@ local max =_N
 replace site = "fusidic acid" if strpos(site, "fus")
 labmask newcount, values(site)
 
+* sensitivity grtaph
 #delimit ;
-twoway rcap usens lsens newcount, ylabel(,format(%3.2f)) xlabel(4(5)94, valuelabel angle(90))
+twoway rspike usens lsens newcount, ylabel(,format(%3.2f)) xlabel(4(5)94, valuelabel angle(90)) lcolor(black)
 || scatter  sens newcount if method=="gf", mcolor(orange) msize(small)
 ||  scatter  sensitivity newcount if method =="tw", mcolor(red)  msize(small)
 || scatter  sens newcount if method=="z", mcolor(blue) msize(small)
-legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe"))
-subtitle("Sensitivity in Phenotype prediction") graphregion(fcolor(white));
+legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe")rows(1))
+subtitle("Sensitivity in Phenotype prediction") graphregion(fcolor(white))
+xtitle("Virulence Factor");
 #delimit cr
-
+*save
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_viru_sens.tif", as(tif) replace
-
+* specificity graph
 #delimit ;
-twoway rcap uspec lspec newcount, ylabel(,format(%3.2f))
+twoway rspike uspec lspec newcount, ylabel(,format(%3.2f)) lcolor(black)
 || scatter  spec newcount if method=="gf", mcolor(orange) msize(small)
 || scatter  spec newcount if method =="tw", mcolor(red) msize(small)
 || scatter  spec newcount if method=="z", mcolor(blue) msize(small)
 xlabel(4(5)94, valuelabel angle(90))
-legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe") )
-subtitle("Specificity in Phenotype prediction") graphregion(fcolor(white));
+legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe") rows(1))
+subtitle("Specificity in Phenotype prediction") graphregion(fcolor(white))
+xtitle("Virulence Factor");
 #delimit cr
-
+*save
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_viru_spec.tif", as(tif) replace
 
 **************************************************
-* OVERALL
+* OVERALL SPEC/SENS SUMMARY
 **************************************************
+* add overall sens/spec values to the log file
+
+
 noi di "all methods"
 tempfile temp
 	use viru_panel_all, clear
@@ -617,7 +641,7 @@ foreach k in valuetype valuez{
 }
 
 	for any TN TP FN FP: replace X=0 if X==.
-
+* point estimates
 	gen sensitivity = TP/(TP+FN)
 	gen specificity = TN/(TN+FP)
 

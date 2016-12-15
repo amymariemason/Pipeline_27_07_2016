@@ -1,4 +1,15 @@
-* clean pipeline data
+************************************************
+* CLEAN_PREDICT.DO 
+************************************************
+
+* Cleans the datafiles of site predictions from the three methods, and matches them on sample/sites
+
+*Inputs: pipeline_data_z; pipeline_data_gf;  pipeline_data_tw (from inputs.do)
+* Outputs : pipeline_clean_all_values_long (one record per sample, per method, per site), pipeline_clean_all_values_wide (one record per sample, per site)
+* Other outputs: problem_samples (set of samples dropped due to contamination)
+
+* Written by: Amy Mason
+
 
 set li 130
 
@@ -10,15 +21,24 @@ cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 noi di _n(5) _dup(80) "=" _n " 1 Combine all predictive sets" _n _dup(80) "="
 
 
-****** combine the 3 sets
+***************************************************************************
+* Combine the three datasets by appending the per sample, per site record of each results
+
+
 noi di "combine"
 use pipeline_data_gf, clear
 append using pipeline_data_tw.dta, force
 append using pipeline_data_z2.dta, force
+
+* some samples do not have set label for all sites; set is constant across a single sample so amend
 gsort sample - set
 by sample: replace set=set[_n-1] if _n>1 & set==""
 by sample: assert set==set[_n-1] if _n>1
+
+* make site name consistent in case
 replace site = lower(site)
+
+* print summary of total results
 noi di _N " results"
 bysort site: gen tab=1 if _n==1
 summ tab 
@@ -30,15 +50,17 @@ summ tab
 noi di "from " r(sum) " samples"
 tab set if tab==1, m
 drop tab
-
+*save
 save pipeline_predict_raw, replace
 
 ***********************************************************
-* 1) Remove samples that are contaminated for all methods
+* 2) Remove samples that are contaminated for all methods
 *********************************************************
+* Some samples were identifed as contaminated before this analysis was started; they have been removed from the samples
+
 use pipeline_predict_raw, clear
 
-noi di _n(5) _dup(80) "=" _n " 1 Remove samples that were contaminated for all methods" _n _dup(80) "="
+noi di _n(5) _dup(80) "=" _n " 2 Remove samples that were contaminated for all methods" _n _dup(80) "="
 
 use pipeline_predict_raw, clear
 preserve
@@ -48,6 +70,8 @@ restore
 gen contam=.
 replace contam=1 if inlist(sample,"C00012813", "C00001215", "C00001249", "C00012746", "C00012791")
 replace contam=1 if inlist(sample,"H113120068-138-1","H121000461-388-2","H131100031-408-2","H111840168-459-2","H111200061-196-2")
+
+* keeps a record of the samples that were contaminates
 preserve
 keep if contam==1
 reshape wide value  comment, i(set sample site) j(method) string
@@ -63,7 +87,7 @@ order sample site value* comment*
 
 noi save problem_samples, replace
 
-
+* returns to the full set and dropsthe contaminated sets
 restore
 summ contam
 noi di r(sum) " values for contaminated samples dropped from study"
@@ -71,13 +95,20 @@ noi drop if contam==1
 drop contam
 compress
 save pipeline_noncontam, replace
+
+
 *****************************************************
-* clean site names
+* Create uniform site names
 ******************************************************
+*Many of the site names have small variations. This section makes sure each method labels sites in identical fashion so that the data can be reshaped.
+*Details of the matching can be found in the supplementary section of paper
+
+
 use pipeline_noncontam, clear
 noi di _n(5) _dup(80) "=" _n "consolidate names/ spelling errors for various sites" _n _dup(80) "=" 
 
-**** match up things I think are the same but with slightly different names
+**** match up sites which are the same with slightly different names
+
 replace site = "ant9ib" if site=="ant9_ibspc"
 replace site = "ant9ia" if site=="ant9_iaspc"
 replace site= "aac6aph2" if strpos(site, "aac")
@@ -100,7 +131,7 @@ save temp, replace
 
 
 
-* some sites split into numbers variants; remerge
+* some method split sites into numbers variants; this sections keeps only those sites and works out the single site value; 
 
 noi di "combining numbered variants into single sites"
 
@@ -126,33 +157,35 @@ drop valueccra_*
 * ccrb
 replace valueccrb="A" if valueccrb=="" & valueccrb_1=="A" & valueccrb_2=="A" & valueccrb_3=="A" & valueccrb_4=="A" & valueccrb_6=="A" 
 replace valueccrb="P" if valueccrb=="" & (valueccrb_1=="P" | valueccrb_2=="P"|valueccrb_3=="P"|valueccrb_4=="P"|valueccrb_6=="P" )
-* two values blank  - C00011656 & C00011655
+* values blank  - C00011656 (this sample is only reported by mykrobe, and will be dropped shortly, so I'm not concerned about this)
 assert valueccrb!="" if !strpos(sample, "C0001165")
 drop valueccrb_*
 
 * sea
 replace valuesea="A" if valuesea_1=="A" & valuesea_2=="A"  & valuesea=="" 
 replace valuesea="P" if valuesea_1=="P" | valuesea_2=="P"  & valuesea=="" 
-* two values blank  - C00011656 & C00011655
+* values blank  - C00011656 
 assert valuesea!=""  if !strpos(sample, "C0001165")
 drop valuesea_*
 
 *seh
 replace valueseh="A" if valueseh_1=="A" & valueseh_2=="A"  & valueseh=="" 
 replace valueseh="P" if valueseh_1=="P" | valueseh_2=="P"  & valueseh=="" 
-* two values blank  - C00011656 & C00011655
+* values blank  - C00011656 
 assert valueseh!=""  if !strpos(sample, "C0001165")
 drop valueseh_*
 
 *seu
 replace valueseu="A" if valueseu_1=="A" & valueseu_2=="A" &  valueseu=="" 
 replace valueseu="P" if valueseu_1=="P" | valueseu_2=="P"  & valueseu=="" 
-* two values blank  - C00011656 & C00011655
+* values blank  - C00011656 
 assert valueseu!=""  if !strpos(sample, "C0001165")
 drop valueseu_*
 
 reshape long
 rename value cleanvalue
+
+* merge this back into the original set and drop the numbered varient sets
 
 merge 1:1 set sample method site using temp, update
 assert _merge!=4
@@ -166,6 +199,7 @@ noi tab site if _merge==2
 drop _merge cleanvalue comment
  
 
+* keep tally of how many samples/ sites etc  
 reshape wide value , i(sample site) j(method) string
 noi display _N " sample sites"
 bysort sample: gen count1=1 if _n==1
@@ -182,6 +216,10 @@ save temp2, replace
 **************************************************
 * SITE TYPES
 ***************************************************
+* 4 types of site are reported: Aquired resistance, Chromosonal resistance, ccr, and virulence; these were identifed for me by Claire 
+
+noi di _n(5) _dup(80) "=" _n " 3 Label sites by Aquired Resistance, ccr etc" _n _dup(80) "="
+
 use temp2, clear
 
 gen type = "mlst"  if inlist(site, "mlst")
@@ -209,7 +247,7 @@ replace type = "Aquired Resistance"  if inlist(site, "dfrg", "dfrk", "cfr", "cat
 
 
 
-* Summary 
+* check tally of samples
 noi display _N " sample sites"
 noi tab type
 bysort sample: gen count1=1 if _n==1
@@ -225,30 +263,40 @@ drop count*
 save temp3, replace
 
 
-**********************
+***********************************************
 *2) LOOK AT MISSING DATA BETWEEN METHODS
 ****************************************************
-noi di _n(5) _dup(80) "=" _n " 2 Missing data between methods" _n _dup(80) "="
+* There are some sites and some samples that were not reported by all the methods; this section removes them from the data
+* and keeps numbers on how many are removed
 
-* how many values are missing
+noi di _n(5) _dup(80) "=" _n " 4 Missing data between methods" _n _dup(80) "="
+
 use temp3, clear
 
-* create absence markers
+* create absence markers; binary number indicating which method is missing from the data on a particular sample
 gen  zbyte=( valuezam!="")
 gen  tbyte=( valuetypewriter !="")
 gen  gbyte=( valuegenefinder   !="")
 gen new= string( tbyte ) + string(zbyte) + string(gbyte)
-replace new ="Phenotype" if type=="Phenotype"
+*replace new ="Phenotype" if type=="Phenotype"
+
+* list types of missingness
 noi di "sample-sites missing values - key (typewriter mykrobe genefinder)"
 table new
 
-
+***********
 *000
+***********
+* i.e. every method has reported blank for this person and method.
+*This is because mykrobe added 40 extra samples AND mykrobe reports absense of a particular with blank
+* purely sample based
 summ zbyte if new=="000"
 noi di r(N) " not called by any method; people missing from T/G and called blank by mycrobe - see 010 bonus people below"
 
-
+******************
 *010
+********************
+* present only in mykrobe data set; 40 samples and 3 sites (vgaalc, luk and ar) not reported elsewhere
 summ zbyte if new== "010"
 noi di r(N) " Called only by mykrobe"
 * vgaalc
@@ -282,7 +330,12 @@ noi di r(N) " sample sites affected"
 drop if strpos("`list'", sample)
 drop count 
 
+
+**************
 *001
+***************
+* appearing only in genefinder 
+* site only (allelicprofile)
 summ gbyte if new =="001"
 noi di r(N) "Called only by genefinder"
 noi di "sites in sample-sites only supplied by genefinder"
@@ -296,8 +349,12 @@ noi di _N " sample sites remaining"
 assert new!="001"
 
 
-
+***************************
 * 101
+****************************
+* supplied by typewriter and genefinder and NOT mykrobe
+* this is because mykrobe doesn't report when mutations aren't present; fixed by swapping them to say "wt" for wild type in line with other two
+
 summ zbyte if new =="101"
 noi di r(N) " no value in mykrobe, eg fusa"
 noi tab site if new=="101"
@@ -309,7 +366,7 @@ summ zbyte if strpos("`list'", site) & valuezam==""
 noi di "solution: replace " r(N) " blanks in these sites in mykroke with wt -  not mlst which is not a mutation site"
 noi replace valuezam="wt" if  strpos("`list'", site) & valuezam==""
 
-* regen new
+*  regenerate the counter to check there are no longer any missing gaps:
 drop new
 drop *byte
 gen  zbyte=( valuezam!="")
@@ -317,12 +374,13 @@ gen  tbyte=( valuetypewriter !="")
 gen  gbyte=( valuegenefinder   !="")
 gen new= string( tbyte ) + string(zbyte) + string(gbyte)
 noi tab new
-* mslt
+
+* mlst is still here (I kept this so I could check for mlst agreement between typewriter and genefinder)
 noi assert site=="mlst" if new=="101" 
 assert new =="111" if (type!="Phenotype" & site!="mlst")
 noi di "all remaining sample sites are either complete accross all three methods or mlst (mykrobe absent)"
 
-* save mlst results and drop
+* compares the mlst results between genefinder and typewriter, then drops them to leave only complete sites
 preserve
 keep if site =="mlst"
 gen ident =  strpos(valuetypewriter, valuegene) >0
@@ -342,7 +400,7 @@ noi drop if marker==1
 drop marker
 
 
-* count how many sample sites left
+* Tally of sites and samples remaining
 
 noi display _N " sample sites"
 bysort sample: gen count1=1 if _n==1
@@ -361,18 +419,21 @@ drop count* new *byte
  
 save temp4, replace
 *************************************
-
-* then add which go with which antibiotic (based on new sheet by clare)
+* Binary predictions
 **********************************************************
+* Some of the results are not simply present/absent
+* in some cases missing prediction - take this as absent
+* in others there is a prediction of specific mutations; these are checked against the table in Claire's paper (reproduced in our draft)
 
-noi di _n(5) _dup(80) "=" _n " 4 Match to antibiotic prediction" _n _dup(80) "="
+
+noi di _n(5) _dup(80) "=" _n " 5 Creates binary predictions" _n _dup(80) "="
 
 
-*clean up non binary values
 use temp4, clear
+
+* replace missing/ unclear results as absent
+
 reshape long
-
-
  noi di "missing values"
 replace value = upper(value)
 gen ambi = 1 if inlist(value, "ND", "NT", "LOW COV", "MIXED")
@@ -387,9 +448,15 @@ drop ambi
 noi di "all values equal A or P, unless chromosonal"
 replace value=upper(value)
 
+* check on the mutation prediction left to do
 assert inlist(value, "A", "P") if !strpos(type, "Chro")
 
 ***************
+* mutation prediction
+****************
+
+* ensure all the mutations are predicted in the same format
+
 gen count = 1 if strpos(value, "=>")
 summ count
 noi di r(N) " replace => with - to create uniform recording of mutations"
@@ -429,20 +496,21 @@ drop value2 value3 start end
 			
 			
 
-*swap to binary the point mutations
-* clarify absenses
+
+* Swap wild type (wt) to A for absent
 gen count = 1  if value=="WT" & strpos(type, "Chromo")
 summ count if count==1 
 noi di r(N) "replace WT with A in typewriter/ genewriter/ zam  reports on chromosonal mutations"
 noi replace value = "A" if count==1 
 drop count
 
-* clarify point mutations based on clare's paper *NOTE: need to do as strpos not inlist as there are multiple variations reported
+* point mutations based on clare's paper: fusa, rpob, gyra/ grla, dfrb
 noi di "mutations: if count!=1 then no considered positive as not in panal on clare's paper"
 
 
-
+************************
 * fusa
+**************************
 noi di "fusa mutations"
 
 gen count =1 if strpos(value, "434:B-N")  & strpos(site, "fusa")
@@ -517,8 +585,10 @@ replace value = "P" if count ==1
 noi tab value count if site=="fusa" , m
 drop count 
 
-
+**********************************
 *rpob
+**********************************
+
 noi di "rpob mutations"
 
 gen count =1 if strpos(value, "468:Q-K") & strpos(site, "rpob")
@@ -563,8 +633,9 @@ drop count insert
 
 
 
-
+***************************************
 *dfrb
+******************************************
 noi di "dfrb mutations"
 gen count =1 if  strpos(value, "99:F-Y" ) & strpos(value, "31:H-N" ) & strpos(site, "dfrb")
 replace count =1 if  strpos(value, "99:F-Y") & strpos(value, "150:H-R") & strpos(site, "dfrb")
@@ -581,8 +652,11 @@ noi tab value count if site=="dfrb" , m
 drop count 
 
 preserve
-
+*******************
 *gyra and grla
+*****************
+
+* these mutations work in combinate, so need to reshape wide and check
 noi di "gyra and grla mutations"
 
 * gyra and grla need to be done on same site
@@ -633,17 +707,22 @@ replace count =1 if  strpos(valuegrla, "80:S-Y")
 
 noi bysort count: tab valuegrla valuegyra
 
+
+* assign present where applicable
 gen value ="P" if count==1
 replace value= "A" if count==. 
 replace value = "grla: " + valuegrla + " gyra: " +valuegyra if (valuegrla!="A" | valuegyra!="A") & count==. 
 drop count
 noi tab value, m
 
+* save results
 gen site = "grla/gyra"
 drop valueg*
 assert _N==4137
 save grla_results, replace
 
+***************************************************
+* restore to full results and append with grla/gyra results
 restore
 
 drop if inlist(site, "grla", "gyra")
@@ -658,8 +737,7 @@ replace value="A" if count==1 & value!="NA"
 drop count
 
 
-
-* swap blanks to dashes to make easier to see
+* check everything has been assigned A or P
 assert value!=""
 replace site=lower(site)
 noi bysort type: tab site value, m 
@@ -669,7 +747,7 @@ save temp5, replace
 noi di _n(5) _dup(80) "=" _n " 5 Cleaned summary" _n _dup(80) "="
 
 ***************************************
-* Summary 
+* Summary and save
 ****************************************
 noi display _N " sample sites"
 noi tab type
@@ -708,6 +786,9 @@ noi bysort type: tab ValueA, sort  m
 
 noi di "breakdown by site"
 noi bysort type site:  tab ValueA, sort 
+
+noi di "breakdown by set"
+noi bysort set:  tab ValueA, sort 
 
 save pipeline_clean_all_values_wide, replace
 

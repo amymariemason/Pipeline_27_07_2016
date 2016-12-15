@@ -1,5 +1,19 @@
-* Compare the three methods in phenotype predictions
+************************************************
+* ANALYSIS_PIPELINE2.DO 
+************************************************
 
+* Analyses the three methods on antibiotic predictions; creates summary tables and graphs
+
+*Inputs: anti_panel_all  from create_predict_anti.do
+* Outputs :  phenotype_disagreements.tif ( bar chart of method results by antibiotic)
+*  phenotype_disagreements_withgold.tif ( bar charts of method results by antibiotic and lab results, restricted to results where lab result either R or S)
+* all_sens.tif ( sensitivity of each method, by antibiotic) and all_spec.tif (specificity of each method, by antibiotic)
+* graphs saved to Graph folder
+* Written by: Amy Mason
+
+***************************************************************************
+* Compare the three methods in phenotype predictions for antibiotics
+****************************************************************************
 set li 130
 
 cap log close
@@ -7,12 +21,14 @@ log using analysis2.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
 cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 
-*********** create phenotype predictions by site
+
 use anti_panel_all, clear
 
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 1 phenotype predictions by site" _n _dup(80) "="
-
+********************************************************
+* create summary tables of the phenotype predictions
+* note r/s = method predictions, R/S = lab results
 
 noi tab site valuea, m
 gen agree  = (valuea=="rrr"| valuea=="sss" )
@@ -35,14 +51,11 @@ noi di r(sum) " out of " r(N) "typewriter undercall"
 noi di r(sum)/_N*100
 
 
-
+* create values for bar chart of all method results
 noi di" make bar chart of which methods differ on which antibiotic"
-
-
 contract  site  value*
 rename valueall all
 drop value*
-
 reshape wide _freq, i(site) j(all) string
 rename _freq* *
 
@@ -53,12 +66,12 @@ graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_di
 
 
 *************************************************************
-
-******************************************************
+* Bar chart comparing with gold standard
+*************************************************************
 noi di _n(5) _dup(80) "=" _n " 2 phenotype predictions compared to gold standard" _n _dup(80) "="
 use anti_panel_all, clear
 
-* in table
+* summary tables of results
 noi tab gold valueall
 gen agree = (valueall=="rrr")|(valueall=="sss")
 summ agree
@@ -72,12 +85,10 @@ noi bysort gold: tab site valueall
 noi di "discrenpancies"
 sort site gold valueall sample site
 noi list sample site valueall if agree!=1
-
 drop agree
 
-* reduced table
-noi di "disagreements with gold standard"
 
+noi di "disagreements with gold standard"
 drop if !inlist(gold, "R", "S")
 noi tab gold valueall
 gen agree = (valueall=="rrr" & gold=="R")|(valueall=="sss" & gold=="S")
@@ -94,12 +105,7 @@ sort site gold valueall sample site
 noi list sample site gold valueall if agree!=1
 
 
-
-
-
-
-
-* in graph
+* creat bar graph values
 
 contract  site  gold valueall
 
@@ -119,8 +125,8 @@ graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_di
 
 
 
-
-* sensitivity/ specificity
+*********************************************************
+* sensitivity/ specificity graphs for each method
 
 ******************************************************
 noi di _n(5) _dup(80) "=" _n " 3 find sensitivity and specifity of each method/antibiotic" _n _dup(80) "="
@@ -134,6 +140,7 @@ use anti_panel_all, clear
 assert site!=""
 assert _N==16548
 
+**
 noi di "restrict to sites with clear gold standard values only"
 
 gen clear=inlist(gold, "R", "S")
@@ -144,11 +151,12 @@ drop if clear!=1
 
 noi di "Typewriter"
 
+* contract data to get total values by site
 contract  site  gold valuetype
 rename value predict
 
 assert predict!=""
-* reshape
+* reshape the data to calculate the senstivity/ specificity
 
 reshape wide _freq, i(site gold) j(predict) string
 rename _freq* *
@@ -209,8 +217,7 @@ noi di site[`i'] " has no negative samples"
 }
 }
 
-* save values for combining into graphs
-
+* save values for combining into multiple graphs
 
 keep site  sens spec lsens usens lspec uspec
 noi list  site  sens spec lsens usens lspec uspec
@@ -218,26 +225,30 @@ rename * tw_*
 rename tw_site site
 save typewriter, replace
 
-* graph
+* create labels
 use typewriter, clear
 sort site
 gen num =_n 
 labmask num, values(site)
 local max= _N
 
+* make graph
 #delimit ;
-twoway rcap tw_usens tw_lsens num || scatter tw_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike tw_usens tw_lsens num, lcolor(black) || scatter tw_sens num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Typewriter vs. Lab") 
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_sens.tif", as(tif) replace
 
 
+
 #delimit ;
-twoway rcap tw_uspec tw_lspec num || scatter tw_spec num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike tw_uspec tw_lspec num, lcolor(black) || scatter tw_spec num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Typewriter vs. Lab") 
 subtitle("Specificity in Phenotype prediction");
 #delimit cr
+
+* save graph
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_spec.tif", as(tif) replace
 
 
@@ -251,6 +262,7 @@ use anti_panel_all, clear
 assert site!=""
 assert _N==16548
 
+* restrict
 noi di "restrict to sites with clear gold standard values only"
 
 gen clear=inlist(gold, "R", "S")
@@ -258,18 +270,15 @@ summ clear
 noi di r(sum) " results are R/S"
 drop if clear!=1
 
-
+* contract to get totals for sites
 noi di "Genefinder"
-
 contract  site  gold valuegene
 rename value predict
-
 assert predict!=""
-* reshape
 
+* reshape
 reshape wide _freq, i(site gold) j(predict) string
 rename _freq* *
-
 rename r combor
 rename s combos
 reshape wide combo*, i(site) j(gold) string
@@ -285,6 +294,7 @@ rename rS FP
 
 for any TN TP FN FP: replace X=0 if X==.
 
+* generate sens and spec
 gen sensitivity = TP/(TP+FN)
 gen specificity = TN/(TN+FP)
 
@@ -336,26 +346,28 @@ rename gf_site site
 save genefinder, replace
 
 
-* graph
+* graph labels
 use genefinder, clear
 sort site
 gen num =_n 
 labmask num, values(site)
 local max= _N
-
+* make sens graph
 #delimit ;
-twoway rcap gf_usens gf_lsens num || scatter gf_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike gf_usens gf_lsens num, lcolor(black) || scatter gf_sens num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Genefinder vs. Lab") 
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
+* save graph
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_sens.tif", as(tif) replace
 
-
+* make specificity graph
 #delimit ;
-twoway rcap gf_uspec gf_lspec num || scatter gf_spec num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike gf_uspec gf_lspec num, lcolor(black) || scatter gf_spec num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Genefinder vs. Lab") 
 subtitle("Specificity in Phenotype prediction");
 #delimit cr
+* save graph
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_spec.tif", as(tif) replace
 
 
@@ -370,6 +382,7 @@ use anti_panel_all, clear
 assert site!=""
 assert _N==16548
 
+* restrict
 noi di "restrict to sites with clear gold standard values only"
 
 gen clear=inlist(gold, "R", "S")
@@ -377,15 +390,13 @@ summ clear
 noi di r(sum) " results are R/S"
 drop if clear!=1
 
-
+* contract
 noi di "Mykrobe"
-
 contract  site  gold valuezam
 rename value predict
-
 assert predict!=""
-* reshape
 
+* reshape
 reshape wide _freq, i(site gold) j(predict) string
 rename _freq* *
 
@@ -404,6 +415,7 @@ rename rS FP
 
 for any TN TP FN FP: replace X=0 if X==.
 
+* gen sens/ spec point values
 gen sensitivity = TP/(TP+FN)
 gen specificity = TN/(TN+FP)
 
@@ -455,30 +467,33 @@ rename z_site site
 save mykrobe, replace
 
 
-* graph
+* graph labels/ order
 use mykrobe, clear
 sort site
 gen num =_n 
 labmask num, values(site)
 local max= _N
 
+* make sens graph
 #delimit ;
-twoway rcap z_usens z_lsens num || scatter z_sens num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike z_usens z_lsens num, lcolor(black) || scatter z_sens num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Mykrobe vs. Lab") 
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
+* save
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_sens.tif", as(tif) replace
 
-
+* make spec graph
 #delimit ;
-twoway rcap z_uspec z_lspec num || scatter z_spec num,  xlabel(1(1)`max', valuelabel angle(90))
+twoway rspike z_uspec z_lspec num, lcolor(black) || scatter z_spec num,  xlabel(1(1)`max', valuelabel angle(90))
 legend(off) title("Mykrobe vs. Lab") 
 subtitle("Specificity in Phenotype prediction");
 #delimit cr
+* save
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_spec.tif", as(tif) replace
 
 ***************************
-* COMBINED
+* COMBINE THE SENS/ SPEC GRAPHS
 ***************************
 
 * merge the three sets
@@ -505,7 +520,7 @@ rename value* *
 order site method sens lsens usens spec lspec uspec
 
 
-* sneaky creating gaps on graphs
+* sneakily creating gaps on graphs
 expand 3 if method =="gf", gen(dups)
 replace method ="blank" if dups==1
 replace sens=. if method=="blank"
@@ -515,7 +530,7 @@ replace uspec=. if method=="blank"
 replace lspec=. if method=="blank"
 replace spec=. if method=="blank"
 
-* order bits
+* order the slabels
 encode(method), gen(order)
 sort site order
 gen newcount = _n
@@ -523,34 +538,40 @@ local max =_N
 replace site = "fusidic acid" if strpos(site, "fus")
 labmask newcount, values(site)
 
+* make sens graph
 #delimit ;
-twoway rcap usens lsens newcount, ylabel(,format(%3.2f)) xlabel(4(5)59, valuelabel angle(90))
+twoway rspike usens lsens newcount, ylabel(,format(%3.2f)) xlabel(4(5)59, valuelabel angle(90)) lcolor(black)
 || scatter  sens newcount if method=="gf", mcolor(orange)
 ||  scatter  sensitivity newcount if method =="tw", mcolor(red) 
 || scatter  sens newcount if method=="z", mcolor(blue)
-legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe"))
-subtitle("Sensitivity in Phenotype prediction") graphregion(fcolor(white));
+legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe") rows(1))
+subtitle("Sensitivity in Phenotype prediction") graphregion(fcolor(white))
+xtitle("Antibiotic");
 #delimit cr
 
+* save graph
 graph save Graph "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_sens.gph", replace
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_sens.tif", as(tif) replace
 
+* make spec graph
 #delimit ;
-twoway rcap uspec lspec newcount, ylabel(,format(%3.2f))
+twoway rspike uspec lspec newcount, ylabel(,format(%3.2f))  lcolor(black)
 || scatter  spec newcount if method=="gf", mcolor(orange)
 || scatter  spec newcount if method =="tw", mcolor(red)
 || scatter  spec newcount if method=="z", mcolor(blue)
 xlabel(4(5)59, valuelabel angle(90))
-legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe") )
-subtitle("Specificity in Phenotype prediction") graphregion(fcolor(white));
+legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe") rows(1))
+subtitle("Specificity in Phenotype prediction") graphregion(fcolor(white))
+xtitle("Antibiotic");
 #delimit cr
+* save graph
 graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_spec.tif", as(tif) replace
 
 
 **************************************************
 * OVERALL
 **************************************************
-
+* add the overall sensitivity and specificity to the log file
 
 
 
@@ -618,7 +639,7 @@ foreach k in valuetype valuez{
 }
 
 	
-
+* point estimates
 	for any TN TP FN FP: replace X=0 if X==.
 
 	gen sensitivity = TP/(TP+FN)
@@ -665,6 +686,11 @@ foreach k in valuetype valuez{
 * save values for combining for table
 noi list method sens lsens usens spec lspec uspec
 
+
+exit
+
+* after this point was written to compare which sites where causing the discrepencies when mykrobe was acting up
+* not relevant to paper
 
 ************************
 *antibiotic specific: rifampicin, fusicidic acid, pencilin
