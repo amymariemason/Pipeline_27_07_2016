@@ -3,7 +3,7 @@
 set li 130
 
 cap log close
-log using clean.log, replace
+log using clean_patch.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
 cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
 
@@ -341,6 +341,12 @@ noi di "dropping " r(sum) " mlst sites"
 noi drop if marker==1
 drop marker
 
+* IleS unsuitable for resistance reporting - drop this 
+gen marker =1 if site=="iles"
+summ marker
+noi di r(sum) " iles site reports dropped due to not being in Claire's gene panel on paper"
+drop if marker==1
+drop marker
 
 * count how many sample sites left
 
@@ -647,7 +653,9 @@ save grla_results, replace
 restore
 
 drop if inlist(site, "grla", "gyra")
-assert _N==343371
+assert _N==339234
+
+
 append using grla_results
  
 * replace all other point mutations as A

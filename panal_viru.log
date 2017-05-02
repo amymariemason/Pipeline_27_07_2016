@@ -1,4 +1,4 @@
-Run by AMM on 10 Nov 2016 12:26:59
+Run by AMM on  2 May 2017 13:15:10
 
 
 
@@ -676,13 +676,1201 @@ goldstanda |                        valueall
 
 
 . 
-. 
-. 
-. * analyse data
+. use anti_panel_all, clear
 
 . 
+. 
+. 
+. ******************************************************
+
+. 
+. noi di _n(5) _dup(80) "=" _n " 1 phenotype predictions by site" _n _dup(80) "="
+
+
+
+
+
+================================================================================
+ 1 phenotype predictions by site
+================================================================================
+
+. 
+. ********************************************************
+
+. 
+. * create summary tables of the phenotype predictions
+
+. 
+. * note r/s = method predictions, R/S = lab results
+
+. 
+. 
+. 
+. noi tab site valuea, m
+
+              |                             valueall
+         site |       rrr        rrs        rsr        rss        srs        sss |     Total
+--------------+------------------------------------------------------------------+----------
+ciprofloxacin |       304          0          2          0          1      1,072 |     1,379 
+  clindamycin |       338          7          0          0         10      1,024 |     1,379 
+ erythromycin |       354          6          0          0          8      1,011 |     1,379 
+  fusidicacid |       151          4          0          0          3      1,221 |     1,379 
+   gentamicin |        76          1          0          0          2      1,300 |     1,379 
+  methicillin |       393          2          0          0          0        984 |     1,379 
+    mupirocin |        15          0          0          2          0      1,362 |     1,379 
+   penicillin |     1,161          3          0          0          4        211 |     1,379 
+   rifampicin |        23          0          1          0          1      1,354 |     1,379 
+ tetracycline |       121          4          0          0          5      1,249 |     1,379 
+ trimethoprim |       175          3          1          0          1      1,199 |     1,379 
+   vancomycin |         0          0          0          0          0      1,379 |     1,379 
+--------------+------------------------------------------------------------------+----------
+        Total |     3,111         30          4          2         35     13,366 |    16,548 
+
+
+. 
+. gen agree  = (valuea=="rrr"| valuea=="sss" )
+
+. 
+. summ agree
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       agree |     16,548    .9957095    .0653636          0          1
+
+. 
+. noi di r(sum) " out of " r(N) " phenotype predictions agree"
+16477 out of 16548 phenotype predictions agree
+
+. 
+. noi di r(sum)/_N*100
+99.570945
+
+. 
+. 
+. 
+. noi di "largest disagreements"
+largest disagreements
+
+. 
+. noi tab site if agree!=1, sort
+
+         site |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+  clindamycin |         17       23.94       23.94
+ erythromycin |         14       19.72       43.66
+ tetracycline |          9       12.68       56.34
+  fusidicacid |          7        9.86       66.20
+   penicillin |          7        9.86       76.06
+ trimethoprim |          5        7.04       83.10
+ciprofloxacin |          3        4.23       87.32
+   gentamicin |          3        4.23       91.55
+  methicillin |          2        2.82       94.37
+    mupirocin |          2        2.82       97.18
+   rifampicin |          2        2.82      100.00
+--------------+-----------------------------------
+        Total |         71      100.00
+
+. 
+. noi tab site valuea if agree!=1
+
+              |                  valueall
+         site |       rrs        rsr        rss        srs |     Total
+--------------+--------------------------------------------+----------
+ciprofloxacin |         0          2          0          1 |         3 
+  clindamycin |         7          0          0         10 |        17 
+ erythromycin |         6          0          0          8 |        14 
+  fusidicacid |         4          0          0          3 |         7 
+   gentamicin |         1          0          0          2 |         3 
+  methicillin |         2          0          0          0 |         2 
+    mupirocin |         0          0          2          0 |         2 
+   penicillin |         3          0          0          4 |         7 
+   rifampicin |         0          1          0          1 |         2 
+ tetracycline |         4          0          0          5 |         9 
+ trimethoprim |         3          1          0          1 |         5 
+--------------+--------------------------------------------+----------
+        Total |        30          4          2         35 |        71 
+
+
+. 
+. 
+. 
+. gen m_overcall = 1 if valuea=="srs"
+(16,513 missing values generated)
+
+. 
+. summ m_overcall
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+  m_overcall |         35           1           0          1          1
+
+. 
+. noi di r(sum) " out of " r(N) "mykrobe overcall"
+35 out of 35mykrobe overcall
+
+. 
+. noi di r(sum)/_N*100
+.21150592
+
+. 
+. 
+. 
+. gen t_undercall = 1 if valuea=="rrs"
+(16,518 missing values generated)
+
+. 
+. summ t_undercall
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+ t_undercall |         30           1           0          1          1
+
+. 
+. noi di r(sum) " out of " r(N) "typewriter undercall"
+30 out of 30typewriter undercall
+
+. 
+. noi di r(sum)/_N*100
+.18129079
+
+. 
+. 
+. 
+. 
+. 
+. * create values for bar chart of all method results
+
+. 
+. noi di" make bar chart of which methods differ on which antibiotic"
+ make bar chart of which methods differ on which antibiotic
+
+. 
+. contract  site  value*
+
+. 
+. rename valueall all
+
+. 
+. drop value*
+
+. 
+. reshape wide _freq, i(site) j(all) string
+(note: j = rrr rrs rsr rss srs sss)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       44   ->      12
+Number of variables                   3   ->       7
+j variable (6 values)               all   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqrrr _freqrrs ... _freqsss
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. 
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis)  rrr rrs rsr rss srs sss,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Result
+> s given as Genefinder Mykrobe Typewriter ") legend( label(1 "rrr") label( 2 "rrs" ) label (3 "rsr") label (4 "rss" ) label (5 "s
+> rs") label( 6 "sss" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6
+> , color(gs12))
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif", as(tif) width(2550) replace
+(file E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.tif written in TIFF format)
+
+. 
+. 
+. 
+. *************************************************************
+
+. 
+. * Bar chart comparing with gold standard
+
+. 
+. *************************************************************
+
+. 
+. noi di _n(5) _dup(80) "=" _n " 2 phenotype predictions compared to gold standard" _n _dup(80) "="
+
+
+
+
+
+================================================================================
+ 2 phenotype predictions compared to gold standard
+================================================================================
+
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. * summary tables of results
+
+. 
+. noi tab gold valueall
+
+goldstanda |                             valueall
+        rd |       rrr        rrs        rsr        rss        srs        sss |     Total
+-----------+------------------------------------------------------------------+----------
+         I |         6          0          0          0          0         74 |        80 
+        NA |       288          8          0          0          9      1,699 |     2,004 
+         R |     2,720          9          3          0          4         89 |     2,825 
+         S |        97         13          1          2         22     11,504 |    11,639 
+-----------+------------------------------------------------------------------+----------
+     Total |     3,111         30          4          2         35     13,366 |    16,548 
+
+
+. 
+. gen agree = (valueall=="rrr")|(valueall=="sss")
+
+. 
+. summ agree
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       agree |     16,548    .9957095    .0653636          0          1
+
+. 
+. noi di r(sum) " out of " r(N) "results agree between all methods"
+16477 out of 16548results agree between all methods
+
+. 
+. noi di r(sum)/r(N)*100
+99.570945
+
+. 
+. 
+. 
+. 
+. 
+. noi di "disagreements by site"
+disagreements by site
+
+. 
+. noi bysort gold: tab site valueall
+
+----------------------------------------------------------------------------------------------------------------------------------
+-> goldstandard = I
+
+              |       valueall
+         site |       rrr        sss |     Total
+--------------+----------------------+----------
+ciprofloxacin |         1         20 |        21 
+  clindamycin |         0          2 |         2 
+ erythromycin |         0          1 |         1 
+  methicillin |         4         16 |        20 
+    mupirocin |         0         24 |        24 
+   penicillin |         1          4 |         5 
+   rifampicin |         0          1 |         1 
+ tetracycline |         0          1 |         1 
+ trimethoprim |         0          5 |         5 
+--------------+----------------------+----------
+        Total |         6         74 |        80 
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+-> goldstandard = NA
+
+              |                  valueall
+         site |       rrr        rrs        srs        sss |     Total
+--------------+--------------------------------------------+----------
+ciprofloxacin |         0          0          0          6 |         6 
+  clindamycin |       136          5          8        764 |       913 
+ erythromycin |         1          0          0          5 |         6 
+  fusidicacid |         0          0          0          6 |         6 
+   gentamicin |         0          0          0          6 |         6 
+  methicillin |         3          0          0          3 |         6 
+    mupirocin |         3          0          0        331 |       334 
+   penicillin |         4          0          0          1 |         5 
+   rifampicin |         0          0          0          6 |         6 
+ tetracycline |         3          0          0          3 |         6 
+ trimethoprim |       138          3          1        562 |       704 
+   vancomycin |         0          0          0          6 |         6 
+--------------+--------------------------------------------+----------
+        Total |       288          8          9      1,699 |     2,004 
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+-> goldstandard = R
+
+              |                        valueall
+         site |       rrr        rrs        rsr        srs        sss |     Total
+--------------+-------------------------------------------------------+----------
+ciprofloxacin |       299          0          2          0         15 |       316 
+  clindamycin |       180          0          0          0          5 |       185 
+ erythromycin |       342          0          0          0          6 |       348 
+  fusidicacid |       144          3          0          2         13 |       162 
+   gentamicin |        73          1          0          1         19 |        94 
+  methicillin |       381          2          0          0          8 |       391 
+    mupirocin |         6          0          0          0          0 |         6 
+   penicillin |     1,124          2          0          1         10 |     1,137 
+   rifampicin |        22          0          1          0          2 |        25 
+ tetracycline |       112          1          0          0          5 |       118 
+ trimethoprim |        37          0          0          0          6 |        43 
+--------------+-------------------------------------------------------+----------
+        Total |     2,720          9          3          4         89 |     2,825 
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+-> goldstandard = S
+
+              |                             valueall
+         site |       rrr        rrs        rsr        rss        srs        sss |     Total
+--------------+------------------------------------------------------------------+----------
+ciprofloxacin |         4          0          0          0          1      1,031 |     1,036 
+  clindamycin |        22          2          0          0          2        253 |       279 
+ erythromycin |        11          6          0          0          8        999 |     1,024 
+  fusidicacid |         7          1          0          0          1      1,202 |     1,211 
+   gentamicin |         3          0          0          0          1      1,275 |     1,279 
+  methicillin |         5          0          0          0          0        957 |       962 
+    mupirocin |         6          0          0          2          0      1,007 |     1,015 
+   penicillin |        32          1          0          0          3        196 |       232 
+   rifampicin |         1          0          0          0          1      1,345 |     1,347 
+ tetracycline |         6          3          0          0          5      1,240 |     1,254 
+ trimethoprim |         0          0          1          0          0        626 |       627 
+   vancomycin |         0          0          0          0          0      1,373 |     1,373 
+--------------+------------------------------------------------------------------+----------
+        Total |        97         13          1          2         22     11,504 |    11,639 
+
+
+
+. 
+. 
+. 
+. noi di "discrenpancies"
+discrenpancies
+
+. 
+. sort site gold valueall sample site
+
+. 
+. noi list sample site valueall if agree!=1
+
+       +-------------------------------------------------+
+       |               sample            site   valueall |
+       |-------------------------------------------------|
+  327. | H111960080-332-F07-2   ciprofloxacin        rsr |
+  328. | H122560310-348-F09-2   ciprofloxacin        rsr |
+  348. |            C00003248   ciprofloxacin        srs |
+ 1518. |            C00001446     clindamycin        rrs |
+ 1519. |            C00003152     clindamycin        rrs |
+       |-------------------------------------------------|
+ 1520. |            C00008638     clindamycin        rrs |
+ 1521. |            C00012749     clindamycin        rrs |
+ 1522. |            C00012780     clindamycin        rrs |
+ 1523. |            C00001387     clindamycin        srs |
+ 1524. |            C00003158     clindamycin        srs |
+       |-------------------------------------------------|
+ 1525. |            C00003272     clindamycin        srs |
+ 1526. |            C00003290     clindamycin        srs |
+ 1527. |            C00003292     clindamycin        srs |
+ 1528. |            C00003355     clindamycin        srs |
+ 1529. |            C00003385     clindamycin        srs |
+       |-------------------------------------------------|
+ 1530. |            C00012784     clindamycin        srs |
+ 2502. |     RH11000301-155-1     clindamycin        rrs |
+ 2503. |     RH12000540-156-1     clindamycin        rrs |
+ 2504. |     H111640001-197-2     clindamycin        srs |
+ 2505. |     H124860349-210-1     clindamycin        srs |
+       |-------------------------------------------------|
+ 3125. |            C00001446    erythromycin        rrs |
+ 3126. |            C00008638    erythromycin        rrs |
+ 3127. |            C00012749    erythromycin        rrs |
+ 3128. |            C00012780    erythromycin        rrs |
+ 3129. |     RH11000301-155-1    erythromycin        rrs |
+       |-------------------------------------------------|
+ 3130. |     RH12000540-156-1    erythromycin        rrs |
+ 3131. |            C00001387    erythromycin        srs |
+ 3132. |            C00003158    erythromycin        srs |
+ 3133. |            C00003290    erythromycin        srs |
+ 3134. |            C00003292    erythromycin        srs |
+       |-------------------------------------------------|
+ 3135. |            C00003355    erythromycin        srs |
+ 3136. |            C00003385    erythromycin        srs |
+ 3137. |            C00012784    erythromycin        srs |
+ 3138. |     H124860349-210-1    erythromycin        srs |
+ 4288. |            C00003302     fusidicacid        rrs |
+       |-------------------------------------------------|
+ 4289. |            C00003303     fusidicacid        rrs |
+ 4290. |     H105020486-191-2     fusidicacid        rrs |
+ 4291. |            C00003340     fusidicacid        srs |
+ 4292. |            C00003351     fusidicacid        srs |
+ 4313. |            C00003332     fusidicacid        rrs |
+       |-------------------------------------------------|
+ 4314. |  RH12000505-239-A0-2     fusidicacid        srs |
+ 5596. |     H092520302-216-1      gentamicin        rrs |
+ 5597. |     RH11000301-155-1      gentamicin        srs |
+ 5620. |     H121320081-505-1      gentamicin        srs |
+ 7303. |     H092520302-216-1     methicillin        rrs |
+       |-------------------------------------------------|
+ 7304. |  H094920323-271-A1-2     methicillin        rrs |
+ 8645. |     H121320081-505-1       mupirocin        rss |
+ 8646. |     RH10000448-161-1       mupirocin        rss |
+10788. |            C00001079      penicillin        rrs |
+10789. |            C00001091      penicillin        rrs |
+       |-------------------------------------------------|
+10790. |     RH12000540-156-1      penicillin        srs |
+10833. |     H122880144-207-1      penicillin        rrs |
+10834. |            C00003144      penicillin        srs |
+10835. |            C00012749      penicillin        srs |
+10836. |     RH08000028-150-1      penicillin        srs |
+       |-------------------------------------------------|
+11062. |            C00003130      rifampicin        rsr |
+11066. |     H110740135-193-2      rifampicin        srs |
+12531. |  RH10000375-235-E0-2    tetracycline        rrs |
+12543. |            C00003385    tetracycline        rrs |
+12544. |     H100200151-169-2    tetracycline        rrs |
+       |-------------------------------------------------|
+12545. |     RH11000301-155-1    tetracycline        rrs |
+12546. |            C00003301    tetracycline        srs |
+12547. |            C00003377    tetracycline        srs |
+12548. |            C00003419    tetracycline        srs |
+12549. |            C00008960    tetracycline        srs |
+       |-------------------------------------------------|
+12550. |  RH12000505-239-A0-2    tetracycline        srs |
+13934. |     H114720434-145-1    trimethoprim        rrs |
+13935. |     H121120058-504-1    trimethoprim        rrs |
+13936. |     RH11000301-155-1    trimethoprim        rrs |
+13937. |     H122880144-207-1    trimethoprim        srs |
+       |-------------------------------------------------|
+14543. |            C00001240    trimethoprim        rsr |
+       +-------------------------------------------------+
+
+. 
+. drop agree
+
+. 
+. 
+. 
+. 
+. 
+. noi di "disagreements with gold standard"
+disagreements with gold standard
+
+. 
+. drop if !inlist(gold, "R", "S")
+(2,084 observations deleted)
+
+. 
+. noi tab gold valueall
+
+goldstanda |                             valueall
+        rd |       rrr        rrs        rsr        rss        srs        sss |     Total
+-----------+------------------------------------------------------------------+----------
+         R |     2,720          9          3          0          4         89 |     2,825 
+         S |        97         13          1          2         22     11,504 |    11,639 
+-----------+------------------------------------------------------------------+----------
+     Total |     2,817         22          4          2         26     11,593 |    14,464 
+
+
+. 
+. gen agree = (valueall=="rrr" & gold=="R")|(valueall=="sss" & gold=="S")
+
+. 
+. summ agree
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       agree |     14,464    .9834071    .1277448          0          1
+
+. 
+. noi di r(sum) " out of " r(N) "results agree between all methods and gold standard"
+14224 out of 14464results agree between all methods and gold standard
+
+. 
+. noi di r(sum)/r(N)*100
+98.340708
+
+. 
+. 
+. 
+. 
+. 
+. noi di "disagreements by site"
+disagreements by site
+
+. 
+. noi bysort gold: tab site valueall
+
+----------------------------------------------------------------------------------------------------------------------------------
+-> goldstandard = R
+
+              |                        valueall
+         site |       rrr        rrs        rsr        srs        sss |     Total
+--------------+-------------------------------------------------------+----------
+ciprofloxacin |       299          0          2          0         15 |       316 
+  clindamycin |       180          0          0          0          5 |       185 
+ erythromycin |       342          0          0          0          6 |       348 
+  fusidicacid |       144          3          0          2         13 |       162 
+   gentamicin |        73          1          0          1         19 |        94 
+  methicillin |       381          2          0          0          8 |       391 
+    mupirocin |         6          0          0          0          0 |         6 
+   penicillin |     1,124          2          0          1         10 |     1,137 
+   rifampicin |        22          0          1          0          2 |        25 
+ tetracycline |       112          1          0          0          5 |       118 
+ trimethoprim |        37          0          0          0          6 |        43 
+--------------+-------------------------------------------------------+----------
+        Total |     2,720          9          3          4         89 |     2,825 
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+-> goldstandard = S
+
+              |                             valueall
+         site |       rrr        rrs        rsr        rss        srs        sss |     Total
+--------------+------------------------------------------------------------------+----------
+ciprofloxacin |         4          0          0          0          1      1,031 |     1,036 
+  clindamycin |        22          2          0          0          2        253 |       279 
+ erythromycin |        11          6          0          0          8        999 |     1,024 
+  fusidicacid |         7          1          0          0          1      1,202 |     1,211 
+   gentamicin |         3          0          0          0          1      1,275 |     1,279 
+  methicillin |         5          0          0          0          0        957 |       962 
+    mupirocin |         6          0          0          2          0      1,007 |     1,015 
+   penicillin |        32          1          0          0          3        196 |       232 
+   rifampicin |         1          0          0          0          1      1,345 |     1,347 
+ tetracycline |         6          3          0          0          5      1,240 |     1,254 
+ trimethoprim |         0          0          1          0          0        626 |       627 
+   vancomycin |         0          0          0          0          0      1,373 |     1,373 
+--------------+------------------------------------------------------------------+----------
+        Total |        97         13          1          2         22     11,504 |    11,639 
+
+
+
+. 
+. 
+. 
+. noi di "discrenpancies"
+discrenpancies
+
+. 
+. sort site gold valueall sample site
+
+. 
+. noi list sample site gold valueall if agree!=1
+
+       +------------------------------------------------------------+
+       |               sample            site   goldst~d   valueall |
+       |------------------------------------------------------------|
+  300. | H111960080-332-F07-2   ciprofloxacin          R        rsr |
+  301. | H122560310-348-F09-2   ciprofloxacin          R        rsr |
+  302. |            C00001092   ciprofloxacin          R        sss |
+  303. |            C00001105   ciprofloxacin          R        sss |
+  304. |            C00001109   ciprofloxacin          R        sss |
+       |------------------------------------------------------------|
+  305. |            C00001115   ciprofloxacin          R        sss |
+  306. |            C00001162   ciprofloxacin          R        sss |
+  307. |            C00001440   ciprofloxacin          R        sss |
+  308. |            C00001442   ciprofloxacin          R        sss |
+  309. |            C00001443   ciprofloxacin          R        sss |
+       |------------------------------------------------------------|
+  310. |            C00003115   ciprofloxacin          R        sss |
+  311. |            C00003170   ciprofloxacin          R        sss |
+  312. |            C00003175   ciprofloxacin          R        sss |
+  313. |            C00009021   ciprofloxacin          R        sss |
+  314. |            C00009033   ciprofloxacin          R        sss |
+       |------------------------------------------------------------|
+  315. |            C00013185   ciprofloxacin          R        sss |
+  316. |     H122140282-391-2   ciprofloxacin          R        sss |
+  317. |            C00001080   ciprofloxacin          S        rrr |
+  318. |            C00001400   ciprofloxacin          S        rrr |
+  319. |            C00003386   ciprofloxacin          S        rrr |
+       |------------------------------------------------------------|
+  320. |            C00003395   ciprofloxacin          S        rrr |
+  321. |            C00003248   ciprofloxacin          S        srs |
+ 1533. |            C00001162     clindamycin          R        sss |
+ 1534. |            C00001224     clindamycin          R        sss |
+ 1535. |  H113800363-253-G0-2     clindamycin          R        sss |
+       |------------------------------------------------------------|
+ 1536. |     H123100270-554-1     clindamycin          R        sss |
+ 1537. |     H133760113-576-1     clindamycin          R        sss |
+ 1538. |     H101020134-173-2     clindamycin          S        rrr |
+ 1539. |  H102820334-277-G1-2     clindamycin          S        rrr |
+ 1540. |  H103300404-218-D0-2     clindamycin          S        rrr |
+       |------------------------------------------------------------|
+ 1541. |     H103440108-442-2     clindamycin          S        rrr |
+ 1542. |  H104340409-219-E0-2     clindamycin          S        rrr |
+ 1543. | H104380040-330-D07-2     clindamycin          S        rrr |
+ 1544. |     H104460171-189-2     clindamycin          S        rrr |
+ 1545. |     H104600048-190-2     clindamycin          S        rrr |
+       |------------------------------------------------------------|
+ 1546. |     H110300192-447-1     clindamycin          S        rrr |
+ 1547. |     H110520238-116-2     clindamycin          S        rrr |
+ 1548. |     H110820268-195-2     clindamycin          S        rrr |
+ 1549. |     H110940110-451-1     clindamycin          S        rrr |
+ 1550. |     H111200066-118-2     clindamycin          S        rrr |
+       |------------------------------------------------------------|
+ 1551. |  H111220168-221-G0-2     clindamycin          S        rrr |
+ 1552. |     H111820165-458-2     clindamycin          S        rrr |
+ 1553. |     H112540036-142-1     clindamycin          S        rrr |
+ 1554. |     H113000047-465-2     clindamycin          S        rrr |
+ 1555. |     H113140144-468-2     clindamycin          S        rrr |
+       |------------------------------------------------------------|
+ 1556. | H113140175-334-H07-2     clindamycin          S        rrr |
+ 1557. |     H113640238-143-1     clindamycin          S        rrr |
+ 1558. |     RH08000028-150-1     clindamycin          S        rrr |
+ 1559. |     RH10000448-161-1     clindamycin          S        rrr |
+ 1560. |     RH11000301-155-1     clindamycin          S        rrs |
+       |------------------------------------------------------------|
+ 1561. |     RH12000540-156-1     clindamycin          S        rrs |
+ 1562. |     H111640001-197-2     clindamycin          S        srs |
+ 1563. |     H124860349-210-1     clindamycin          S        srs |
+ 2159. |            C00001147    erythromycin          R        sss |
+ 2160. |            C00001162    erythromycin          R        sss |
+       |------------------------------------------------------------|
+ 2161. |            C00001224    erythromycin          R        sss |
+ 2162. |            C00003420    erythromycin          R        sss |
+ 2163. |  H071160354-264-B1-2    erythromycin          R        sss |
+ 2164. |     H123100270-554-1    erythromycin          R        sss |
+ 2165. |            C00001080    erythromycin          S        rrr |
+       |------------------------------------------------------------|
+ 2166. |            C00001189    erythromycin          S        rrr |
+ 2167. |            C00003272    erythromycin          S        rrr |
+ 2168. |            C00008984    erythromycin          S        rrr |
+ 2169. |     H101020134-173-2    erythromycin          S        rrr |
+ 2170. |  H103300404-218-D0-2    erythromycin          S        rrr |
+       |------------------------------------------------------------|
+ 2171. |     H110820268-195-2    erythromycin          S        rrr |
+ 2172. |     H112540036-142-1    erythromycin          S        rrr |
+ 2173. | H124420844-355-E10-2    erythromycin          S        rrr |
+ 2174. |     RH08000028-150-1    erythromycin          S        rrr |
+ 2175. |     RH10000448-161-1    erythromycin          S        rrr |
+       |------------------------------------------------------------|
+ 2176. |            C00001446    erythromycin          S        rrs |
+ 2177. |            C00008638    erythromycin          S        rrs |
+ 2178. |            C00012749    erythromycin          S        rrs |
+ 2179. |            C00012780    erythromycin          S        rrs |
+ 2180. |     RH11000301-155-1    erythromycin          S        rrs |
+       |------------------------------------------------------------|
+ 2181. |     RH12000540-156-1    erythromycin          S        rrs |
+ 2182. |            C00001387    erythromycin          S        srs |
+ 2183. |            C00003158    erythromycin          S        srs |
+ 2184. |            C00003290    erythromycin          S        srs |
+ 2185. |            C00003292    erythromycin          S        srs |
+       |------------------------------------------------------------|
+ 2186. |            C00003355    erythromycin          S        srs |
+ 2187. |            C00003385    erythromycin          S        srs |
+ 2188. |            C00012784    erythromycin          S        srs |
+ 2189. |     H124860349-210-1    erythromycin          S        srs |
+ 3333. |            C00003302     fusidicacid          R        rrs |
+       |------------------------------------------------------------|
+ 3334. |            C00003303     fusidicacid          R        rrs |
+ 3335. |     H105020486-191-2     fusidicacid          R        rrs |
+ 3336. |            C00003340     fusidicacid          R        srs |
+ 3337. |            C00003351     fusidicacid          R        srs |
+ 3338. |            C00001259     fusidicacid          R        sss |
+       |------------------------------------------------------------|
+ 3339. |            C00001276     fusidicacid          R        sss |
+ 3340. |            C00003207     fusidicacid          R        sss |
+ 3341. |            C00003265     fusidicacid          R        sss |
+ 3342. |  H071160354-264-B1-2     fusidicacid          R        sss |
+ 3343. |     H102940768-182-2     fusidicacid          R        sss |
+       |------------------------------------------------------------|
+ 3344. |     H103260058-185-2     fusidicacid          R        sss |
+ 3345. | H104040516-329-C07-2     fusidicacid          R        sss |
+ 3346. |     H110960065-452-1     fusidicacid          R        sss |
+ 3347. |     H111820058-457-2     fusidicacid          R        sss |
+ 3348. |  H114160372-256-B1-2     fusidicacid          R        sss |
+       |------------------------------------------------------------|
+ 3349. |     H120860086-386-2     fusidicacid          R        sss |
+ 3350. |     H122640061-512-1     fusidicacid          R        sss |
+ 3351. |            C00001128     fusidicacid          S        rrr |
+ 3352. |            C00003374     fusidicacid          S        rrr |
+ 3353. |            C00012793     fusidicacid          S        rrr |
+       |------------------------------------------------------------|
+ 3354. |            C00013181     fusidicacid          S        rrr |
+ 3355. |     H113640238-143-1     fusidicacid          S        rrr |
+ 3356. |     H121120058-504-1     fusidicacid          S        rrr |
+ 3357. |     H121340220-509-1     fusidicacid          S        rrr |
+ 3358. |            C00003332     fusidicacid          S        rrs |
+       |------------------------------------------------------------|
+ 3359. |  RH12000505-239-A0-2     fusidicacid          S        srs |
+ 4635. |     H092520302-216-1      gentamicin          R        rrs |
+ 4636. |     RH11000301-155-1      gentamicin          R        srs |
+ 4637. |            C00001115      gentamicin          R        sss |
+ 4638. |            C00013331      gentamicin          R        sss |
+       |------------------------------------------------------------|
+ 4639. |  H092820427-242-D0-2      gentamicin          R        sss |
+ 4640. |  H100180330-243-E0-2      gentamicin          R        sss |
+ 4641. |     H100600212-171-2      gentamicin          R        sss |
+ 4642. |     H101520278-175-2      gentamicin          R        sss |
+ 4643. |     H102380070-178-2      gentamicin          R        sss |
+       |------------------------------------------------------------|
+ 4644. |  H103360314-241-C0-2      gentamicin          R        sss |
+ 4645. |     H112540036-142-1      gentamicin          R        sss |
+ 4646. |     H113140166-125-2      gentamicin          R        sss |
+ 4647. |  H113640207-252-F0-2      gentamicin          R        sss |
+ 4648. |  H113800363-253-G0-2      gentamicin          R        sss |
+       |------------------------------------------------------------|
+ 4649. |  H113840385-254-H0-2      gentamicin          R        sss |
+ 4650. |     H124480843-137-1      gentamicin          R        sss |
+ 4651. |     H133180046-621-1      gentamicin          R        sss |
+ 4652. |     H133520197-646-1      gentamicin          R        sss |
+ 4653. |     H133520198-647-1      gentamicin          R        sss |
+       |------------------------------------------------------------|
+ 4654. |     RH09000011-151-1      gentamicin          R        sss |
+ 4655. |     RH09000012-153-1      gentamicin          R        sss |
+ 4656. |     H113640238-143-1      gentamicin          S        rrr |
+ 4657. |     H121120058-504-1      gentamicin          S        rrr |
+ 4658. |     RH10000448-161-1      gentamicin          S        rrr |
+       |------------------------------------------------------------|
+ 4659. |     H121320081-505-1      gentamicin          S        srs |
+ 6316. |     H092520302-216-1     methicillin          R        rrs |
+ 6317. |  H094920323-271-A1-2     methicillin          R        rrs |
+ 6318. |            C00001115     methicillin          R        sss |
+ 6319. |            C00001162     methicillin          R        sss |
+       |------------------------------------------------------------|
+ 6320. |            C00003115     methicillin          R        sss |
+ 6321. |  H103300404-218-D0-2     methicillin          R        sss |
+ 6322. |     H113140144-468-2     methicillin          R        sss |
+ 6323. |     H124860349-210-1     methicillin          R        sss |
+ 6324. | RH12000362-323-E06-2     methicillin          R        sss |
+       |------------------------------------------------------------|
+ 6325. |     RH12000540-156-1     methicillin          R        sss |
+ 6326. |            C00001080     methicillin          S        rrr |
+ 6327. |            C00001222     methicillin          S        rrr |
+ 6328. |            C00003247     methicillin          S        rrr |
+ 6329. |     H121120058-504-1     methicillin          S        rrr |
+       |------------------------------------------------------------|
+ 6330. |     H124940430-401-1     methicillin          S        rrr |
+ 7294. |            C00001387       mupirocin          S        rrr |
+ 7295. |            C00001405       mupirocin          S        rrr |
+ 7296. |     H110300192-447-1       mupirocin          S        rrr |
+ 7297. |     H121120058-504-1       mupirocin          S        rrr |
+       |------------------------------------------------------------|
+ 7298. |  H125000105-229-G0-2       mupirocin          S        rrr |
+ 7299. |     H125000105-833-2       mupirocin          S        rrr |
+ 7300. |     H121320081-505-1       mupirocin          S        rss |
+ 7301. |     RH10000448-161-1       mupirocin          S        rss |
+ 9433. |            C00001079      penicillin          R        rrs |
+       |------------------------------------------------------------|
+ 9434. |            C00001091      penicillin          R        rrs |
+ 9435. |     RH12000540-156-1      penicillin          R        srs |
+ 9436. |            C00001147      penicillin          R        sss |
+ 9437. |            C00003324      penicillin          R        sss |
+ 9438. |            C00003397      penicillin          R        sss |
+       |------------------------------------------------------------|
+ 9439. |            C00003404      penicillin          R        sss |
+ 9440. |            C00012780      penicillin          R        sss |
+ 9441. |            C00013232      penicillin          R        sss |
+ 9442. |  H104340409-219-E0-2      penicillin          R        sss |
+ 9443. |     H113080385-467-2      penicillin          R        sss |
+       |------------------------------------------------------------|
+ 9444. |     RH12000363-423-2      penicillin          R        sss |
+ 9445. |     RH12000364-424-2      penicillin          R        sss |
+ 9446. |            C00001080      penicillin          S        rrr |
+ 9447. |            C00001092      penicillin          S        rrr |
+ 9448. |            C00001093      penicillin          S        rrr |
+       |------------------------------------------------------------|
+ 9449. |            C00001104      penicillin          S        rrr |
+ 9450. |            C00001111      penicillin          S        rrr |
+ 9451. |            C00001112      penicillin          S        rrr |
+ 9452. |            C00001124      penicillin          S        rrr |
+ 9453. |            C00001142      penicillin          S        rrr |
+       |------------------------------------------------------------|
+ 9454. |            C00001144      penicillin          S        rrr |
+ 9455. |            C00001148      penicillin          S        rrr |
+ 9456. |            C00001158      penicillin          S        rrr |
+ 9457. |            C00001182      penicillin          S        rrr |
+ 9458. |            C00001192      penicillin          S        rrr |
+       |------------------------------------------------------------|
+ 9459. |            C00001194      penicillin          S        rrr |
+ 9460. |            C00001199      penicillin          S        rrr |
+ 9461. |            C00001203      penicillin          S        rrr |
+ 9462. |            C00001205      penicillin          S        rrr |
+ 9463. |            C00001217      penicillin          S        rrr |
+       |------------------------------------------------------------|
+ 9464. |            C00001231      penicillin          S        rrr |
+ 9465. |            C00001241      penicillin          S        rrr |
+ 9466. |            C00001266      penicillin          S        rrr |
+ 9467. |            C00001277      penicillin          S        rrr |
+ 9468. |            C00012754      penicillin          S        rrr |
+       |------------------------------------------------------------|
+ 9469. |            C00013228      penicillin          S        rrr |
+ 9470. |            C00013249      penicillin          S        rrr |
+ 9471. |  H093620523-269-G1-2      penicillin          S        rrr |
+ 9472. |     H111740190-456-2      penicillin          S        rrr |
+ 9473. |     H120980139-387-2      penicillin          S        rrr |
+       |------------------------------------------------------------|
+ 9474. |     RH09000011-151-1      penicillin          S        rrr |
+ 9475. |     RH10000292-140-1      penicillin          S        rrr |
+ 9476. | RH12000342-303-A04-2      penicillin          S        rrr |
+ 9477. | RH12000344-305-C04-2      penicillin          S        rrr |
+ 9478. |     H122880144-207-1      penicillin          S        rrs |
+       |------------------------------------------------------------|
+ 9479. |            C00003144      penicillin          S        srs |
+ 9480. |            C00012749      penicillin          S        srs |
+ 9481. |     RH08000028-150-1      penicillin          S        srs |
+ 9700. |            C00003130      rifampicin          R        rsr |
+ 9701. |            C00003115      rifampicin          R        sss |
+       |------------------------------------------------------------|
+ 9702. |     H122640061-512-1      rifampicin          R        sss |
+ 9703. |            C00000820      rifampicin          S        rrr |
+ 9704. |     H110740135-193-2      rifampicin          S        srs |
+11162. |  RH10000375-235-E0-2    tetracycline          R        rrs |
+11163. | H104040516-329-C07-2    tetracycline          R        sss |
+       |------------------------------------------------------------|
+11164. |     H113140166-125-2    tetracycline          R        sss |
+11165. |     H113540198-126-2    tetracycline          R        sss |
+11166. |     H120860086-386-2    tetracycline          R        sss |
+11167. |     H133520198-647-1    tetracycline          R        sss |
+11168. |            C00001247    tetracycline          S        rrr |
+       |------------------------------------------------------------|
+11169. |            C00012796    tetracycline          S        rrr |
+11170. |     H113640238-143-1    tetracycline          S        rrr |
+11171. |     RH08000028-150-1    tetracycline          S        rrr |
+11172. |     RH09000011-151-1    tetracycline          S        rrr |
+11173. |     RH09000012-153-1    tetracycline          S        rrr |
+       |------------------------------------------------------------|
+11174. |            C00003385    tetracycline          S        rrs |
+11175. |     H100200151-169-2    tetracycline          S        rrs |
+11176. |     RH11000301-155-1    tetracycline          S        rrs |
+11177. |            C00003301    tetracycline          S        srs |
+11178. |            C00003377    tetracycline          S        srs |
+       |------------------------------------------------------------|
+11179. |            C00003419    tetracycline          S        srs |
+11180. |            C00008960    tetracycline          S        srs |
+11181. |  RH12000505-239-A0-2    tetracycline          S        srs |
+12459. |            C00003375    trimethoprim          R        sss |
+12460. |            C00003376    trimethoprim          R        sss |
+       |------------------------------------------------------------|
+12461. |            C00003377    trimethoprim          R        sss |
+12462. |            C00003396    trimethoprim          R        sss |
+12463. |            C00003404    trimethoprim          R        sss |
+12464. |  H071160354-264-B1-2    trimethoprim          R        sss |
+12465. |            C00001240    trimethoprim          S        rsr |
+       +------------------------------------------------------------+
+
+. 
+. 
+. 
+. 
+. 
+. * creat bar graph values
+
+. 
+. 
+. 
+. contract  site  gold valueall
+
+. 
+. 
+. 
+. reshape wide _freq, i(site gold) j(valueall) string
+(note: j = rrr rrs rsr rss srs sss)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                       68   ->      23
+Number of variables                   4   ->       8
+j variable (6 values)          valueall   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqrrr _freqrrs ... _freqsss
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. 
+. 
+. 
+. 
+. sort gold site
+
+. 
+.  gen num =_n
+
+. 
+.  replace num=num+1 if gold=="S"
+(12 real changes made)
+
+. 
+. labmask num, values(site)
+
+. 
+. gen goldlabel = "Gold standard " + gold
+
+. 
+. 
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis) rrr rrs rsr rss srs sss if inlist(golds,"R", "S"),graphregion(color(white))    over(site, label(angle(90) labsi
+> ze(tiny)) )  over(goldlabel, label(labsize(small)) ) stack  title("Prediction combinations") subtitle("Results given as Genefind
+> er Mykrobe Typewriter") legend(rows(2) label(1 "rrr") label( 2 "rrs" ) label (3 "rsr") label (4 "rss" ) label (5 "srs") label( 6
+>  "sss" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, color(gs12)
+> ) ylabel(0(500)1000 1400)
+
+. 
+. graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements_withgold.wmf", as(wmf) width(2550) r
+> eplace
+option width() not allowed
+r(198);
+
+. 
+. 
+. 
+. 
+. * bar graph of predictions (antibiotics)
+
+. 
+. graph bar (asis) rrr rrs rsr rss srs sss if inlist(golds,"R", "S"),graphregion(color(white))    over(site, label(angle(90) labsi
+> ze(tiny)) )  over(goldlabel, label(labsize(small)) ) stack ytitle("Number of isolates") legend(rows(2) label(1 "rrr") label( 2 "
+> rrs" ) label (3 "rsr") label (4 "rss" ) label (5 "srs") label( 6 "sss" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(re
+> d)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, color(gs12)) ylabel(0(500)1000 1400)
+
+. 
+. *title("Prediction combinations") subtitle("Results given as Genefinder Mykrobe Typewriter") 
+
+. * merge the three sets
+
+. 
+. use typewriter, clear
+
+. 
+.  merge 1:1 site using genefinder, update
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                                19
+        not updated                        19  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
+
+. 
+.  assert _merge==3
+
+. 
+.  drop _merge
+
+. 
+.  merge 1:1 site using mykrobe, update 
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                                19
+        not updated                        19  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
+
+. 
+.  assert _merge==3
+
+. 
+.  drop _merge
+
+. 
+.  
+. 
+.  * reshape to enable graph
+
+. 
+. reshape long tw_ gf_ z_, i(site) j(new) string
+(note: j = lsens lspec sensitivity specificity usens uspec)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                       19   ->     114
+Number of variables                  19   ->       5
+j variable (6 values)                     ->   new
+xij variables:
+         tw_lsens tw_lspec ... tw_uspec   ->   tw_
+         gf_lsens gf_lspec ... gf_uspec   ->   gf_
+            z_lsens z_lspec ... z_uspec   ->   z_
+-----------------------------------------------------------------------------
+
+. 
+. rename tw_ meth_tw
+
+. 
+. rename gf_ meth_gf
+
+. 
+. rename z_ meth_z
+
+. 
+. 
+. 
+. reshape long meth_, i(site new) j(method) string
+(note: j = gf tw z)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                      114   ->     342
+Number of variables                   5   ->       4
+j variable (3 values)                     ->   method
+xij variables:
+                 meth_gf meth_tw meth_z   ->   meth_
+-----------------------------------------------------------------------------
+
+. 
+. rename meth_ value
+
+. 
+. 
+. 
+. reshape wide value, i(site method) j(new) string
+(note: j = lsens lspec sensitivity specificity usens uspec)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                      342   ->      57
+Number of variables                   4   ->       8
+j variable (6 values)               new   ->   (dropped)
+xij variables:
+                                  value   ->   valuelsens valuelspec ... valueuspec
+-----------------------------------------------------------------------------
+
+. 
+. rename value* *
+
+. 
+. 
+. 
+. order site method sens lsens usens spec lspec uspec
+
+. 
+. 
+. 
+. 
+. 
+. * sneakily creating gaps on graphs
+
+. 
+. expand 3 if method =="gf", gen(dups)
+(38 observations created)
+
+. 
+. replace method ="blank" if dups==1
+variable method was str2 now str5
+(38 real changes made)
+
+. 
+. replace sens=. if method=="blank"
+(34 real changes made, 34 to missing)
+
+. 
+. replace lsens=. if method=="blank"
+(34 real changes made, 34 to missing)
+
+. 
+. replace usens=. if method=="blank"
+(34 real changes made, 34 to missing)
+
+. 
+. replace uspec=. if method=="blank"
+(38 real changes made, 38 to missing)
+
+. 
+. replace lspec=. if method=="blank"
+(38 real changes made, 38 to missing)
+
+. 
+. replace spec=. if method=="blank"
+(38 real changes made, 38 to missing)
+
+. 
+. 
+. 
+. * order the slabels
+
+. 
+. encode(method), gen(order)
+
+. 
+. sort site order
+
+. 
+. gen newcount = _n
+
+. 
+. local max =_N
+
+. 
+. replace site = "fusidic acid" if strpos(site, "fus")
+(0 real changes made)
+
+. 
+. labmask newcount, values(site)
+
+. 
+. 
+. 
+. * make sens graph
+
+. 
+. #delimit ;
+Unknown #command
+
+. 
+. twoway rspike usens lsens newcount, ylabel(,format(%3.2f)) xlabel(4(5)59, valuelabel angle(90)) lcolor(black)
+
+. 
+. || scatter  sens newcount if method=="gf", mcolor(orange)
+| is not a valid command name
+r(199);
+
+. 
+. || scatter  sens newcount if method=="z", mcolor(blue)
+| is not a valid command name
+r(199);
+
+. 
+. ||  scatter  sensitivity newcount if method =="tw", mcolor(red) 
+| is not a valid command name
+r(199);
+
+. 
+. legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Typewriter") lab(4 "Mykrobe") rows(1))
+command legend is unrecognized
+r(199);
+
+. 
+. *subtitle("Sensitivity in Phenotype prediction") 
+
+. 
+. graphregion(fcolor(white))
+command graphregion is unrecognized
+r(199);
+
+. 
+. xtitle("Antibiotic")
+command xtitle is unrecognized
+r(199);
+
+. 
+. ytitle("Sensitivity")
+command ytitle is unrecognized
+r(199);
+
+. 
+. yscale(range(0.5 1));
+command yscale is unrecognized
+r(199);
+
+. 
+. #delimit cr
+Unknown #command
+
 . cd E:\users\amy.mason\Pipeline_27_07_2016\
 E:\users\amy.mason\Pipeline_27_07_2016
 
 . 
-. run Analysis_Pipeline.do *compares A/P site predictions; makes agreement graph 1
+. run Analysis_Pipeline2.do
