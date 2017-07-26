@@ -708,7 +708,7 @@ save pipeline_clean_all_values_long, replace
 noi di "Compare site values between methods"
 
 reshape wide
-gen ValueAll = valuet  + valuez + valueg
+gen ValueAll = valueg  + valuez + valuet
 noi tab ValueAll , sort m
 
 noi di "values by type"

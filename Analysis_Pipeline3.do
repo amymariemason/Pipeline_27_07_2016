@@ -554,6 +554,7 @@ twoway rspike usens lsens newcount, ylabel(,format(%3.2f)) xlabel(4(5)94, valuel
 ||  scatter  sensitivity newcount if method =="tw", mcolor(red)  msize(small)
 legend(order(2 3 4) lab(2 "Genefinder") lab(3 "Mykrobe") lab(4 "Typewriter")rows(1))
 graphregion(fcolor(white))
+ytitle("Sensitivity")
 xtitle("Virulence Factor")
 yscale(range(0.2 1))
 ylabel(0.2 (0.2) 1);
