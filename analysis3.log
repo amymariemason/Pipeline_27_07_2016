@@ -1,4 +1,4 @@
-Run by AMM on  2 May 2017 14:59:57
+Run by AMM on 26 Jul 2017 10:25:59
 
 
 
@@ -599,3 +599,36 @@ all methods
   2. | valuetype   .9596273   .9414021   .9734606   .9763757   .9707599   .9811679 |
   3. | valuegene   .9751553   .9599667   .9857339    .971478   .9653836   .9767596 |
      +-----------------------------------------------------------------------------+
+
+. 
+. exit
+
+end of do-file
+
+
+. do "E:\users\amy.mason\Pipeline_27_07_2016\Analysis_Pipeline3.do
+> "
+
+. ************************************************
+. * ANALYSIS_PIPELINE3.DO 
+. ************************************************
+. 
+. * Analyses the three methods on virulence factor predictions; cr
+> eates summary tables and graphs
+. 
+. *Inputs: viru_panel_all  from create_predict_viru.do
+. * Outputs : virulence_disagreements.wmf ( bar chart of method re
+> sults by antibiotic)
+. *  virulence_disagreements_withgold.wmf ( bar charts of method r
+> esults by antibiotic and lab results, restricted to results wher
+> e lab result either R or S)
+. * all_viru_sens.wmf ( sensitivity of each method, by virulence f
+> actor) and all_viru_spec.wmf (specificity of each method, by vir
+> ulence factor)
+. * graphs saved to Graph folder
+. * Written by: Amy Mason
+. 
+. set li 130
+
+. 
+. cap log close

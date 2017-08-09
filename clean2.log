@@ -1,4 +1,4 @@
-Run by AMM on  2 May 2017 13:02:32
+Run by AMM on 26 Jul 2017 10:23:33
 
 
 
@@ -750,9 +750,8 @@ MECC
 ------------+-----------------------------------
       Total |      1,379      100.00
 SAVE: one record per sample-site with gold standard profile
-. 
+
 . cd E:\users\amy.mason\Pipeline_27_07_2016\
 E:\users\amy.mason\Pipeline_27_07_2016
 
-. 
 . run clean_predict.do
