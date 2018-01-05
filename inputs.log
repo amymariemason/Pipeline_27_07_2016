@@ -1,9 +1,10 @@
-Run by AMM on 26 Jul 2017 10:22:40
+Run by AMM on  2 Jan 2018 13:36:11
 Genefinder sets
 136122 results
 on 98 sites
 from 1389 samples
 Mykrobe sets
+duplicate results for same sample - one set indentical or null
 124323 results
 on 87 sites
 from 1429 samples
@@ -15,12 +16,12 @@ Lab gold standard
 include extra toxin panal
 1389 samples
 typewriter coverage
-
-. 
-. 
 . * clean data : these two programs clean up the data in the stata datasets; first the phenotype data and then the three methods d
 > ata
-. cd E:\users\amy.mason\Pipeline_27_07_2016\
-E:\users\amy.mason\Pipeline_27_07_2016
 
+. 
+. cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"
+\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline
+
+. 
 . run clean_pheno.do

@@ -6,7 +6,7 @@ set li 130
 cap log close
 log using panal_viru.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 
 ************************
 * add antibiotic relevance to sites
@@ -87,7 +87,7 @@ restore
 *****************************************************
 noi di _n(5) _dup(80) "=" _n " 1 add gold standard" _n _dup(80) "="
 **************************
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 use pipeline_gold_clean_long, clear
 drop if inlist(site, "ciprofloxacin","erythromycin","clindamycin","fusidicacid","gentamicin")
 drop if inlist(site,"mupirocin","penicillin","rifampicin","tetracycline")
@@ -104,4 +104,4 @@ noi tab gold valuea
 
 noi bysort gold: tab site valuea
 save viru_panel_all, replace
-cd E:\users\amy.mason\Pipeline_27_07_2016\
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"

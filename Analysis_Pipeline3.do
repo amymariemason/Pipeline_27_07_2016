@@ -16,7 +16,7 @@ set li 130
 cap log close
 log using analysis3.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 
 *********************************************
 use viru_panel_all, clear
@@ -70,7 +70,7 @@ graph bar (asis) ppp app ppa apa aaa,  over(site, label(angle(90))) stack title(
 legend( label(1 "ppp") label( 2 "app" ) label (3 "ppa") label (4 "apa" ) label (5 "aaa") ) 
 bar(1, color(gs8)) bar(2, color(green)) bar(3, color(cyan)) bar(4, color(yellow)) bar(5, color(gs12));
 #delimit cr
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\virulence_disagreements.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\virulence_disagreements.wmf", as(wmf) replace
 
 restore
 
@@ -129,8 +129,8 @@ bar(1, color(gs8))  bar(2, color(cyan)) bar(3, color(yellow)) bar(4, color(gs12)
 ylabel(0(50)250);
 #delimit cr
 *save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\virulence_disagreements_withgold.wmf", as(wmf) replace
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\virulence_disagreements_withgold.tif", width(2280) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\virulence_disagreements_withgold.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\virulence_disagreements_withgold.tif", width(2280) replace
 
 restore
 *********************************************************************
@@ -203,10 +203,10 @@ for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
 local max=_N
 forvalues i=1(1)`max'{
 if truePos[`i']>0{
-cii prop  truePos[`i'] TP[`i']
+cii  truePos[`i'] TP[`i']
 replace lsens = r(lb) if _n==`i'
 replace usens = r(ub) if _n==`i'
-cii prop truePos[`i'] FN[`i']
+cii truePos[`i'] FN[`i']
 replace lvme = r(lb) if _n==`i'
 replace uvme = r(ub) if _n==`i'
 }
@@ -214,10 +214,10 @@ else{
 noi di site[`i'] " has no positive samples"
 }
 if trueNeg[`i']>0{
-cii prop trueNeg[`i'] TN[`i']
+cii trueNeg[`i'] TN[`i']
 replace lspec = r(lb) if _n==`i'
 replace uspec = r(ub) if _n==`i'
-cii prop trueNeg[`i'] FP[`i']
+cii trueNeg[`i'] FP[`i']
 replace lme = r(lb) if _n==`i'
 replace ume = r(ub) if _n==`i'
 }
@@ -249,7 +249,7 @@ legend(off) title("Typewriter vs. Lab")
 subtitle("Sensitivity in Virulence prediction");
 #delimit cr
 *save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_viru_sens.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\tw_viru_sens.wmf", as(wmf) replace
 
 * make spec graph
 #delimit ;
@@ -258,7 +258,7 @@ legend(off) title("Typewriter vs. Lab")
 subtitle("Specificity in Virulence prediction");
 #delimit cr
 * save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_viru_spec.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\tw_viru_spec.wmf", as(wmf) replace
 
 
 ***************************************************
@@ -321,10 +321,10 @@ for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
 local max=_N
 forvalues i=1(1)`max'{
 if truePos[`i']>0{
-cii prop  truePos[`i'] TP[`i']
+cii  truePos[`i'] TP[`i']
 replace lsens = r(lb) if _n==`i'
 replace usens = r(ub) if _n==`i'
-cii prop truePos[`i'] FN[`i']
+cii truePos[`i'] FN[`i']
 replace lvme = r(lb) if _n==`i'
 replace uvme = r(ub) if _n==`i'
 }
@@ -332,10 +332,10 @@ else{
 noi di site[`i'] " has no positive samples"
 }
 if trueNeg[`i']>0{
-cii prop trueNeg[`i'] TN[`i']
+cii trueNeg[`i'] TN[`i']
 replace lspec = r(lb) if _n==`i'
 replace uspec = r(ub) if _n==`i'
-cii prop trueNeg[`i'] FP[`i']
+cii trueNeg[`i'] FP[`i']
 replace lme = r(lb) if _n==`i'
 replace ume = r(ub) if _n==`i'
 }
@@ -368,7 +368,7 @@ legend(off) title("Genefinder vs. Lab")
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
 * save
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_viru_sens.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\gf_viru_sens.wmf", as(wmf) replace
 
 * specificity graph
 #delimit ;
@@ -377,7 +377,7 @@ legend(off) title("Genefinder vs. Lab")
 subtitle("Specificity in Phenotype prediction");
 #delimit cr
 * save
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_viru_spec.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\gf_viru_spec.wmf", as(wmf) replace
 
 
 
@@ -441,10 +441,10 @@ for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
 local max=_N
 forvalues i=1(1)`max'{
 if truePos[`i']>0{
-cii prop  truePos[`i'] TP[`i']
+cii  truePos[`i'] TP[`i']
 replace lsens = r(lb) if _n==`i'
 replace usens = r(ub) if _n==`i'
-cii prop truePos[`i'] FN[`i']
+cii truePos[`i'] FN[`i']
 replace lvme = r(lb) if _n==`i'
 replace uvme = r(ub) if _n==`i'
 }
@@ -452,10 +452,10 @@ else{
 noi di site[`i'] " has no positive samples"
 }
 if trueNeg[`i']>0{
-cii prop trueNeg[`i'] TN[`i']
+cii trueNeg[`i'] TN[`i']
 replace lspec = r(lb) if _n==`i'
 replace uspec = r(ub) if _n==`i'
-cii prop trueNeg[`i'] FP[`i']
+cii trueNeg[`i'] FP[`i']
 replace lme = r(lb) if _n==`i'
 replace ume = r(ub) if _n==`i'
 }
@@ -488,7 +488,7 @@ legend(off) title("Mykrobe vs. Lab")
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
 *save
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_viru_sens.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\z_viru_sens.wmf", as(wmf) replace
 
 *spec graph
 #delimit ;
@@ -497,7 +497,7 @@ legend(off) title("Mykrobe vs. Lab")
 subtitle("Specificity in Phenotype prediction");
 #delimit cr
 *save
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_viru_spec.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\z_viru_spec.wmf", as(wmf) replace
 
 
 ********************************************
@@ -560,8 +560,8 @@ yscale(range(0.2 1))
 ylabel(0.2 (0.2) 1);
 #delimit cr
 *save
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_viru_sens.wmf", as(wmf) replace
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_viru_sens.tif", width(2880) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\all_viru_sens.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\all_viru_sens.tif", width(2880) replace
 
 * specificity graph
 #delimit ;
@@ -579,8 +579,8 @@ ylabel(0.2 (0.2) 1)
 ;
 #delimit cr
 *save
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_viru_spec.wmf", as(wmf) replace
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_viru_spec.tif", width(2880) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\all_viru_spec.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\all_viru_spec.tif", width(2880) replace
 
 **************************************************
 * OVERALL SPEC/SENS SUMMARY
@@ -671,10 +671,10 @@ foreach k in valuetype valuez{
 	local max=_N
 	forvalues i=1(1)`max'{
 	if truePos[`i']>0{
-	cii prop  truePos[`i'] TP[`i']
+	cii  truePos[`i'] TP[`i']
 	replace lsens = r(lb) if _n==`i'
 	replace usens = r(ub) if _n==`i'
-	cii prop truePos[`i'] FN[`i']
+	cii truePos[`i'] FN[`i']
 	replace lvme = r(lb) if _n==`i'
 	replace uvme = r(ub) if _n==`i'
 	}
@@ -682,10 +682,10 @@ foreach k in valuetype valuez{
 	noi di site[`i'] " has no positive samples"
 	}
 	if trueNeg[`i']>0{
-	cii prop trueNeg[`i'] TN[`i']
+	cii trueNeg[`i'] TN[`i']
 	replace lspec = r(lb) if _n==`i'
 	replace uspec = r(ub) if _n==`i'
-	cii prop trueNeg[`i'] FP[`i']
+	cii trueNeg[`i'] FP[`i']
 	replace lme = r(lb) if _n==`i'
 	replace ume = r(ub) if _n==`i'
 	}

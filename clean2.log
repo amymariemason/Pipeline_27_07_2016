@@ -1,4 +1,4 @@
-Run by AMM on 26 Jul 2017 10:23:33
+Run by AMM on  2 Jan 2018 15:32:10
 
 
 
@@ -438,7 +438,7 @@ based on MecC pcr
 
 
 ================================================================================
-4   use D-test to clarify clindamycin test results
+4   use D-test to fix clindamycin test results
 ================================================================================
 117 clinddtest results are positive when clindamycin results = S -> replace clindamycin test with R
 
@@ -750,8 +750,8 @@ MECC
 ------------+-----------------------------------
       Total |      1,379      100.00
 SAVE: one record per sample-site with gold standard profile
+. cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"
+\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline
 
-. cd E:\users\amy.mason\Pipeline_27_07_2016\
-E:\users\amy.mason\Pipeline_27_07_2016
-
-. run clean_predict.do
+. 
+. run create_predict_anti.do

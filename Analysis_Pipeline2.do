@@ -19,7 +19,7 @@ set li 130
 cap log close
 log using analysis2.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 
 
 use anti_panel_all, clear
@@ -62,7 +62,7 @@ rename _freq* *
 
 * bar graph of predictions (antibiotics)
 graph bar (asis)  rrr rrs rsr rss srs sss,  over(site, label(angle(90))) stack title("Combinations of Results") subtitle("Results given as Genefinder Mykrobe Typewriter ") legend( label(1 "rrr") label( 2 "rrs" ) label (3 "rsr") label (4 "rss" ) label (5 "srs") label( 6 "sss" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, color(gs12))
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements.wmf", as(wmf)  replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\phenotype_disagreements.wmf", as(wmf)  replace
 
 
 *************************************************************
@@ -123,8 +123,8 @@ gen goldlabel = "Gold standard " + gold
 graph bar (asis) rrr rrs rsr rss srs sss if inlist(golds,"R", "S"),graphregion(color(white))    over(site, label(angle(90) labsize(tiny)) )  over(goldlabel, label(labsize(small)) ) stack ytitle("Number of isolates") legend( subtitle("Results given as Genefinder Mykrobe Typewriter") rows(2) label(1 "rrr") label( 2 "rrs" ) label (3 "rsr") label (4 "rss" ) label (5 "srs") label( 6 "sss" )) bar(1, color(gs8)) bar(2, color(cyan)) bar(3, color(red)) bar(4, color(blue)) bar(5, color(yellow)) bar(6, color(gs12)) ylabel(0(500)1000 1400)
 	*title("Prediction combinations") subtitle("Results given as Genefinder Mykrobe Typewriter") 
 	
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements_withgold.wmf", as(wmf) replace
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\phenotype_disagreements_withgold.tif", as(tif) width(2880) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\phenotype_disagreements_withgold.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\phenotype_disagreements_withgold.tif", as(tif) width(2880) replace
 
 
 *********************************************************
@@ -196,10 +196,10 @@ for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
 local max=_N
 forvalues i=1(1)`max'{
 if truePos[`i']>0{
-cii prop  truePos[`i'] TP[`i']
+cii  truePos[`i'] TP[`i']
 replace lsens = r(lb) if _n==`i'
 replace usens = r(ub) if _n==`i'
-cii prop truePos[`i'] FN[`i']
+cii truePos[`i'] FN[`i']
 replace lvme = r(lb) if _n==`i'
 replace uvme = r(ub) if _n==`i'
 }
@@ -207,10 +207,10 @@ else{
 noi di site[`i'] " has no positive samples"
 }
 if trueNeg[`i']>0{
-cii prop trueNeg[`i'] TN[`i']
+cii  trueNeg[`i'] TN[`i']
 replace lspec = r(lb) if _n==`i'
 replace uspec = r(ub) if _n==`i'
-cii prop trueNeg[`i'] FP[`i']
+cii  trueNeg[`i'] FP[`i']
 replace lme = r(lb) if _n==`i'
 replace ume = r(ub) if _n==`i'
 }
@@ -240,7 +240,7 @@ twoway rspike tw_usens tw_lsens num, lcolor(black) || scatter tw_sens num,  xlab
 legend(off) title("Typewriter vs. Lab") 
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_sens.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\tw_sens.wmf", as(wmf) replace
 
 
 
@@ -251,7 +251,7 @@ subtitle("Specificity in Phenotype prediction");
 #delimit cr
 
 * save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\tw_spec.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\tw_spec.wmf", as(wmf) replace
 
 
 ***************************************************
@@ -315,10 +315,10 @@ for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
 local max=_N
 forvalues i=1(1)`max'{
 if truePos[`i']>0{
-cii prop  truePos[`i'] TP[`i']
+cii  truePos[`i'] TP[`i']
 replace lsens = r(lb) if _n==`i'
 replace usens = r(ub) if _n==`i'
-cii prop truePos[`i'] FN[`i']
+cii truePos[`i'] FN[`i']
 replace lvme = r(lb) if _n==`i'
 replace uvme = r(ub) if _n==`i'
 }
@@ -326,10 +326,10 @@ else{
 noi di site[`i'] " has no positive samples"
 }
 if trueNeg[`i']>0{
-cii prop trueNeg[`i'] TN[`i']
+cii trueNeg[`i'] TN[`i']
 replace lspec = r(lb) if _n==`i'
 replace uspec = r(ub) if _n==`i'
-cii prop trueNeg[`i'] FP[`i']
+cii trueNeg[`i'] FP[`i']
 replace lme = r(lb) if _n==`i'
 replace ume = r(ub) if _n==`i'
 }
@@ -361,7 +361,7 @@ legend(off) title("Genefinder vs. Lab")
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
 * save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_sens.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\gf_sens.wmf", as(wmf) replace
 
 * make specificity graph
 #delimit ;
@@ -370,7 +370,7 @@ legend(off) title("Genefinder vs. Lab")
 subtitle("Specificity in Phenotype prediction");
 #delimit cr
 * save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\gf_spec.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\gf_spec.wmf", as(wmf) replace
 
 
 
@@ -436,10 +436,10 @@ for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
 local max=_N
 forvalues i=1(1)`max'{
 if truePos[`i']>0{
-cii prop  truePos[`i'] TP[`i']
+cii  truePos[`i'] TP[`i']
 replace lsens = r(lb) if _n==`i'
 replace usens = r(ub) if _n==`i'
-cii prop truePos[`i'] FN[`i']
+cii truePos[`i'] FN[`i']
 replace lvme = r(lb) if _n==`i'
 replace uvme = r(ub) if _n==`i'
 }
@@ -447,10 +447,10 @@ else{
 noi di site[`i'] " has no positive samples"
 }
 if trueNeg[`i']>0{
-cii prop trueNeg[`i'] TN[`i']
+cii trueNeg[`i'] TN[`i']
 replace lspec = r(lb) if _n==`i'
 replace uspec = r(ub) if _n==`i'
-cii prop trueNeg[`i'] FP[`i']
+cii trueNeg[`i'] FP[`i']
 replace lme = r(lb) if _n==`i'
 replace ume = r(ub) if _n==`i'
 }
@@ -483,7 +483,7 @@ legend(off) title("Mykrobe vs. Lab")
 subtitle("Sensitivity in Phenotype prediction");
 #delimit cr
 * save
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_sens.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\z_sens.wmf", as(wmf) replace
 
 * make spec graph
 #delimit ;
@@ -492,7 +492,7 @@ legend(off) title("Mykrobe vs. Lab")
 subtitle("Specificity in Phenotype prediction");
 #delimit cr
 * save
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\z_spec.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\z_spec.wmf", as(wmf) replace
 
 ***************************
 * COMBINE THE SENS/ SPEC GRAPHS
@@ -555,8 +555,8 @@ ylabel(0.5 (0.1) 1);
 #delimit cr
 
 * save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_sens.wmf", as(wmf) replace
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_sens.tif", as(tif) width(2880) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\all_sens.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\all_sens.tif", as(tif) width(2880) replace
 
 
 * make spec graph
@@ -574,8 +574,8 @@ yscale(range(0.5 1))
 ylabel(0.5 (0.1) 1);
 #delimit cr
 * save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_spec.wmf", as(wmf) replace
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\all_spec.tif", as(tif) width(2880) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\all_spec.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\all_spec.tif", as(tif) width(2880) replace
 
 **************************************************
 * OVERALL
@@ -669,10 +669,10 @@ foreach k in valuetype valuez{
 	local max=_N
 	forvalues i=1(1)`max'{
 	if truePos[`i']>0{
-	cii prop  truePos[`i'] TP[`i']
+	cii  truePos[`i'] TP[`i']
 	replace lsens = r(lb) if _n==`i'
 	replace usens = r(ub) if _n==`i'
-	cii prop truePos[`i'] FN[`i']
+	cii truePos[`i'] FN[`i']
 	replace lvme = r(lb) if _n==`i'
 	replace uvme = r(ub) if _n==`i'
 	}
@@ -680,10 +680,10 @@ foreach k in valuetype valuez{
 	noi di site[`i'] " has no positive samples"
 	}
 	if trueNeg[`i']>0{
-	cii prop trueNeg[`i'] TN[`i']
+	cii trueNeg[`i'] TN[`i']
 	replace lspec = r(lb) if _n==`i'
 	replace uspec = r(ub) if _n==`i'
-	cii prop trueNeg[`i'] FP[`i']
+	cii trueNeg[`i'] FP[`i']
 	replace lme = r(lb) if _n==`i'
 	replace ume = r(ub) if _n==`i'
 	}

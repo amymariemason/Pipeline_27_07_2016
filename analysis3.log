@@ -1,4 +1,4 @@
-Run by AMM on 26 Jul 2017 10:25:59
+Run by AMM on  2 Jan 2018 17:33:37
 
 
 
@@ -599,36 +599,2578 @@ all methods
   2. | valuetype   .9596273   .9414021   .9734606   .9763757   .9707599   .9811679 |
   3. | valuegene   .9751553   .9599667   .9857339    .971478   .9653836   .9767596 |
      +-----------------------------------------------------------------------------+
+. use anti_panel_all, clear
+
+. gen all_value = "G"+valueg + " M"+ valuem + "T "+ valuet+ "; L"+valueg
+valuem not found
+r(111);
+
+. gen all_value = "G"+valueg + " M"+ valuez + "T "+ valuet+ "; L"+valueg
+
+. replace all_value = "G "+valueg + ": M "+ valuez + ": T "+ valuet+ ": L "+valueg
+all_value was str12 now str18
+(16548 real changes made)
+
+. replace all_value = valueg + valuez + valuet+ ": "+valueg
+(16548 real changes made)
+
+. replace all_value = valueg + valuez + valuet+ ": "+gold
+(16548 real changes made)
+
+. replace all_value = valueg + valuez + valuet+ ": "+gold
+(0 real changes made)
+
+. keep sample site method set all
+
+. reshape long
+(already long)
+
+. reshape wide
+variable value not found
+r(111);
+
+. drop method
+
+. reshape all_value, i(sample set) j(site)
+invalid syntax
+    In the reshape command that you typed, you omitted the word wide or long, or substituted some other word for it.  You should
+    have typed
+
+        . reshape wide varlist, ...
+    or
+        . reshape long varlist, ...
+
+    You might have omitted varlist, too.  The basic syntax of reshape is
+
+         long                                wide
+        +---------------+                   +------------------+
+        | i   j   a   b |                   | i   a1 a2  b1 b2 |
+        |---------------| <--- reshape ---> |------------------|
+        | 1   1   1   2 |                   | 1   1   3   2  4 |
+        | 1   2   3   4 |                   | 2   5   7   6  8 |
+        | 2   1   5   6 |                   +------------------+
+        | 2   2   7   8 |
+        +---------------+
+
+        long to wide: reshape wide a b, i(i) j(j)    (j existing variable)
+        wide to long: reshape long a b, i(i) j(j)    (j    new   variable)
+r(198);
+
+. reshape wide all_value, i(sample set) j(site)
+variable site is string; specify string option
+r(109);
+
+. reshape wide all_value, i(sample set) j(site) string
+(note: j = ciprofloxacin clindamycin erythromycin fusidicacid gentamicin methicillin mupirocin penicillin rifampicin tetracycline 
+> trimethoprim vancomycin)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    16548   ->    1379
+Number of variables                   4   ->      14
+j variable (12 values)             site   ->   (dropped)
+xij variables:
+                              all_value   ->   all_valueciprofloxacin all_valueclindamycin ... all_valuevancomycin
+-----------------------------------------------------------------------------
+
+. rename all_value* *
+
+. save predictions
+file predictions.dta saved
+
+. use viru_panel_all, clear
+
+. gen all_value = valueg + valuez + valuet+ ": "+gold
 
 . 
-. exit
-
-end of do-file
-
-
-. do "E:\users\amy.mason\Pipeline_27_07_2016\Analysis_Pipeline3.do
-> "
-
-. ************************************************
-. * ANALYSIS_PIPELINE3.DO 
-. ************************************************
-. 
-. * Analyses the three methods on virulence factor predictions; cr
-> eates summary tables and graphs
-. 
-. *Inputs: viru_panel_all  from create_predict_viru.do
-. * Outputs : virulence_disagreements.wmf ( bar chart of method re
-> sults by antibiotic)
-. *  virulence_disagreements_withgold.wmf ( bar charts of method r
-> esults by antibiotic and lab results, restricted to results wher
-> e lab result either R or S)
-. * all_viru_sens.wmf ( sensitivity of each method, by virulence f
-> actor) and all_viru_spec.wmf (specificity of each method, by vir
-> ulence factor)
-. * graphs saved to Graph folder
-. * Written by: Amy Mason
-. 
-. set li 130
+. keep sample site set all
 
 . 
-. cap log close
+. reshape wide all_value, i(sample set) j(site) string
+(note: j = eta etb etd meca mecc pvl sea seb sec sed see seg seh sei sej selr sep seu tsst1)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    26201   ->    1379
+Number of variables                   4   ->      21
+j variable (19 values)             site   ->   (dropped)
+xij variables:
+                              all_value   ->   all_valueeta all_valueetb ... all_valuetsst1
+-----------------------------------------------------------------------------
+
+. 
+. rename all_value* *
+
+. merge 1:1 sample using predictions, update
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                             1,379
+        not updated                     1,379  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
+
+. assert _merge==3
+
+. 
+. drop _merge
+
+. *antibiotics
+
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. gen all_value = valueg + valuez + valuet+ ": "+gold
+
+. 
+. replace all_value=valueg if valueg==valuez & valuez==t
+t not found
+r(111);
+
+. 
+. keep sample site set all
+
+. 
+. reshape wide all_value, i(sample set) j(site) string
+(note: j = ciprofloxacin clindamycin erythromycin fusidicacid gentamicin methicillin mupirocin penicillin rifampicin tetracycline 
+> trimethoprim vancomycin)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    16548   ->    1379
+Number of variables                   4   ->      14
+j variable (12 values)             site   ->   (dropped)
+xij variables:
+                              all_value   ->   all_valueciprofloxacin all_valueclindamycin ... all_valuevancomycin
+-----------------------------------------------------------------------------
+
+. 
+. rename all_value* *
+
+. 
+. 
+. 
+. save predictions, replace
+file predictions.dta saved
+
+. 
+. 
+. 
+. * virulence
+
+. 
+. 
+. 
+. gen all_value = valueg + valuez + valuet+ ": "+gold
+valueg not found
+r(111);
+
+. 
+. replace all_value=valueg if valueg==valuez & valuez==t
+variable all_value not found
+r(111);
+
+. 
+. keep sample site set all
+variable site not found
+r(111);
+
+. 
+. reshape wide all_value, i(sample set) j(site) string
+variable site not found
+    Data are already wide.
+r(111);
+
+. 
+. rename all_value* *
+variable all_value* not found
+r(111);
+
+. 
+. 
+. 
+. merge 1:1 sample using predictions, update
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                             1,379
+        not updated                     1,379  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
+
+. 
+. assert _merge==3
+
+. 
+. drop _merge
+
+. *antibiotics
+
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. gen all_value = valueg + valuez + valuet+ ": "+gold
+
+. 
+. replace all_value=valueg if valueg==valuez & valuez==t
+t not found
+r(111);
+
+. 
+. keep sample site set all
+
+. 
+. reshape wide all_value, i(sample set) j(site) string
+(note: j = ciprofloxacin clindamycin erythromycin fusidicacid gentamicin methicillin mupirocin penicillin rifampicin tetracycline 
+> trimethoprim vancomycin)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    16548   ->    1379
+Number of variables                   4   ->      14
+j variable (12 values)             site   ->   (dropped)
+xij variables:
+                              all_value   ->   all_valueciprofloxacin all_valueclindamycin ... all_valuevancomycin
+-----------------------------------------------------------------------------
+
+. 
+. rename all_value* *
+
+. 
+. 
+. 
+. save predictions, replace
+file predictions.dta saved
+
+. 
+. 
+. 
+. * virulence
+
+. 
+. 
+. 
+. use viru_panel_all, clear
+
+. 
+. 
+. 
+. gen all_value = valueg + valuez + valuet+ ": "+gold
+
+. 
+. replace all_value=valueg if valueg==valuez & valuez==t
+t not found
+r(111);
+
+. 
+. keep sample site set all
+
+. 
+. reshape wide all_value, i(sample set) j(site) string
+(note: j = eta etb etd meca mecc pvl sea seb sec sed see seg seh sei sej selr sep seu tsst1)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    26201   ->    1379
+Number of variables                   4   ->      21
+j variable (19 values)             site   ->   (dropped)
+xij variables:
+                              all_value   ->   all_valueeta all_valueetb ... all_valuetsst1
+-----------------------------------------------------------------------------
+
+. 
+. rename all_value* *
+
+. 
+. 
+. 
+. merge 1:1 sample using predictions, update
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                             1,379
+        not updated                     1,379  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
+
+. 
+. assert _merge==3
+
+. 
+. drop _merge
+
+. *antibiotics
+
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. gen all_value = valueg + valuez + valuet+ ": "+gold
+
+. 
+. replace all_value=valueg if valueg==valuez & valuez==valuet
+(16477 real changes made)
+
+. 
+. keep sample site set all
+
+. 
+. reshape wide all_value, i(sample set) j(site) string
+(note: j = ciprofloxacin clindamycin erythromycin fusidicacid gentamicin methicillin mupirocin penicillin rifampicin tetracycline 
+> trimethoprim vancomycin)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    16548   ->    1379
+Number of variables                   4   ->      14
+j variable (12 values)             site   ->   (dropped)
+xij variables:
+                              all_value   ->   all_valueciprofloxacin all_valueclindamycin ... all_valuevancomycin
+-----------------------------------------------------------------------------
+
+. 
+. rename all_value* *
+
+. 
+. 
+. 
+. save predictions, replace
+file predictions.dta saved
+
+. 
+. 
+. 
+. * virulence
+
+. 
+. 
+. 
+. use viru_panel_all, clear
+
+. 
+. 
+. 
+. gen all_value = valueg + valuez + valuet+ ": "+gold
+
+. 
+. replace all_value=valueg if valueg==valuez & valuez==valuet
+(26038 real changes made)
+
+. 
+. keep sample site set all
+
+. 
+. reshape wide all_value, i(sample set) j(site) string
+(note: j = eta etb etd meca mecc pvl sea seb sec sed see seg seh sei sej selr sep seu tsst1)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    26201   ->    1379
+Number of variables                   4   ->      21
+j variable (19 values)             site   ->   (dropped)
+xij variables:
+                              all_value   ->   all_valueeta all_valueetb ... all_valuetsst1
+-----------------------------------------------------------------------------
+
+. 
+. rename all_value* *
+
+. 
+. 
+. 
+. merge 1:1 sample using predictions, update
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                             1,379
+        not updated                     1,379  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
+
+. 
+. assert _merge==3
+
+. 
+. drop _merge
+
+. *antibiotics
+
+. 
+. use anti_panel_all, clear
+
+. 
+. 
+. 
+. gen all_value = valueg + valuez + valuet+ ": "+gold
+
+. 
+. replace all_value=valueg + ": "+gold if valueg==valuez & valuez==valuet
+(16477 real changes made)
+
+. 
+. keep sample site set all
+
+. 
+. reshape wide all_value, i(sample set) j(site) string
+(note: j = ciprofloxacin clindamycin erythromycin fusidicacid gentamicin methicillin mupirocin penicillin rifampicin tetracycline 
+> trimethoprim vancomycin)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    16548   ->    1379
+Number of variables                   4   ->      14
+j variable (12 values)             site   ->   (dropped)
+xij variables:
+                              all_value   ->   all_valueciprofloxacin all_valueclindamycin ... all_valuevancomycin
+-----------------------------------------------------------------------------
+
+. 
+. rename all_value* *
+
+. 
+. 
+. 
+. save predictions, replace
+file predictions.dta saved
+
+. 
+. 
+. 
+. * virulence
+
+. 
+. 
+. 
+. use viru_panel_all, clear
+
+. 
+. 
+. 
+. gen all_value = valueg + valuez + valuet+ ": "+gold
+
+. 
+. replace all_value=valueg+ ": "+gold if valueg==valuez & valuez==valuet
+(26038 real changes made)
+
+. 
+. keep sample site set all
+
+. 
+. reshape wide all_value, i(sample set) j(site) string
+(note: j = eta etb etd meca mecc pvl sea seb sec sed see seg seh sei sej selr sep seu tsst1)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    26201   ->    1379
+Number of variables                   4   ->      21
+j variable (19 values)             site   ->   (dropped)
+xij variables:
+                              all_value   ->   all_valueeta all_valueetb ... all_valuetsst1
+-----------------------------------------------------------------------------
+
+. 
+. rename all_value* *
+
+. 
+. 
+. 
+. merge 1:1 sample using predictions, update
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+
+    matched                             1,379
+        not updated                     1,379  (_merge==3)
+        missing updated                     0  (_merge==4)
+        nonmissing conflict                 0  (_merge==5)
+    -----------------------------------------
+
+. 
+. assert _merge==3
+
+. 
+. drop _merge
+
+. export excel using "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Comments\Predictions.xls", sheet("Predictio
+> ns") firstrow(variables) replace
+file \\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Comments\Predictions.xls saved
+
+. export excel using "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Comments\Predictions.xls", sheet("Predictio
+> ns") firstrow(variables) update
+option update not allowed
+r(198);
+
+. export excel using "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Comments\Predictions.xls", sheet("Predictio
+> ns") sheetreplace firstrow(variables)
+file \\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Comments\Predictions.xls saved
+
+. cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
+\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets
+
+. 
+. use pipeline_clean_all_values_wide, clear
+
+. 
+. 
+. 
+. noi di  "Recall order is  Genefiner Mykrobe Typewriter"
+Recall order is  Genefiner Mykrobe Typewriter
+
+. 
+. 
+. 
+. gen agree  = (ValueA=="AAA"| ValueA=="PPP" )
+
+. 
+. 
+. 
+. *which set  have the most discrenpacies
+
+. 
+. noi di "site discrenpacies by set"
+site discrenpacies by set
+
+. 
+. noi tab set if agree!=1, sort
+
+        set |      Freq.     Percent        Cum.
+------------+-----------------------------------
+ Collindale |        349       55.66       55.66
+  Oxford501 |        233       37.16       92.82
+  Oxford491 |         45        7.18      100.00
+------------+-----------------------------------
+      Total |        627      100.00
+
+. 
+. noi tab set agree, row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |         agree
+       set |         0          1 |     Total
+-----------+----------------------+----------
+Collindale |       349     32,187 |    32,536 
+           |      1.07      98.93 |    100.00 
+-----------+----------------------+----------
+ Oxford491 |        45     40,293 |    40,338 
+           |      0.11      99.89 |    100.00 
+-----------+----------------------+----------
+ Oxford501 |       233     41,350 |    41,583 
+           |      0.56      99.44 |    100.00 
+-----------+----------------------+----------
+     Total |       627    113,830 |   114,457 
+           |      0.55      99.45 |    100.00 
+
+
+. 
+. noi tab set agree, chi2
+
+           |         agree
+       set |         0          1 |     Total
+-----------+----------------------+----------
+Collindale |       349     32,187 |    32,536 
+ Oxford491 |        45     40,293 |    40,338 
+ Oxford501 |       233     41,350 |    41,583 
+-----------+----------------------+----------
+     Total |       627    113,830 |   114,457 
+
+          Pearson chi2(2) = 305.5423   Pr = 0.000
+
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. * what is the minority method by site
+
+. 
+. 
+. 
+. gen minority= "GeneFinder" if agree!=1 &  valuet==valuez
+(114276 missing values generated)
+
+. 
+. replace minority= "Mykrobe" if agree!=1 &  valueg==valuet
+(183 real changes made)
+
+. 
+. gen minority= "Typewriter" if agree!=1 &  valueg==valuez
+minority already defined
+r(110);
+
+. replace minority= "Typewriter" if agree!=1 &  valueg==valuez
+(263 real changes made)
+
+. tab minority
+
+   minority |      Freq.     Percent        Cum.
+------------+-----------------------------------
+ GeneFinder |        181       28.87       28.87
+    Mykrobe |        183       29.19       58.05
+ Typewriter |        263       41.95      100.00
+------------+-----------------------------------
+      Total |        627      100.00
+
+. tab minority valueA
+variable valueA not found
+r(111);
+
+. tab minority ValueA
+
+           |                        ValueAll
+  minority |       APA        APP        PAA        PAP        PPA |     Total
+-----------+-------------------------------------------------------+----------
+GeneFinder |         0        164         17          0          0 |       181 
+   Mykrobe |       179          0          0          4          0 |       183 
+Typewriter |         0          0          0          0        263 |       263 
+-----------+-------------------------------------------------------+----------
+     Total |       179        164         17          4        263 |       627 
+
+
+. tab minority site
+
+           |                                                site
+  minority |  aac6aph2  aaddaph..  aadeant..     ant9ia  apha3ap..       arca       arcb       arcc       arcd |     Total
+-----------+---------------------------------------------------------------------------------------------------+----------
+GeneFinder |         0          0          0          0          0          0          6          6          6 |       181 
+   Mykrobe |         2          2         28          4          0          1          0          0          0 |       183 
+Typewriter |         1          0          2          3          1          0          0          0          0 |       263 
+-----------+---------------------------------------------------------------------------------------------------+----------
+     Total |         3          2         30          7          1          1          6          6          6 |       627 
+
+
+           |                                                site
+  minority |      blaz       ccra       ccrb      ccrca      ccrcb      ccrcc        cfr        chp       dfra |     Total
+-----------+---------------------------------------------------------------------------------------------------+----------
+GeneFinder |         1          0         10          9         22          6          0          0          1 |       181 
+   Mykrobe |        19          2          1          8         22         16          0          1          3 |       183 
+Typewriter |         7          3         22          1          0          1          1         46          0 |       263 
+-----------+---------------------------------------------------------------------------------------------------+----------
+     Total |        27          5         33         18         44         23          1         47          4 |       627 
+
+
+           |                                                site
+  minority |      dfrb       dfrc       dfrg       erma       ermb       ermc        eta        etb        etd |     Total
+-----------+---------------------------------------------------------------------------------------------------+----------
+GeneFinder |         0         34          0          0          0          0          0          0          0 |       181 
+   Mykrobe |         1          0          1          1          1         10          1          1          1 |       183 
+Typewriter |         0          3          0          5          0          2          0          1          1 |       263 
+-----------+---------------------------------------------------------------------------------------------------+----------
+     Total |         1         37          1          6          1         12          1          2          2 |       627 
+
+
+           |                                                site
+  minority |      fusa       fusb       fusc  grla/gyra       lnua      lukmf     lukpvf     lukpvs       meca |     Total
+-----------+---------------------------------------------------------------------------------------------------+----------
+GeneFinder |         0          0          0          0          6          6          0          0          0 |       181 
+   Mykrobe |         0          2          1          3          0          0          2          3          1 |       183 
+Typewriter |         2          0          2          0          0          0          0          1          2 |       263 
+-----------+---------------------------------------------------------------------------------------------------+----------
+     Total |         2          2          3          3          6          6          2          4          3 |       627 
+
+
+           |                                                site
+  minority |      mphc       msra       mupa       qaca       qacb    qaccsmr       rpob        sak       sasx |     Total
+-----------+---------------------------------------------------------------------------------------------------+----------
+GeneFinder |         0          0          2          0         44          1          0          0         14 |       181 
+   Mykrobe |         1          1          0          1          2          7          2          3          1 |       183 
+Typewriter |         0          0          0          1          0          2          0          5          0 |       263 
+-----------+---------------------------------------------------------------------------------------------------+----------
+     Total |         1          1          2          2         46         10          2          8         15 |       627 
+
+
+           |                                                site
+  minority |      sat4        scn        sea        seb        sec        seg        seh        sei        sep |     Total
+-----------+---------------------------------------------------------------------------------------------------+----------
+GeneFinder |         0          0          0          0          0          0          0          6          1 |       181 
+   Mykrobe |         2          3          1          1          1          6          2          3          0 |       183 
+Typewriter |         1         15          3          2          4         20          2         33          2 |       263 
+-----------+---------------------------------------------------------------------------------------------------+----------
+     Total |         3         18          4          3          5         26          4         42          3 |       627 
+
+
+           |                    site
+  minority |       seu       tetk       tetm      tsst1 |     Total
+-----------+--------------------------------------------+----------
+GeneFinder |         0          0          0          0 |       181 
+   Mykrobe |         2          4          1          1 |       183 
+Typewriter |        57          4          1          4 |       263 
+-----------+--------------------------------------------+----------
+     Total |        59          8          2          5 |       627 
+
+
+. tab minority set
+
+           |               set
+  minority | Collind..  Oxford491  Oxford501 |     Total
+-----------+---------------------------------+----------
+GeneFinder |       141         22         18 |       181 
+   Mykrobe |       130         10         43 |       183 
+Typewriter |        78         13        172 |       263 
+-----------+---------------------------------+----------
+     Total |       349         45        233 |       627 
+
+
+. tab minority set, chi
+
+           |               set
+  minority | Collind..  Oxford491  Oxford501 |     Total
+-----------+---------------------------------+----------
+GeneFinder |       141         22         18 |       181 
+   Mykrobe |       130         10         43 |       183 
+Typewriter |        78         13        172 |       263 
+-----------+---------------------------------+----------
+     Total |       349         45        233 |       627 
+
+          Pearson chi2(4) = 166.3378   Pr = 0.000
+
+. help tab
+
+. tab minority set, chi cell
+
++-----------------+
+| Key             |
+|-----------------|
+|    frequency    |
+| cell percentage |
++-----------------+
+
+           |               set
+  minority | Collind..  Oxford491  Oxford501 |     Total
+-----------+---------------------------------+----------
+GeneFinder |       141         22         18 |       181 
+           |     22.49       3.51       2.87 |     28.87 
+-----------+---------------------------------+----------
+   Mykrobe |       130         10         43 |       183 
+           |     20.73       1.59       6.86 |     29.19 
+-----------+---------------------------------+----------
+Typewriter |        78         13        172 |       263 
+           |     12.44       2.07      27.43 |     41.95 
+-----------+---------------------------------+----------
+     Total |       349         45        233 |       627 
+           |     55.66       7.18      37.16 |    100.00 
+
+          Pearson chi2(4) = 166.3378   Pr = 0.000
+
+. tab minority set, chi row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |               set
+  minority | Collind..  Oxford491  Oxford501 |     Total
+-----------+---------------------------------+----------
+GeneFinder |       141         22         18 |       181 
+           |     77.90      12.15       9.94 |    100.00 
+-----------+---------------------------------+----------
+   Mykrobe |       130         10         43 |       183 
+           |     71.04       5.46      23.50 |    100.00 
+-----------+---------------------------------+----------
+Typewriter |        78         13        172 |       263 
+           |     29.66       4.94      65.40 |    100.00 
+-----------+---------------------------------+----------
+     Total |       349         45        233 |       627 
+           |     55.66       7.18      37.16 |    100.00 
+
+          Pearson chi2(4) = 166.3378   Pr = 0.000
+
+. tab minority set, chi col
+
++-------------------+
+| Key               |
+|-------------------|
+|     frequency     |
+| column percentage |
++-------------------+
+
+           |               set
+  minority | Collind..  Oxford491  Oxford501 |     Total
+-----------+---------------------------------+----------
+GeneFinder |       141         22         18 |       181 
+           |     40.40      48.89       7.73 |     28.87 
+-----------+---------------------------------+----------
+   Mykrobe |       130         10         43 |       183 
+           |     37.25      22.22      18.45 |     29.19 
+-----------+---------------------------------+----------
+Typewriter |        78         13        172 |       263 
+           |     22.35      28.89      73.82 |     41.95 
+-----------+---------------------------------+----------
+     Total |       349         45        233 |       627 
+           |    100.00     100.00     100.00 |    100.00 
+
+          Pearson chi2(4) = 166.3378   Pr = 0.000
+
+. tab minority set, chi expected
+
++--------------------+
+| Key                |
+|--------------------|
+|     frequency      |
+| expected frequency |
++--------------------+
+
+           |               set
+  minority | Collind..  Oxford491  Oxford501 |     Total
+-----------+---------------------------------+----------
+GeneFinder |       141         22         18 |       181 
+           |     100.7       13.0       67.3 |     181.0 
+-----------+---------------------------------+----------
+   Mykrobe |       130         10         43 |       183 
+           |     101.9       13.1       68.0 |     183.0 
+-----------+---------------------------------+----------
+Typewriter |        78         13        172 |       263 
+           |     146.4       18.9       97.7 |     263.0 
+-----------+---------------------------------+----------
+     Total |       349         45        233 |       627 
+           |     349.0       45.0      233.0 |     627.0 
+
+          Pearson chi2(4) = 166.3378   Pr = 0.000
+
+. *which set  have the most discrenpacies
+
+. 
+. noi di "site discrenpacies by set"
+site discrenpacies by set
+
+. 
+. noi tab set agree, chi2 expected
+
++--------------------+
+| Key                |
+|--------------------|
+|     frequency      |
+| expected frequency |
++--------------------+
+
+           |         agree
+       set |         0          1 |     Total
+-----------+----------------------+----------
+Collindale |       349     32,187 |    32,536 
+           |     178.2   32,357.8 |  32,536.0 
+-----------+----------------------+----------
+ Oxford491 |        45     40,293 |    40,338 
+           |     221.0   40,117.0 |  40,338.0 
+-----------+----------------------+----------
+ Oxford501 |       233     41,350 |    41,583 
+           |     227.8   41,355.2 |  41,583.0 
+-----------+----------------------+----------
+     Total |       627    113,830 |   114,457 
+           |     627.0  113,830.0 | 114,457.0 
+
+          Pearson chi2(2) = 305.5423   Pr = 0.000
+
+. *which set and type  have the most discrenpacies
+
+. 
+. noi di "site discrenpacies by set and type"
+site discrenpacies by set and type
+
+. 
+. gen new = set + type
+
+. 
+. noi tab new minority, expected chi
+
++--------------------+
+| Key                |
+|--------------------|
+|     frequency      |
+| expected frequency |
++--------------------+
+
+                      |             minority
+                  new | GeneFin..    Mykrobe  Typewri.. |     Total
+----------------------+---------------------------------+----------
+CollindaleAquired R.. |        79         64         18 |       161 
+                      |      46.5       47.0       67.5 |     161.0 
+----------------------+---------------------------------+----------
+CollindaleChromosom.. |         0          3          0 |         3 
+                      |       0.9        0.9        1.3 |       3.0 
+----------------------+---------------------------------+----------
+        Collindaleccr |        33         44          6 |        83 
+                      |      24.0       24.2       34.8 |      83.0 
+----------------------+---------------------------------+----------
+  Collindalevirulence |        29         19         54 |       102 
+                      |      29.4       29.8       42.8 |     102.0 
+----------------------+---------------------------------+----------
+Oxford491Aquired Re.. |         9          4          6 |        19 
+                      |       5.5        5.5        8.0 |      19.0 
+----------------------+---------------------------------+----------
+Oxford491Chromosoma.. |         0          1          0 |         1 
+                      |       0.3        0.3        0.4 |       1.0 
+----------------------+---------------------------------+----------
+         Oxford491ccr |        10          0          0 |        10 
+                      |       2.9        2.9        4.2 |      10.0 
+----------------------+---------------------------------+----------
+   Oxford491virulence |         3          5          7 |        15 
+                      |       4.3        4.4        6.3 |      15.0 
+----------------------+---------------------------------+----------
+Oxford501Aquired Re.. |         1         26         14 |        41 
+                      |      11.8       12.0       17.2 |      41.0 
+----------------------+---------------------------------+----------
+Oxford501Chromosoma.. |         0          2          2 |         4 
+                      |       1.2        1.2        1.7 |       4.0 
+----------------------+---------------------------------+----------
+         Oxford501ccr |         4          5         21 |        30 
+                      |       8.7        8.8       12.6 |      30.0 
+----------------------+---------------------------------+----------
+   Oxford501virulence |        13         10        135 |       158 
+                      |      45.6       46.1       66.3 |     158.0 
+----------------------+---------------------------------+----------
+                Total |       181        183        263 |       627 
+                      |     181.0      183.0      263.0 |     627.0 
+
+         Pearson chi2(22) = 314.9822   Pr = 0.000
+
+. cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
+\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets
+
+. 
+. use pipeline_clean_all_values_wide, clear
+
+. use anti_panel_all
+
+. append viru_panel_all
+using required
+r(100);
+
+. append using viru_panel_all
+(label _merge already defined)
+
+. drop _merge
+
+. append using viru_panel_all
+(label _merge already defined)
+
+. drop _merge
+
+. save
+invalid file specification
+r(198);
+
+. help append
+
+. append using viru_panel_all, gen(new)
+(label _merge already defined)
+
+. di nrow
+nrow not found
+r(111);
+
+. di _N
+95151
+
+. tab site
+
+         site |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+ciprofloxacin |      1,379        1.45        1.45
+  clindamycin |      1,379        1.45        2.90
+ erythromycin |      1,379        1.45        4.35
+          eta |      4,137        4.35        8.70
+          etb |      4,137        4.35       13.04
+          etd |      4,137        4.35       17.39
+  fusidicacid |      1,379        1.45       18.84
+   gentamicin |      1,379        1.45       20.29
+         meca |      4,137        4.35       24.64
+         mecc |      4,137        4.35       28.99
+  methicillin |      1,379        1.45       30.43
+    mupirocin |      1,379        1.45       31.88
+   penicillin |      1,379        1.45       33.33
+          pvl |      4,137        4.35       37.68
+   rifampicin |      1,379        1.45       39.13
+          sea |      4,137        4.35       43.48
+          seb |      4,137        4.35       47.83
+          sec |      4,137        4.35       52.17
+          sed |      4,137        4.35       56.52
+          see |      4,137        4.35       60.87
+          seg |      4,137        4.35       65.22
+          seh |      4,137        4.35       69.57
+          sei |      4,137        4.35       73.91
+          sej |      4,137        4.35       78.26
+         selr |      4,137        4.35       82.61
+          sep |      4,137        4.35       86.96
+          seu |      4,137        4.35       91.30
+ tetracycline |      1,379        1.45       92.75
+ trimethoprim |      1,379        1.45       94.20
+        tsst1 |      4,137        4.35       98.55
+   vancomycin |      1,379        1.45      100.00
+--------------+-----------------------------------
+        Total |     95,151      100.00
+
+. tab new
+
+        new |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |     68,950       72.46       72.46
+          1 |     26,201       27.54      100.00
+------------+-----------------------------------
+      Total |     95,151      100.00
+
+. drop _merge new
+
+. use anti_panel_all
+no; data in memory would be lost
+r(4);
+
+. use anti_panel_all, clear
+
+. append using viru_panel_all, gen(new)
+(label _merge already defined)
+
+. tab site
+
+         site |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+ciprofloxacin |      1,379        3.23        3.23
+  clindamycin |      1,379        3.23        6.45
+ erythromycin |      1,379        3.23        9.68
+          eta |      1,379        3.23       12.90
+          etb |      1,379        3.23       16.13
+          etd |      1,379        3.23       19.35
+  fusidicacid |      1,379        3.23       22.58
+   gentamicin |      1,379        3.23       25.81
+         meca |      1,379        3.23       29.03
+         mecc |      1,379        3.23       32.26
+  methicillin |      1,379        3.23       35.48
+    mupirocin |      1,379        3.23       38.71
+   penicillin |      1,379        3.23       41.94
+          pvl |      1,379        3.23       45.16
+   rifampicin |      1,379        3.23       48.39
+          sea |      1,379        3.23       51.61
+          seb |      1,379        3.23       54.84
+          sec |      1,379        3.23       58.06
+          sed |      1,379        3.23       61.29
+          see |      1,379        3.23       64.52
+          seg |      1,379        3.23       67.74
+          seh |      1,379        3.23       70.97
+          sei |      1,379        3.23       74.19
+          sej |      1,379        3.23       77.42
+         selr |      1,379        3.23       80.65
+          sep |      1,379        3.23       83.87
+          seu |      1,379        3.23       87.10
+ tetracycline |      1,379        3.23       90.32
+ trimethoprim |      1,379        3.23       93.55
+        tsst1 |      1,379        3.23       96.77
+   vancomycin |      1,379        3.23      100.00
+--------------+-----------------------------------
+        Total |     42,749      100.00
+
+. drop _merge new valueall
+
+. reshape long
+(already long)
+
+. drop method
+
+. reshape long value, i (sample site set gold) j(method)
+variable method contains all missing values
+r(498);
+
+. reshape long value, i (sample site set gold) j(method) string
+(note: j = genefinder typewriter zam)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                    42749   ->  128247
+Number of variables                   7   ->       6
+j variable (3 values)                     ->   method
+xij variables:
+valuegenefinder valuetypewriter valuezam  ->   value
+-----------------------------------------------------------------------------
+
+. replace value=upper(value)
+(128247 real changes made)
+
+. tab gold
+
+goldstandar |
+          d |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          A |     10,413        8.12        8.12
+          I |        240        0.19        8.31
+         NA |     72,270       56.35       64.66
+          P |      1,932        1.51       66.17
+          R |      8,475        6.61       72.77
+          S |     34,917       27.23      100.00
+------------+-----------------------------------
+      Total |    128,247      100.00
+
+. drop if gold==(NA|I)
+NA not found
+r(111);
+
+. drop if gold==("NA"|"I")
+type mismatch
+r(109);
+
+. drop if gold==NA
+NA not found
+r(111);
+
+. drop if gold=="NA"
+(72270 observations deleted)
+
+. drop if gold=="I"
+(240 observations deleted)
+
+. gen match=1 if gold==value
+(976 missing values generated)
+
+. replace match=0 if match==.
+(976 real changes made)
+
+. tab match
+
+      match |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        976        1.75        1.75
+          1 |     54,761       98.25      100.00
+------------+-----------------------------------
+      Total |     55,737      100.00
+
+. tab value match
+
+           |         match
+     value |         0          1 |     Total
+-----------+----------------------+----------
+         A |        56     10,123 |    10,179 
+         P |       290      1,876 |     2,166 
+         R |       343      8,188 |     8,531 
+         S |       287     34,574 |    34,861 
+-----------+----------------------+----------
+     Total |       976     54,761 |    55,737 
+
+
+. tab type match
+variable type not found
+r(111);
+
+. tab site match
+
+              |         match
+         site |         0          1 |     Total
+--------------+----------------------+----------
+ciprofloxacin |        60      3,996 |     4,056 
+  clindamycin |        87      1,305 |     1,392 
+ erythromycin |        71      4,045 |     4,116 
+          eta |         1        617 |       618 
+          etb |         2        616 |       618 
+          etd |         1        617 |       618 
+  fusidicacid |        70      4,049 |     4,119 
+   gentamicin |        70      4,049 |     4,119 
+         meca |         5        979 |       984 
+         mecc |         0        504 |       504 
+  methicillin |        41      4,018 |     4,059 
+    mupirocin |        20      3,043 |     3,063 
+   penicillin |       135      3,972 |     4,107 
+          pvl |        13        989 |     1,002 
+   rifampicin |        11      4,105 |     4,116 
+          sea |        14        601 |       615 
+          seb |         4        611 |       615 
+          sec |         9        606 |       615 
+          sed |         0        615 |       615 
+          see |         0        615 |       615 
+          seg |         6        609 |       615 
+          seh |        10        605 |       615 
+          sei |        19        596 |       615 
+          sej |         3        612 |       615 
+         selr |        57        558 |       615 
+          sep |        33        582 |       615 
+          seu |       166        449 |       615 
+ tetracycline |        45      4,071 |     4,116 
+ trimethoprim |        20      1,990 |     2,010 
+        tsst1 |         3        618 |       621 
+   vancomycin |         0      4,119 |     4,119 
+--------------+----------------------+----------
+        Total |       976     54,761 |    55,737 
+
+
+. di 976/2
+488
+
+. tab set method if match!=1
+
+           |              method
+       set | genefin..  typewri..        zam |     Total
+-----------+---------------------------------+----------
+Collindale |       226        215        240 |       681 
+ Oxford491 |        58         58         59 |       175 
+ Oxford501 |        37         35         48 |       120 
+-----------+---------------------------------+----------
+     Total |       321        308        347 |       976 
+
+
+. tab set method if match!=1, chi
+
+           |              method
+       set | genefin..  typewri..        zam |     Total
+-----------+---------------------------------+----------
+Collindale |       226        215        240 |       681 
+ Oxford491 |        58         58         59 |       175 
+ Oxford501 |        37         35         48 |       120 
+-----------+---------------------------------+----------
+     Total |       321        308        347 |       976 
+
+          Pearson chi2(4) =   1.3851   Pr = 0.847
+
+. tab set method if match!=1 & set!="Collindale", chi
+
+           |              method
+       set | genefin..  typewri..        zam |     Total
+-----------+---------------------------------+----------
+ Oxford491 |        58         58         59 |       175 
+ Oxford501 |        37         35         48 |       120 
+-----------+---------------------------------+----------
+     Total |        95         93        107 |       295 
+
+          Pearson chi2(2) =   1.2503   Pr = 0.535
+
+. tab set method if match!=1 & set!="Collindale"& method=="zam", chi
+
+           |   method
+       set |       zam |     Total
+-----------+-----------+----------
+ Oxford491 |        59 |        59 
+ Oxford501 |        48 |        48 
+-----------+-----------+----------
+     Total |       107 |       107 
+
+
+. help ttest
+
+. ttest match if method=="zam" & set!="Collindale", by(set)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+Oxford49 |    5135    .9885102    .0014874    .1065832    .9855943    .9914261
+Oxford50 |    5010    .9904192    .0013764    .0974215    .9877209    .9931175
+---------+--------------------------------------------------------------------
+combined |   10145    .9894529    .0010143    .1021609    .9874647    .9914411
+---------+--------------------------------------------------------------------
+    diff |           -.0019089    .0020287               -.0058856    .0020678
+------------------------------------------------------------------------------
+    diff = mean(Oxford49) - mean(Oxford50)                        t =  -0.9410
+Ho: diff = 0                                     degrees of freedom =    10143
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.1734         Pr(|T| > |t|) = 0.3468          Pr(T > t) = 0.8266
+
+. ttest match if method=="genefinder" & set!="Collindale", by(set)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+Oxford49 |    5135     .988705    .0014749    .1056865    .9858136    .9915963
+Oxford50 |    5010    .9926148    .0012098     .085628    .9902431    .9949864
+---------+--------------------------------------------------------------------
+combined |   10145    .9906358    .0009563    .0963195    .9887613    .9925103
+---------+--------------------------------------------------------------------
+    diff |           -.0039098    .0019124               -.0076585   -.0001611
+------------------------------------------------------------------------------
+    diff = mean(Oxford49) - mean(Oxford50)                        t =  -2.0444
+Ho: diff = 0                                     degrees of freedom =    10143
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0205         Pr(|T| > |t|) = 0.0409          Pr(T > t) = 0.9795
+
+. 
+. ttest match if method=="typewriter" & set!="Collindale", by(set)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+Oxford49 |    5135     .988705    .0014749    .1056865    .9858136    .9915963
+Oxford50 |    5010     .993014    .0011768    .0832983    .9907069    .9953211
+---------+--------------------------------------------------------------------
+combined |   10145    .9908329    .0009463    .0953097    .9889781    .9926878
+---------+--------------------------------------------------------------------
+    diff |            -.004309    .0018923               -.0080182   -.0005998
+------------------------------------------------------------------------------
+    diff = mean(Oxford49) - mean(Oxford50)                        t =  -2.2772
+Ho: diff = 0                                     degrees of freedom =    10143
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0114         Pr(|T| > |t|) = 0.0228          Pr(T > t) = 0.9886
+
+. noi di "all methods"
+all methods
+
+. 
+. tempfile temp
+
+. 
+. use anti_panel_all, clear
+
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. * restrict to clear goldstandard values
+
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |     16548    .8740633     .331788          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+14464 results are R/S
+
+. 
+. drop if clear!=1
+(2084 observations deleted)
+
+. 
+. contract  gold valuegene
+
+. 
+. rename value predict
+
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. reshape wide _freq, i( gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. rename r combor
+
+. 
+. rename s combos
+
+. 
+. gen method = "valuegene"
+
+. 
+. reshape wide combo*, i(method) j(gold) string
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+
+. 
+. rename combo* *
+
+. 
+. 
+. 
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+
+. 
+. rename rR TP
+
+. 
+. rename sR FN 
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+
+. 
+. * predicted resistant but actually sensitive
+
+. 
+. save temp, replace
+file temp.dta saved
+
+. noi di "all methods: Collindale"
+all methods: Collindale
+
+. 
+. tempfile temp
+
+. 
+. use anti_panel_all, clear
+
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. keep if set=="Collindale"
+(11844 observations deleted)
+
+. 
+. * restrict to clear goldstandard values
+
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      4704    .9181548    .2741579          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+4319 results are R/S
+
+. 
+. drop if clear!=1
+(385 observations deleted)
+
+. 
+. contract  gold valuegene
+
+. 
+. rename value predict
+
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. reshape wide _freq, i( gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. rename r combor
+
+. 
+. rename s combos
+
+. 
+. gen method = "valuegene"
+
+. 
+. reshape wide combo*, i(method) j(gold) string
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+
+. 
+. rename combo* *
+
+. 
+. 
+. 
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+
+. 
+. rename rR TP
+
+. 
+. rename sR FN 
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+
+. 
+. * predicted resistant but actually sensitive
+
+. 
+. gen set="Collindale"
+
+. 
+. save temp, replace
+file temp.dta saved
+
+. noi di "Collindale"
+Collindale
+
+. 
+. tempfile temp
+
+. 
+. use anti_panel_all, clear
+
+. 
+. assert site!=""
+
+. 
+. assert _N==16548
+
+. 
+. keep if set=="Collindale"
+(11844 observations deleted)
+
+. 
+. * restrict to clear goldstandard values
+
+. 
+. gen clear=inlist(gold, "R", "S")
+
+. 
+. summ clear
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      4704    .9181548    .2741579          0          1
+
+. 
+. noi di r(sum) " results are R/S"
+4319 results are R/S
+
+. 
+. drop if clear!=1
+(385 observations deleted)
+
+. 
+. contract  gold valuegene
+
+. 
+. rename value predict
+
+. 
+. assert predict!=""
+
+. 
+. * reshape
+
+. 
+. reshape wide _freq, i( gold) j(predict) string
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+
+. 
+. rename _freq* *
+
+. 
+. rename r combor
+
+. 
+. rename s combos
+
+. 
+. gen method = "valuegene"
+
+. 
+. reshape wide combo*, i(method) j(gold) string
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+
+. 
+. rename combo* *
+
+. 
+. 
+. 
+. * remember : resistance = postive result
+
+. 
+. rename sS TN
+
+. 
+. rename rR TP
+
+. 
+. rename sR FN 
+
+. 
+. *so predicted sensitive but actually resistant
+
+. 
+. rename rS FP 
+
+. 
+. * predicted resistant but actually sensitive
+
+. 
+. gen set="Collindale"
+
+. 
+. save temp, replace
+file temp.dta saved
+
+. 
+. 
+. 
+. foreach k in valuetype valuez{
+  2. 
+. use anti_panel_all, clear
+  3. 
+. assert site!=""
+  4. 
+. assert _N==16548
+  5. 
+. keep if set=="Collindale"
+  6. 
+. * restrict to clear goldstandard values
+. 
+. gen clear=inlist(gold, "R", "S")
+  7. 
+. summ clear
+  8. 
+. noi di r(sum) " results are R/S"
+  9. 
+. drop if clear!=1
+ 10. 
+. contract  gold `k'
+ 11. 
+. rename value predict
+ 12. 
+. assert predict!=""
+ 13. 
+. * reshape
+. 
+. reshape wide _freq, i( gold) j(predict) string
+ 14. 
+. rename _freq* *
+ 15. 
+. rename r combor
+ 16. 
+. rename s combos
+ 17. 
+. gen method = "`k'"
+ 18. 
+. reshape wide combo*, i(method) j(gold) string
+ 19. 
+. rename combo* *
+ 20. 
+. 
+. 
+. * remember : resistance = postive result
+. 
+. rename sS TN
+ 21. 
+. rename rR TP
+ 22. 
+. rename sR FN 
+ 23. 
+. *so predicted sensitive but actually resistant
+. 
+. rename rS FP 
+ 24. 
+. * predicted resistant but actually sensitive
+. 
+. gen set="Collindale"
+ 25. 
+. append using temp
+ 26. 
+. save temp, replace
+ 27. 
+. }
+(11844 observations deleted)
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      4704    .9181548    .2741579          0          1
+4319 results are R/S
+(385 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+file temp.dta saved
+(11844 observations deleted)
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      4704    .9181548    .2741579          0          1
+4319 results are R/S
+(385 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+(note: variable method was str6, now str9 to accommodate using data's values)
+file temp.dta saved
+
+. 
+. 
+. 
+. noi di "Oxford 491"
+Oxford 491
+
+. 
+. foreach k in valuetype valuez valuegene{
+  2. 
+. use anti_panel_all, clear
+  3. 
+. assert site!=""
+  4. 
+. assert _N==16548
+  5. 
+. keep if set=="Oxford491"
+  6. 
+. * restrict to clear goldstandard values
+. 
+. gen clear=inlist(gold, "R", "S")
+  7. 
+. summ clear
+  8. 
+. noi di r(sum) " results are R/S"
+  9. 
+. drop if clear!=1
+ 10. 
+. contract  gold `k'
+ 11. 
+. rename value predict
+ 12. 
+. assert predict!=""
+ 13. 
+. * reshape
+. 
+. reshape wide _freq, i( gold) j(predict) string
+ 14. 
+. rename _freq* *
+ 15. 
+. rename r combor
+ 16. 
+. rename s combos
+ 17. 
+. gen method = "`k'"
+ 18. 
+. reshape wide combo*, i(method) j(gold) string
+ 19. 
+. rename combo* *
+ 20. 
+. 
+. 
+. * remember : resistance = postive result
+. 
+. rename sS TN
+ 21. 
+. rename rR TP
+ 22. 
+. rename sR FN 
+ 23. 
+. *so predicted sensitive but actually resistant
+. 
+. rename rS FP 
+ 24. 
+. * predicted resistant but actually sensitive
+. 
+. gen set="Oxford491"
+ 25. 
+. append using temp
+ 26. 
+. save temp, replace
+ 27. 
+. }
+(10716 observations deleted)
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      5832     .880487     .324419          0          1
+5135 results are R/S
+(697 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+(note: variable set was str9, now str10 to accommodate using data's values)
+file temp.dta saved
+(10716 observations deleted)
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      5832     .880487     .324419          0          1
+5135 results are R/S
+(697 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+(note: variable method was str6, now str9 to accommodate using data's values)
+(note: variable set was str9, now str10 to accommodate using data's values)
+file temp.dta saved
+(10716 observations deleted)
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      5832     .880487     .324419          0          1
+5135 results are R/S
+(697 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+(note: variable set was str9, now str10 to accommodate using data's values)
+file temp.dta saved
+
+. 
+. 
+. 
+. noi di "Oxford 501"
+Oxford 501
+
+. 
+. foreach k in valuetype valuez valuegene{
+  2. 
+. use anti_panel_all, clear
+  3. 
+. assert site!=""
+  4. 
+. assert _N==16548
+  5. 
+. keep if set=="Oxford501"
+  6. 
+. * restrict to clear goldstandard values
+. 
+. gen clear=inlist(gold, "R", "S")
+  7. 
+. summ clear
+  8. 
+. noi di r(sum) " results are R/S"
+  9. 
+. drop if clear!=1
+ 10. 
+. contract  gold `k'
+ 11. 
+. rename value predict
+ 12. 
+. assert predict!=""
+ 13. 
+. * reshape
+. 
+. reshape wide _freq, i( gold) j(predict) string
+ 14. 
+. rename _freq* *
+ 15. 
+. rename r combor
+ 16. 
+. rename s combos
+ 17. 
+. gen method = "`k'"
+ 18. 
+. reshape wide combo*, i(method) j(gold) string
+ 19. 
+. rename combo* *
+ 20. 
+. 
+. 
+. * remember : resistance = postive result
+. 
+. rename sS TN
+ 21. 
+. rename rR TP
+ 22. 
+. rename sR FN 
+ 23. 
+. *so predicted sensitive but actually resistant
+. 
+. rename rS FP 
+ 24. 
+. * predicted resistant but actually sensitive
+. 
+. gen set="Oxford501"
+ 25. 
+. append using temp
+ 26. 
+. save temp, replace
+ 27. 
+. }
+(10536 observations deleted)
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      6012    .8333333     .372709          0          1
+5010 results are R/S
+(1002 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+(note: variable set was str9, now str10 to accommodate using data's values)
+file temp.dta saved
+(10536 observations deleted)
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      6012    .8333333     .372709          0          1
+5010 results are R/S
+(1002 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+(note: variable method was str6, now str9 to accommodate using data's values)
+(note: variable set was str9, now str10 to accommodate using data's values)
+file temp.dta saved
+(10536 observations deleted)
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       clear |      6012    .8333333     .372709          0          1
+5010 results are R/S
+(1002 observations deleted)
+(note: j = r s)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        4   ->       2
+Number of variables                   3   ->       3
+j variable (2 values)           predict   ->   (dropped)
+xij variables:
+                                  _freq   ->   _freqr _freqs
+-----------------------------------------------------------------------------
+(note: j = R S)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                        2   ->       1
+Number of variables                   4   ->       5
+j variable (2 values)      goldstandard   ->   (dropped)
+xij variables:
+                                 combor   ->   comborR comborS
+                                 combos   ->   combosR combosS
+-----------------------------------------------------------------------------
+(note: variable set was str9, now str10 to accommodate using data's values)
+file temp.dta saved
+
+. * point estimates
+
+. 
+. for any TN TP FN FP: replace X=0 if X==.
+
+->  replace TN=0 if TN==.
+(0 real changes made)
+
+->  replace TP=0 if TP==.
+(0 real changes made)
+
+->  replace FN=0 if FN==.
+(0 real changes made)
+
+->  replace FP=0 if FP==.
+(0 real changes made)
+
+. 
+. 
+. 
+. gen sensitivity = TP/(TP+FN)
+
+. 
+. gen specificity = TN/(TN+FP)
+
+. 
+. 
+. 
+. gen predictPOS = TP+FP
+
+. 
+. gen predictNEG = TN +FN
+
+. 
+. 
+. 
+. gen trueNeg= TN +FP
+
+. 
+. gen truePos= TP +FN
+
+. 
+. 
+. 
+. gen MajorErrorRate = FN/truePos
+
+. 
+. gen VeryMajorErrorRate = FP/trueNeg
+
+. 
+. gen Agreement = (TP+TN)/(trueNeg+truePos)
+
+. 
+. 
+. 
+. * get confidence intervals
+
+. 
+. for any lsens usens lspec uspec lme ume lvme uvme:gen X=.
+
+->  gen lsens=.
+(9 missing values generated)
+
+->  gen usens=.
+(9 missing values generated)
+
+->  gen lspec=.
+(9 missing values generated)
+
+->  gen uspec=.
+(9 missing values generated)
+
+->  gen lme=.
+(9 missing values generated)
+
+->  gen ume=.
+(9 missing values generated)
+
+->  gen lvme=.
+(9 missing values generated)
+
+->  gen uvme=.
+(9 missing values generated)
+
+. 
+. local max=_N
+
+. 
+. forvalues i=1(1)`max'{
+  2. 
+. if truePos[`i']>0{
+  3. 
+. cii  truePos[`i'] TP[`i']
+  4. 
+. replace lsens = r(lb) if _n==`i'
+  5. 
+. replace usens = r(ub) if _n==`i'
+  6. 
+. cii truePos[`i'] FN[`i']
+  7. 
+. replace lvme = r(lb) if _n==`i'
+  8. 
+. replace uvme = r(ub) if _n==`i'
+  9. 
+. }
+ 10. 
+. else{
+ 11. 
+. noi di site[`i'] " has no positive samples"
+ 12. 
+. }
+ 13. 
+. if trueNeg[`i']>0{
+ 14. 
+. cii trueNeg[`i'] TN[`i']
+ 15. 
+. replace lspec = r(lb) if _n==`i'
+ 16. 
+. replace uspec = r(ub) if _n==`i'
+ 17. 
+. cii trueNeg[`i'] FP[`i']
+ 18. 
+. replace lme = r(lb) if _n==`i'
+ 19. 
+. replace ume = r(ub) if _n==`i'
+ 20. 
+. }
+ 21. 
+. else{
+ 22. 
+. noi di site[`i'] " has no negative samples"
+ 23. 
+. }
+ 24. 
+. }
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1003    .9770688    .0047263        .9657897    .9854094
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1003    .0229312    .0047263        .0145906    .0342103
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4007    .9965061    .0009321        .9941448    .9980886
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4007    .0034939    .0009321        .0019114    .0058552
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1003    .9780658    .0046248        .9669788    .9862041
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1003    .0219342    .0046248        .0137959    .0330212
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4007    .9935114    .0012684         .990507    .9957572
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4007    .0064886    .0012684        .0042428     .009493
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1003    .9750748    .0049225        .9634242    .9838062
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1003    .0249252    .0049225        .0161938    .0365758
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4007    .9975044    .0007882        .9954152    .9988026
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4007    .0024956    .0007882        .0011974    .0045848
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        735    .9727891    .0060012        .9582867    .9833014
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        735    .0272109    .0060012        .0166986    .0417133
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4400    .9913636    .0013949         .988165    .9938814
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4400    .0086364    .0013949        .0061186     .011835
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        735    .9727891    .0060012        .9582867    .9833014
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        735    .0272109    .0060012        .0166986    .0417133
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4400    .9911364     .001413        .9879028    .9936897
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4400    .0088636     .001413        .0063103    .0120972
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        735     .970068    .0062853        .9550319    .9811487
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |        735     .029932    .0062853        .0188513    .0449681
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4400    .9918182     .001358        .9886907    .9942632
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       4400    .0081818     .001358        .0057368    .0113093
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1087    .9540018    .0063537         .939804    .9656696
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1087    .0459982    .0063537        .0343304     .060196
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       3232    .9792698    .0025062        .9737473    .9838992
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       3232    .0207302    .0025062        .0161008    .0262527
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1087     .949402    .0066478         .934646    .9616585
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1087     .050598    .0066478        .0383415     .065354
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       3232    .9839109    .0022131        .9789542    .9879611
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       3232    .0160891    .0022131        .0120389    .0210458
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1087    .9540018    .0063537         .939804    .9656696
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       1087    .0459982    .0063537        .0343304     .060196
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       3232    .9811262    .0023936        .9758211    .9855331
+(1 real change made)
+(1 real change made)
+
+                                                         -- Binomial Exact --
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+             |       3232    .0188738    .0023936        .0144669    .0241789
+(1 real change made)
+(1 real change made)
+
+. 
+. 
+. 
+. * save values for combining for table
+
+. 
+. noi list set method sens lsens usens spec lspec uspec
+
+     +------------------------------------------------------------------------------------------+
+     |        set      method   sensit~y      lsens      usens   specif~y      lspec      uspec |
+     |------------------------------------------------------------------------------------------|
+  1. |  Oxford501   valuegene   .9770688   .9657897   .9854094   .9965061   .9941448   .9980886 |
+  2. |  Oxford501      valuez   .9780658   .9669788   .9862041   .9935114    .990507   .9957572 |
+  3. |  Oxford501   valuetype   .9750748   .9634243   .9838063   .9975044   .9954153   .9988026 |
+  4. |  Oxford491   valuegene   .9727891   .9582868   .9833014   .9913636    .988165   .9938813 |
+  5. |  Oxford491      valuez   .9727891   .9582868   .9833014   .9911364   .9879028   .9936897 |
+     |------------------------------------------------------------------------------------------|
+  6. |  Oxford491   valuetype    .970068   .9550319   .9811487   .9918182   .9886907   .9942632 |
+  7. | Collindale      valuez   .9540018    .939804   .9656696   .9792698   .9737473   .9838992 |
+  8. | Collindale   valuetype    .949402    .934646   .9616585   .9839109   .9789543   .9879612 |
+  9. | Collindale   valuegene   .9540018    .939804   .9656696   .9811262   .9758211   .9855331 |
+     +------------------------------------------------------------------------------------------+
+
+. help graph export
+
+. * analyse data
+
+. 
+. cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"
+\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline
+
+. 
+. *compares A/P site predictions; makes agreement graph 1
+
+. 
+. run Analysis_Pipeline.do

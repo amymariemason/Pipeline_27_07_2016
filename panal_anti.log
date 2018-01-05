@@ -1,4 +1,4 @@
-Run by AMM on 26 Jul 2017 10:24:55
+Run by AMM on  2 Jan 2018 16:32:06
 
 
 
@@ -478,8 +478,8 @@ ciprofloxacin |         4          0          0          0          1      1,031
         Total |        97         13          1          2         22     11,504 |    11,639 
 
 
+. cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"
+\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline
 
-. cd E:\users\amy.mason\Pipeline_27_07_2016\
-E:\users\amy.mason\Pipeline_27_07_2016
-
+. 
 . run create_predict_viru.do
