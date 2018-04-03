@@ -1,4 +1,4 @@
-Run by AMM on 26 Jul 2017 10:23:34
+Run by AMM on  2 Jan 2018 15:50:09
 
 
 
@@ -23,7 +23,7 @@ from 1429 samples
 10 samples contaminated
 file problem_samples.dta saved
 2820 values for contaminated samples dropped from study
-(2,820 observations deleted)
+(2820 observations deleted)
 
 
 
@@ -204,7 +204,7 @@ sample-sites missing values - key (typewriter mykrobe genefinder)
          Total |     1,419 |     1,419 
 
 1419 vgaalc only supplied by mykrobe, drop from database
-(1,419 observations deleted)
+(1419 observations deleted)
 126171 sample sites remaining
 
                |          new
@@ -219,7 +219,7 @@ sample-sites missing values - key (typewriter mykrobe genefinder)
          Total |     1,579      5,516 |     7,095 
 
 1419 luk only supplied by mykrobe, drop from database
-(1,419 observations deleted)
+(1419 observations deleted)
 124752 sample sites remaining
 
                |          new
@@ -234,7 +234,7 @@ sample-sites missing values - key (typewriter mykrobe genefinder)
          Total |     1,579      5,516 |     7,095 
 
 1419ar only supplied by mykrobe, drop from database
-(1,419 observations deleted)
+(1419 observations deleted)
 123333 sample sites remaining
 
                      |          new
@@ -302,7 +302,7 @@ allelicprofile |     1,379 |     1,379
          Total |     1,379 |     1,379 
 
 1379 allelicprofile only supplied by genefinder, drop from database
-(1,379 observations deleted)
+(1379 observations deleted)
 118594 sample sites remaining
 8793 no value in mykrobe, eg fusa
 
@@ -351,7 +351,7 @@ fus_P406L-CCA600918CTAfus_A67T-GCA599.. |          1        1.64       86.89
 
  problem is that mykrobe is not reporting absence of mutation as other than blank
 solution: replace 7414 blanks in these sites in mykroke with wt -  not mlst which is not a mutation site
-(7,414 real changes made)
+(7414 real changes made)
 
         new |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -380,7 +380,7 @@ rest
                 Total |         8          1 |         9 
 
 dropping 1379 mlst sites
-(1,379 observations deleted)
+(1379 observations deleted)
 1379 iles site reports dropped due to not being in Claire's gene panel on paper
 115836 sample sites
 1379 samples
@@ -501,7 +501,7 @@ all values equal A or P, unless chromosonal
 4 remove all spaces in value reports
 (4 real changes made)
 18278replace WT with A in typewriter/ genewriter/ zam  reports on chromosonal mutations
-(18,278 real changes made)
+(18278 real changes made)
 mutations: if count!=1 then no considered positive as not in panal on clare's paper
 fusa mutations
 
@@ -2683,10 +2683,8 @@ breakdown by site
 ------------+-----------------------------------
       Total |      1,379      100.00
 
+. cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"
+\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline
 
 . 
-. * prediction of phenotypes; uses the cleaned site predictions to make antibiotic predictions
-. cd E:\users\amy.mason\Pipeline_27_07_2016\
-E:\users\amy.mason\Pipeline_27_07_2016
-
 . run create_predict_anti.do

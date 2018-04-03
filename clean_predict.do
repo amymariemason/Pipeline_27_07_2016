@@ -5,7 +5,7 @@ set li 130
 cap log close
 log using clean_patch.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 
 noi di _n(5) _dup(80) "=" _n " 1 Combine all predictive sets" _n _dup(80) "="
 
@@ -719,6 +719,6 @@ noi bysort type site:  tab ValueA, sort
 
 save pipeline_clean_all_values_wide, replace
 
-cd E:\users\amy.mason\Pipeline_27_07_2016\
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"
 
 

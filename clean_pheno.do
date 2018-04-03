@@ -5,7 +5,7 @@ set li 130
 cap log close
 log using clean2.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 
 
 *************************************************
@@ -197,4 +197,4 @@ foreach k in Penicillin Methicillin Ciprofloxacin Erythromycin Clindamycin Tetra
 	save pipeline_gold_clean_long, replace
 	
 	
-noi cd E:\users\amy.mason\Pipeline_27_07_2016\	
+noi cd \\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\	

@@ -15,10 +15,10 @@ set li 130
 cap log close
 log using analysis1.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 
 *************************************************
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 use pipeline_clean_all_values_wide, clear
 
 ****************************************
@@ -29,7 +29,7 @@ noi di _n(5) _dup(80) "=" _n " Overall summary" _n _dup(80) "="
 * tables summarizing the % agreements between methods
 * look at log file to read summary
 
-noi di  "Recall order is  Mykrobe Mykrobe Genefinder"
+noi di  "Recall order is  Genefinder Mykrobe Typewriter"
 
 
 noi tab site ValueA, m
@@ -222,9 +222,9 @@ legend(order( 2 3 4 5) label(2 "Aquired Resistance sites") label(3 "Chromosonal 
 #delimit cr
 
 * save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\method_disagreements_tg.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\method_disagreements_tg.wmf", as(wmf) replace
 
-
+exit
 ***********************************************************************
 * Compare mykrobe with typewriter
 **********************************************************************
@@ -304,7 +304,7 @@ legend(order( 2 3 4 5) label(2 "Aquired Resistance sites") label(3 "Chromosonal 
 	label(4 "Virulence sites") label(5 "Ccr sites" ));
 #delimit cr
 * save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\method_disagreements_tz.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\method_disagreements_tz.wmf", as(wmf) replace
 
 ***********************************************************************
 * Compare mykrobe with genefinder
@@ -397,7 +397,7 @@ legend(order( 2 3 4 5) label(2 "Aquired Resistance sites") label(3 "Chromosonal 
 	label(4 "Virulence sites") label(5 "Ccr sites" ));
 #delimit cr
 *save graph
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\method_disagreements_zg.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\method_disagreements_zg.wmf", as(wmf) replace
 
 
 
@@ -494,9 +494,9 @@ graph combine graph1.gph graph2.gph graph3.gph, cols(1) ycommon
 
 *save the graph
 
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\method_disagreements_all.wmf", as(wmf) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\method_disagreements_all.wmf", as(wmf) replace
 
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\method_disagreements_all.eps", as(eps) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\method_disagreements_all.eps", as(eps) replace
 
-graph export "E:\users\amy.mason\Pipeline_27_07_2016\Graphs_Outputs\method_disagreements_all_0205.tif", as(tif) width(2880) replace
+graph export "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Graphs_Outputs\method_disagreements_all_0205.tif", as(tif) width(2880) replace
 

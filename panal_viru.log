@@ -1,4 +1,4 @@
-Run by AMM on 26 Jul 2017 10:25:07
+Run by AMM on  2 Jan 2018 16:43:49
 
 
 
@@ -675,13 +675,14 @@ goldstanda |                        valueall
         Total |        14          2         10        618 |       644 
 
 
-
-. 
-. * DOWN TO HERE
-. 
 . * analyse data
-. cd E:\users\amy.mason\Pipeline_27_07_2016\
-E:\users\amy.mason\Pipeline_27_07_2016
 
+. 
+. cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"
+\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline
+
+. 
 . *compares A/P site predictions; makes agreement graph 1
-. run Analysis_Pipeline.do 
+
+. 
+. run Analysis_Pipeline.do

@@ -1,4 +1,4 @@
-Run by AMM on 26 Jul 2017 10:25:50
+Run by AMM on  2 Jan 2018 17:00:44
 
 
 
@@ -706,9 +706,7 @@ all methods
   3. | valuegene   .9670796   .9598206   .9733485   .9902912   .9883389   .9919921 |
      +-----------------------------------------------------------------------------+
 
-. 
-. * compares virulence predictions
-. cd E:\users\amy.mason\Pipeline_27_07_2016\
-E:\users\amy.mason\Pipeline_27_07_2016
+. cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"
+\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline
 
-. run Analysis_Pipeline3.do 
+. run Analysis_Pipeline3.do

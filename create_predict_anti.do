@@ -17,7 +17,7 @@ set li 130
 cap log close
 log using panal_anti.log, replace
 noi di "Run by AMM on $S_DATE $S_TIME"
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 
 **************************************************************
 * ANTIBIOTIC RESISTANCE PANEL
@@ -109,7 +109,7 @@ noi di _n(5) _dup(80) "=" _n " 1 add gold standard" _n _dup(80) "="
 * add in the gold standard results from clean_pheno; note not all values have results
 
 
-cd E:\users\amy.mason\Pipeline_27_07_2016\Datasets
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\Datasets"
 use pipeline_gold_clean_long, clear
 drop if inlist(upper(site), "SEA", "SEB", "SEC", "SED", "SEE", "SEG", "SEH")
 drop if inlist(upper(site), "SEI", "SEJ", "SELR")
@@ -124,7 +124,7 @@ noi tab gold valuea
 noi bysort gold: tab site valuea
 
 save anti_panel_all, replace
-cd E:\users\amy.mason\Pipeline_27_07_2016\
+cd "\\me-filer1\home$\am2609\My Documents\MMM work\Programs\Pipeline\"
 
 
 
