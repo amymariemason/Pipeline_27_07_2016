@@ -94,6 +94,9 @@ noi di "method disagreeing with lab"
 use anti_panel_all, clear
 append using viru_panel_all, gen(new)
 
+
+
+
 * reshape wide
 drop _merge new valueall method
 reshape long value, i (sample site set gold) j(method) string
@@ -104,6 +107,10 @@ drop if gold=="I"
 gen match=1 if gold==value
 replace match=0 if match==.
 tab set method if match!=1, chi
+
+noi di "total number gold method results"
+
+tab set method
 
 
 ******************************************************
